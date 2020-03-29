@@ -12,8 +12,11 @@ import {
   Hidden,
   MenuItem,
   FormHelperText, 
+  Box, 
+  Paper
 } from "@material-ui/core";
-import SaveIcon from '@material-ui/icons/Save';
+import PersonIcon from '@material-ui/icons/Person';
+import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import CancelIcon from '@material-ui/icons/Cancel';
 
 class UserProfileDetail extends Component {
@@ -47,168 +50,174 @@ class UserProfileDetail extends Component {
   render() {
     return (
       <form onSubmit={this.handleSubmit} >
+         <Grid container xs={12} spacing={1} >
+            <Grid item xs={12} >
+              <Box color="error.main">
+                <ul >
+                  {this.state.errorMessages.map(errorMessage => (
+                    <li>{errorMessage.message}</li>
+                  ))}
+                </ul>
+              </Box>
+            </Grid>
+            <Grid container item xs={12} >
+                <Grid item xs={6} style={{padding: 5}} >
+                  <TextField
+                    id="uxFirstName"
+                    name="uxFirstName"
+                    value={this.state.uxFirstName}
+                    label="First Name"
+                    required
+                    fullWidth
+                    onChange={this.handleProfileChange.bind(this)}
+                  />
+                </Grid>
+                <Grid item xs={6} style={{padding: 5}}>
 
-        <ul style={{color:"red"}}>
-          {this.state.errorMessages.map(errorMessage => (
-            <li>{errorMessage.message}</li>
-          ))}
+                  <TextField
+                    id="uxLastName"
+                    name="uxLastName"
+                    value={this.state.uxLastName}
+                    label="Last Name"
+                    required
+                    fullWidth
+                    onChange={this.handleProfileChange.bind(this)}
+                  />
+                </Grid>
+            </Grid>
+            <Grid  item xs={12} style={{padding: 5}}>
+              <RadioGroup
+                aria-label="position"
+                id="uxActive"
+                name="uxActive"
+                value={this.state.uxActive}
+                row
+                required
+                onChange={this.handleProfileChangeBool.bind(this)}
+              >
+                <FormControlLabel
+                  value={true}
+                  control={<Radio color="primary" />}
+                  label="Active"
+                  labelPlacement="end"
+                />
+                <FormControlLabel
+                  value={false}
+                  control={<Radio color="primary" />}
+                  label="InActive"
+                  labelPlacement="end"
+                />
+              </RadioGroup>
+            </Grid>
+            <Grid  item xs={12} style={{padding: 5}}>
+              <TextField
+                id="uxAddress1"
+                name="uxAddress1"
+                value={this.state.uxAddress1}
+                label="Address1"
+                required
+                fullWidth
+                onChange={this.handleProfileChange.bind(this)}
+              />
+            </Grid>
+            <Grid  item xs={12} style={{padding: 5}}>
+              <TextField
+                id="uxAddress2"
+                name="uxAddress2"
+                value={this.state.uxAddress2}
+                label="Address2"
+                fullWidth
+                onChange={this.handleProfileChange.bind(this)}
+              />
+            </Grid>
+            <Grid  item xs={12} style={{padding: 5}}>
+              <TextField
+                id="uxCity"
+                name="uxCity"
+                value={this.state.uxCity}
+                label="City"
+                required
+                fullWidth
+                onChange={this.handleProfileChange.bind(this)}
+              />
+            </Grid>
 
-        </ul>
+            <Grid  item xs={12} style={{padding: 5}}>
+              <FormControl
+                required
+              >
 
-        <Grid container item xs={12} spacing={1}>
-          <Grid container item xs={6} spacing={0}>
-            <TextField
-              id="uxFirstName"
-              name="uxFirstName"
-              value={this.state.uxFirstName}
-              label="First Name"
-              required
-              fullWidth
-              onChange={this.handleProfileChange.bind(this)}
-            />
+                <InputLabel htmlFor="age-native-required">State</InputLabel>
+                <Select
+                  required
+                  label= "States"
+                  name="uxStateAbrev"
+                  id="uxStateAbrev"
+                  value={this.state.uxStateAbrev}
+                  onChange={this.handleProfileChange.bind(this)}
+                  inputProps={{
+                    id: 'age-native-required',
+                  }}
+                >
+                  {/* <MenuItem value=""><em>Select a State</em></MenuItem> */}
+                  {this.state.countryStatesList.map(aItem => (
+                    <MenuItem key={aItem.stateAbrev} key={aItem.stateAbrev} value={aItem.stateAbrev} >
+                      {aItem.stateName}
+                    </MenuItem>
+                  ))}
+                </Select>
+                <FormHelperText>Required</FormHelperText>
+              </FormControl>
+            </Grid>
+            <Grid  item xs={12} style={{padding: 5}}>
+              <TextField
+                id="uxZipCode"
+                name="uxZipCode"
+                value={this.state.uxZipCode}
+                label="ZipCode"
+                required 
+                type="number"
+                onChange={this.handleProfileChange.bind(this)}
+              />
+            </Grid>
+            <Grid container item xs={12} justify="center">
+              <Button
+                variant="contained"
+                color="primary"
+                size="small"
+                style={{ padding: 4, margin: 10, borderRadius: 25 }}
+                onClick={this.props.onCancel}
+                startIcon={<CancelIcon />}
+                type="button"
+                >
+                Cancel
+              </Button>
+              <Hidden smUp={this.props.profile ? true : false}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  size="small"
+                  style={{ padding: 4, margin: 10, borderRadius: 25 }}
+                  type="submit"
+                  startIcon={<PersonAddIcon />}
+                >
+                  Add
+                </Button>
+              </Hidden>
+              <Hidden smUp={this.props.profile ? false : true}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  size="small"
+                  style={{ padding: 4, margin: 10, borderRadius: 25 }}
+                  type="submit"
+                  startIcon={<PersonIcon />}
+                >
+                  Update
+                </Button>
+              </Hidden>
+            </Grid>
           </Grid>
-          <Grid container item xs={6} spacing={0}>
-            <TextField
-              id="uxLastName"
-              name="uxLastName"
-              value={this.state.uxLastName}
-              label="Last Name"
-              required
-              onChange={this.handleProfileChange.bind(this)}
-            />
-          </Grid>
-        </Grid>
-        <Grid container item xs={12} spacing={0}>
-          <RadioGroup
-            aria-label="position"
-            id="uxActive"
-            name="uxActive"
-            value={this.state.uxActive}
-            row
-            required
-            onChange={this.handleProfileChangeBool.bind(this)}
-          >
-            <FormControlLabel
-              value={true}
-              control={<Radio color="primary" />}
-              label="Active"
-              labelPlacement="end"
-            />
-            <FormControlLabel
-              value={false}
-              control={<Radio color="primary" />}
-              label="InActive"
-              labelPlacement="end"
-            />
-          </RadioGroup>
-        </Grid>
-        <Grid container item xs={12} spacing={0}>
-          <TextField
-            id="uxAddress1"
-            name="uxAddress1"
-            value={this.state.uxAddress1}
-            label="Address1"
-            required
-            fullWidth
-            onChange={this.handleProfileChange.bind(this)}
-          />
-        </Grid>
-        <Grid container item xs={12} spacing={0}>
-          <TextField
-            id="uxAddress2"
-            name="uxAddress2"
-            value={this.state.uxAddress2}
-            label="Address2"
-            fullWidth
-            onChange={this.handleProfileChange.bind(this)}
-          />
-        </Grid>
-        <Grid container item xs={12} spacing={0}>
-          <TextField
-            id="uxCity"
-            name="uxCity"
-            value={this.state.uxCity}
-            label="City"
-            required
-            fullWidth
-            onChange={this.handleProfileChange.bind(this)}
-          />
-        </Grid>
-
-        <Grid container item xs={12} spacing={0}>
-          <FormControl
-            required
-          >
-
-            <InputLabel htmlFor="age-native-required">State</InputLabel>
-            <Select
-              required
-              label= "States"
-              name="uxStateAbrev"
-              id="uxStateAbrev"
-              value={this.state.uxStateAbrev}
-              onChange={this.handleProfileChange.bind(this)}
-              inputProps={{
-                id: 'age-native-required',
-              }}
-            >
-              {/* <MenuItem value=""><em>Select a State</em></MenuItem> */}
-              {this.state.countryStatesList.map(aItem => (
-                <MenuItem key={aItem.stateAbrev} key={aItem.stateAbrev} value={aItem.stateAbrev} >
-                  {aItem.stateName}
-                </MenuItem>
-              ))}
-            </Select>
-            <FormHelperText>Required</FormHelperText>
-          </FormControl>
-        </Grid>
-        <Grid container item xs={12} spacing={0}>
-          <TextField
-            id="uxZipCode"
-            name="uxZipCode"
-            value={this.state.uxZipCode}
-            label="ZipCode"
-            required 
-            type="number"
-            onChange={this.handleProfileChange.bind(this)}
-          />
-        </Grid>
-        <Grid container item xs={12} spacing={0} justify="center">
-          <Button
-            variant="contained"
-            color="primary"
-            size="small"
-            style={{ padding: 4, margin: 10, borderRadius: 25 }}
-            onClick={this.props.onCancel}
-            startIcon={<CancelIcon />}
-            >
-            Cancel
-          </Button>
-          <Hidden smUp={this.props.profile ? true : false}>
-            <Button
-              variant="contained"
-              color="primary"
-              size="small"
-              style={{ padding: 4, margin: 10, borderRadius: 25 }}
-              type="Submit"
-              startIcon={<SaveIcon />}
-            >
-              Add
-            </Button>
-          </Hidden>
-          <Hidden smUp={this.props.profile ? false : true}>
-            <Button
-              variant="contained"
-              color="primary"
-              size="small"
-              style={{ padding: 4, margin: 10, borderRadius: 25 }}
-              type="Submit"
-              startIcon={<SaveIcon />}
-            >
-              Update
-            </Button>
-          </Hidden>
-        </Grid>
       </form>
     );
   }
