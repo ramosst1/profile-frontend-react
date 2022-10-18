@@ -58,7 +58,8 @@ export default function UserProfileDetail(props) {
       handleUpdateProfile(event);
     }
 
-    return false;}
+    return false;
+  }
 
   const handleProfileChangeBool = event => {
 
