@@ -105,8 +105,6 @@ export default function UserProfileDetail(props) {
       } else {
         setErrorMessages(response);
       }
-
-
     });
 
     return true;
