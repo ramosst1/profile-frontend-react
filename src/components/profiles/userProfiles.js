@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {useState, useEffect } from 'react';
 import {
   Button,
   Grid,
@@ -21,6 +21,7 @@ import {
   Hidden
   
 } from "@material-ui/core";
+import ReactDOM from 'react-dom/client';
 import UserProfileDetail from './userProfileDetail';
 import { makeStyles } from '@material-ui/core/styles';
 import DeleteIcon from '@material-ui/icons/Delete';
@@ -51,23 +52,138 @@ const useStyles = makeStyles(theme => ({
 
   const classes = useStyles;
   
-class Profiles extends Component {
+  export default function Profiles() {
 
+  const [keyProfileKey,setKeyProfileKey] = useState(0);
+  const [profileActiveStatus,setProfileActiveStatus] = useState("true");
+  const[profiles, setProfiles] = useState([]);
+  const [openDeleteConfirm, setOpenDeleteConfirm] = useState(false);
+  const [selectedProfile, setSelectedProfile] = useState(null);
+  const [openProfileDetail, setOpenProfileDetail] = useState(false);
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      keyProfileKey: 0,
-      profileActiveStatus: "true",
-      profiles: [],
-      openDeleteConfirm: false,
-      selectedProfile: null,
-      openProfileDetail: false
-    };
+  useEffect(() => {
+    populateProfileList();
+  },[]);  
 
+  const getProfileFilters = () => {
+    const ProfileFiltered = profiles.filter(
+      aProfile =>
+        profileActiveStatus === null ||
+        aProfile.active === (profileActiveStatus === "true")
+    );
+
+    return ProfileFiltered;
   }
 
-  render() {
+  const handleProfileFilterChange = (event, profileActiveStatus) => {
+    setOpenProfileDetail(false);
+    setProfileActiveStatus(profileActiveStatus);
+  };
+
+  const handleDialogOpen = profile => {
+    setOpenDeleteConfirm(true);
+    setSelectedProfile(profile);
+  };
+
+  const handleDialogClose = (event, value) => {
+    setOpenDeleteConfirm(false);
+  };
+
+  const handleAddProfile = () => {
+
+    setOpenProfileDetail(true)
+    setKeyProfileKey(0);
+    setSelectedProfile(null);
+  };
+
+  const handleProfileDetailUpdate = profile => {
+    populateProfileList();
+
+    setOpenProfileDetail(false);
+    setSelectedProfile(null);
+  };
+
+  const handleProfileCreate = profile => {
+    populateProfileList();
+
+    setOpenProfileDetail(false);
+    setSelectedProfile(null);
+  };
+
+  const handleProfileDetailCancel = () => {
+    setOpenProfileDetail(false);
+    setSelectedProfile(null);
+  };
+
+  const handleDeleteProfile = () => {
+    deleteProfileData()
+      .then(newProfile => {
+
+        const ProfileNew = profiles.filter(
+          aItem => aItem.profileId !== selectedProfile.profileId
+        );
+
+        setOpenDeleteConfirm(false);
+        setProfiles(ProfileNew);
+        setOpenProfileDetail(false);
+    });
+  };
+
+  const deleteProfileData = () => {
+    return fetch(
+      "http://localhost:54969/api/v1/profiles/" + selectedProfile.profileId,
+      {
+        method: "delete"
+      }
+    )
+      .then(resp => resp.json())
+      .then(response => response);
+  };
+
+  const handleEditProfile = profile => {
+    setOpenProfileDetail(true);
+    setKeyProfileKey(profile.ProfileId);
+    setSelectedProfile(profile);
+  };
+
+  const populateProfileList = () => {
+    return fetch("http://localhost:54969/api/v1/profiles")
+      .then(resp => resp.json())
+      .then(profileList => {
+        setProfiles(profileList);
+      },[]);
+  }
+
+  const renderDeleteProfileDialogBox = () => {
+    return (
+      <Dialog
+        open={openDeleteConfirm}
+        TransitionComponent={Transition}
+        keepMounted
+        onClose={handleDialogClose}
+        aria-labelledby="alert-dialog-slide-title"
+        aria-describedby="alert-dialog-slide-description"
+      >
+        <DialogTitle id="alert-dialog-slide-title">
+          {"Profile Delete Dialog"}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-slide-description">
+            Are you sure you want to delete the user profile?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleDialogClose} color="primary">
+            No
+          </Button>
+          <Button onClick={handleDeleteProfile} color="primary">
+            Yes
+          </Button>
+        </DialogActions>
+      </Dialog>
+    );
+  }
+
     return (
       <div>
         <Grid container item xs={12} spacing={0} >
@@ -83,9 +199,9 @@ class Profiles extends Component {
                 <Grid container>
                   <Grid item xs={9} style={{padding: "0px 0px 0px 10px"}}>
                     <Tabs
-                      value={this.state.profileActiveStatus}
+                      value={profileActiveStatus}
                       indicatorColor="primary"
-                      onChange={this.handleProfileFilterChange}
+                      onChange={handleProfileFilterChange}
                     >
                       <Tab label="Active" value="true" />
                       <Tab label="Inactive" value="false" />
@@ -98,7 +214,7 @@ class Profiles extends Component {
                       color="primary"
                       size="small"
                       style={{ padding: 4, margin: 10, borderRadius: 25 }}
-                      onClick={this.handleAddProfile}
+                      onClick={handleAddProfile}
                       startIcon={<PersonAddIcon />}
                     >
                       Add Profile
@@ -120,7 +236,7 @@ class Profiles extends Component {
                         style={{
                           width: 10,
                           display:
-                            this.state.profileActiveStatus === null
+                            profileActiveStatus === null
                               ? ""
                               : "none"
                         }}
@@ -133,7 +249,7 @@ class Profiles extends Component {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {this.getProfileFilters().map(profile => (
+                    {getProfileFilters().map(profile => (
                       <TableRow
                         key={profile.profileId}
                         className={classes.userProfileSelected}
@@ -144,7 +260,7 @@ class Profiles extends Component {
                         <TableCell
                           style={{
                             display:
-                              this.state.profileActiveStatus === null
+                              profileActiveStatus === null
                                 ? ""
                                 : "none"
                           }}
@@ -157,7 +273,7 @@ class Profiles extends Component {
                           <Button
                             size="small"
                             color="primary"
-                            onClick={() => this.handleEditProfile(profile)}
+                            onClick={() => handleEditProfile(profile)}
                           >
                             <EditIcon />
                           </Button>
@@ -165,7 +281,7 @@ class Profiles extends Component {
                             size="small"
                             color="secondary"
                             style={{ fontSize: 14 }}
-                            onClick={() => this.handleDialogOpen(profile)}
+                            onClick={() => handleDialogOpen(profile)}
                           >
                             <Box color="error.main">
                               <DeleteIcon />
@@ -180,7 +296,7 @@ class Profiles extends Component {
             </form>
           </Grid>
           <Grid container item xs={6} spacing={0}>
-            <Hidden smUp={this.state.openProfileDetail ? false : true} >
+            <Hidden smUp={openProfileDetail ? false : true} >
               <br/>&nbsp; <br/>
               <Grid item xs={12} style={{ borderRadius: "15px", padding: 0 }} component={Paper} elevation={10}>
                 <Grid item xs={12}>
@@ -201,11 +317,11 @@ class Profiles extends Component {
                     }}
                   >
                     <UserProfileDetail
-                      key={this.state.keyProfileKey}
-                      profile={this.state.selectedProfile}
-                      onUpdate={this.handleProfileDetailUpdate}
-                      onCancel={this.handleProfileDetailCancel}
-                      onCreate={this.handleProfileCreate}
+                      key={keyProfileKey}
+                      profile={selectedProfile}
+                      onUpdate={handleProfileDetailUpdate}
+                      onCancel={handleProfileDetailCancel}
+                      onCreate={handleProfileCreate}
                     />
                   </div>
                 </Grid>
@@ -213,154 +329,10 @@ class Profiles extends Component {
             </Hidden>
             </Grid>
         </Grid>
-        {this.renderDeleteProfileDialogBox()}
+        {renderDeleteProfileDialogBox()}
       </div>
     );
-  }
-
-  getProfileFilters = () => {
-    const ProfileFiltered = this.state.profiles.filter(
-      aProfile =>
-        this.state.profileActiveStatus === null ||
-        aProfile.active == (this.state.profileActiveStatus == "true")
-    );
-
-    return ProfileFiltered;
-  }
-
-  handleProfileFilterChange = (event, profileActiveStatus) => {
-
-    this.setState({
-      openProfileDetail: false,
-      profileActiveStatus
-    });
-  };
-
-  handleDialogOpen = profile => {
-
-    this.setState({
-      openDeleteConfirm: true,
-      selectedProfile: profile,
-    });
-  };
-
-  handleDialogClose = (event, value) => {
-    this.setState({ openDeleteConfirm: false });
-  };
-
-  handleAddProfile = () => {
-    this.setState({
-      openProfileDetail: true,
-      keyProfileKey: 0,
-      selectedProfile: null
-    });
-  };
-
-  handleProfileDetailUpdate = profile => {
-    this.populateProfileList();
-
-    this.setState({
-      openProfileDetail: false,
-      selectedProfile: null
-    });
-  };
-
-  handleProfileCreate = profile => {
-    this.populateProfileList();
-
-    this.setState({
-      openProfileDetail: false,
-      selectedProfile: null
-    });
-  };
-
-  handleProfileDetailCancel = () => {
-    this.setState({
-      openProfileDetail: false,
-      selectedProfile: null
-    });
-  };
-
-  handleDeleteProfile = () => {
-    this.deleteProfileData()
-      .then(newProfile => {
-
-        const ProfileNew = this.state.profiles.filter(
-          aItem => aItem.profileId != this.state.selectedProfile.profileId
-        );
-
-        this.setState({
-          openDeleteConfirm: false,
-          profiles: ProfileNew,
-          openProfileDetail: false, 
-        });
-    });
-  };
-
-  deleteProfileData = () => {
-    const { selectedProfile } = this.state;
-
-    return fetch(
-      "http://localhost:54969/api/v1/profiles/" + selectedProfile.profileId,
-      {
-        method: "delete"
-      }
-    )
-      .then(resp => resp.json())
-      .then(response => response);
-  };
-
-  handleEditProfile = profile => {
-    this.setState({
-      openProfileDetail: true,
-      keyProfileKey: profile.ProfileId,
-      selectedProfile: profile
-    });
-  };
-
-  componentDidMount(prevProps) {
-    this.populateProfileList();
-  }
-
-  populateProfileList() {
-    return fetch("http://localhost:54969/api/v1/profiles")
-      .then(resp => resp.json())
-      .then(profileList => {
-        this.setState({
-          profiles: profileList
-        });
-      });
-  }
-
-  renderDeleteProfileDialogBox() {
-    return (
-      <Dialog
-        open={this.state.openDeleteConfirm}
-        TransitionComponent={Transition}
-        keepMounted
-        onClose={this.handleDialogClose}
-        aria-labelledby="alert-dialog-slide-title"
-        aria-describedby="alert-dialog-slide-description"
-      >
-        <DialogTitle id="alert-dialog-slide-title">
-          {"Profile Delete Dialog"}
-        </DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-slide-description">
-            Are you sure you want to delete the user profile?
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={this.handleDialogClose} color="primary">
-            No
-          </Button>
-          <Button onClick={this.handleDeleteProfile} color="primary">
-            Yes
-          </Button>
-        </DialogActions>
-      </Dialog>
-    );
-  }
 }
 
-export default Profiles;
+const root = ReactDOM.createRoot(document.getElementById("root"));
+root.render(<Profiles />);

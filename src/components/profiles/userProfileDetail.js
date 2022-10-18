@@ -1,4 +1,5 @@
-import React, {Component} from 'react';
+import React, {useState, useEffect} from 'react';
+import ReactDOM from 'react-dom/client';
 import {
   Grid,
   TextField,
@@ -12,49 +13,243 @@ import {
   Hidden,
   MenuItem,
   FormHelperText, 
-  Box, 
-  Paper
+  Box
 } from "@material-ui/core";
 import PersonIcon from '@material-ui/icons/Person';
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import CancelIcon from '@material-ui/icons/Cancel';
 
-class UserProfileDetail extends Component {
-  constructor(props) {
-    super(props);
+export default function UserProfileDetail(props) {
 
-    const APropProfile = this.props.profile;
+  const APropProfile = props.profile;
 
-    let APropAddressPrimary = APropProfile?.addresses?.find(
-      aItem => aItem.isPrimary == true
-    );
+  const APropAddressPrimary = APropProfile?.addresses?.find(
+    aItem => aItem.isPrimary === true
+  );
 
-    this.state = {
-      countryStatesList: [],
-      successProfileCommitt: false,
-      errorMessages: [],
-      uxFirstName: APropProfile?.firstName ?? "",
-      uxLastName: APropProfile?.lastName ?? "",
-      uxActive: APropProfile?.active ?? false,
-      uxAddress1: APropAddressPrimary?.address1 ?? "",
-      uxAddress2: APropAddressPrimary?.address2 ?? "",
-      uxCity: APropAddressPrimary?.city ?? "",
-      uxStateAbrev: APropAddressPrimary?.stateAbrev ?? "",
-      uxZipCode: APropAddressPrimary?.zipCode ?? ""
-      
-    };
+  const [countryStatesList, setCountryStatesList] = useState([]);
+  const [errorMessages, setErrorMessages] = useState([]);
+  let successProfileCommitt = false;
 
-    this.populateCountryStates();
+  const [uxProfile, setUxProfile] = useState({
+      firstName: APropProfile?.firstName ?? "",
+      lastName : APropProfile?.lastName ?? "",
+      active: APropProfile?.active ?? false,
+      address1: APropAddressPrimary?.address1 ?? "",
+      address2: APropAddressPrimary?.address2 ?? "",
+      city: APropAddressPrimary?.city ?? "",
+      stateAbrev: APropAddressPrimary?.stateAbrev ?? "",
+      zipCode: APropAddressPrimary?.zipCode ?? ""
+    });
+
+
+  useEffect(() => {
+      populateCountryStates();
+      populateProfileDetail();      
+  },[APropProfile?.profileId]); 
+  
+  const handleSubmit = (event) => {
+
+    event.preventDefault() ;
+
+    if(props.profile === null){
+      handleAddProfile(event);
+    } else {
+      handleUpdateProfile(event);
+    }
+
+    return false;}
+
+  const handleProfileChangeBool = event => {
+
+    const { name, value } = event.target;
+
+    let ValueBool = (value === "true")
+
+    setUxProfile({ ...uxProfile, [name]: ValueBool });
+  };
+
+  const handleProfileChange = event => {
+    const { name, value } = event.target;
+
+    setUxProfile({ ...uxProfile, [name]: value });
+
+  };
+
+  const handleAddProfile = event => {
+
+     let ProfileNew = {
+      "firstName": uxProfile.firstName,
+      "lastName": uxProfile.lastName,
+      "active": uxProfile.active,
+      "addresses": [
+          {
+              "isPrimary": true,
+              "address1": uxProfile.address1,
+              "address2": uxProfile.address2,
+              "city": uxProfile.city,
+              "stateAbrev": uxProfile.stateAbrev,
+              "zipCode": uxProfile.zipCode
+          }
+    
+      ]
+    }
+
+    putProfileData(ProfileNew)
+    .then(response => {
+
+      if(successProfileCommitt === true) {
+
+        props.onCreate(response);
+
+      } else {
+        setErrorMessages(response);
+      }
+
+
+    });
+
+    return true;
+  }
+  
+  const handleUpdateProfile = event => {
+    const { profile } = props;
+
+    fetch("http://localhost:54969/api/v1/profiles/" + profile.profileId)
+      .then(resp => resp.json())
+      .then(aProfileToUpdate => {
+        const AUpdateProfile = { ...aProfileToUpdate };
+
+        let APropAddressPrimary = AUpdateProfile?.addresses?.find(
+          aItem => aItem.isPrimary === true
+        );
+
+        AUpdateProfile.firstName = uxProfile.firstName;
+        AUpdateProfile.lastName = uxProfile.lastName;
+        AUpdateProfile.active = uxProfile.active;
+
+        APropAddressPrimary.address1 = uxProfile.address1;
+        APropAddressPrimary.address2 = uxProfile.address2;
+        APropAddressPrimary.city = uxProfile.city;
+        APropAddressPrimary.stateAbrev = uxProfile.stateAbrev;
+        APropAddressPrimary.zipCode = uxProfile.zipCode;
+
+        postProfileData(AUpdateProfile)
+          .then(response => {
+
+            if(successProfileCommitt === true) {
+
+              props.onUpdate(AUpdateProfile);
+
+            } else {
+              setErrorMessages(response);
+            }
+
+          });
+
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  };
+
+  const postProfileData = (profile) => {
+
+    return fetch("http://localhost:54969/api/v1/profiles/", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json"
+      },
+
+      body: JSON.stringify(profile)
+    })
+      .then(resp => {
+        if (!resp.ok) {
+          successProfileCommitt = false;
+        } else {
+          successProfileCommitt = true;
+        }
+        return resp.json();
+      })
+      .then(data => {
+        return data;
+      })
+      .catch(error => {
+        console.error(error.message);
+      });
+
   }
 
-  render() {
+  const putProfileData = (profile) => {
+
+    return fetch("http://localhost:54969/api/v1/profiles/", {
+      method: "PUT",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json"
+      },
+
+      body: JSON.stringify(profile)
+    })
+      .then(resp => {
+
+        if (!resp.ok) {
+          successProfileCommitt = false;
+        } else {
+          successProfileCommitt = true;          
+        }
+
+        return resp.json();
+
+      })
+      .then(data => {
+
+        return data;
+
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  }
+
+  const populateProfileDetail = () => {
+    const AProfile = props.profile;
+
+    let AddressPrimary = AProfile?.addresses?.find(
+      aItem => aItem.isPrimary === true
+    );
+
+    setUxProfile({
+      firstName: AProfile?.firstName ?? "",
+      lastName: AProfile?.lastName ?? "",
+      active: AProfile?.active ?? false,
+      address1: AddressPrimary?.address1 ?? "",
+      address2: AddressPrimary?.address2 ?? "",
+      city: AddressPrimary?.city ?? "",
+      stateAbrev: AddressPrimary?.stateAbrev ?? "",
+      zipCode: AddressPrimary?.zipCode ?? ""
+    });
+ 
+  }
+
+  const populateCountryStates = () => {
+    if (countryStatesList.length > 0) return;
+
+    return fetch("http://localhost:54969/api/v1/states")
+      .then(resp => resp.json())
+      .then(json => {
+
+        setCountryStatesList(json);
+      });
+  }  
     return (
-      <form onSubmit={this.handleSubmit} >
+      <form onSubmit={handleSubmit} >
          <Grid container xs={12} spacing={1} >
             <Grid item xs={12} >
               <Box color="error.main">
                 <ul >
-                  {this.state.errorMessages.map(errorMessage => (
+                  {errorMessages.map(errorMessage => (
                     <li>{errorMessage.message}</li>
                   ))}
                 </ul>
@@ -63,37 +258,37 @@ class UserProfileDetail extends Component {
             <Grid container item xs={12} >
                 <Grid item xs={6} style={{padding: 5}} >
                   <TextField
-                    id="uxFirstName"
-                    name="uxFirstName"
-                    value={this.state.uxFirstName}
+                    id="firstName"
+                    name="firstName"
+                    value={uxProfile.firstName}
                     label="First Name"
                     required
                     fullWidth
-                    onChange={this.handleProfileChange.bind(this)}
+                    onChange={handleProfileChange.bind(this)}
                   />
                 </Grid>
                 <Grid item xs={6} style={{padding: 5}}>
 
                   <TextField
-                    id="uxLastName"
-                    name="uxLastName"
-                    value={this.state.uxLastName}
+                    id="lastName"
+                    name="lastName"
+                    value={uxProfile.lastName}
                     label="Last Name"
                     required
                     fullWidth
-                    onChange={this.handleProfileChange.bind(this)}
+                    onChange={handleProfileChange.bind(this)}
                   />
                 </Grid>
             </Grid>
             <Grid  item xs={12} style={{padding: 5}}>
               <RadioGroup
                 aria-label="position"
-                id="uxActive"
-                name="uxActive"
-                value={this.state.uxActive}
+                id="active"
+                name="active"
+                value={uxProfile.active}
                 row
                 required
-                onChange={this.handleProfileChangeBool.bind(this)}
+                onChange={handleProfileChangeBool.bind(this)}
               >
                 <FormControlLabel
                   value={true}
@@ -111,34 +306,34 @@ class UserProfileDetail extends Component {
             </Grid>
             <Grid  item xs={12} style={{padding: 5}}>
               <TextField
-                id="uxAddress1"
-                name="uxAddress1"
-                value={this.state.uxAddress1}
+                id="address1"
+                name="address1"
+                value={uxProfile.address1}
                 label="Address1"
                 required
                 fullWidth
-                onChange={this.handleProfileChange.bind(this)}
+                onChange={handleProfileChange.bind(this)}
               />
             </Grid>
             <Grid  item xs={12} style={{padding: 5}}>
               <TextField
-                id="uxAddress2"
-                name="uxAddress2"
-                value={this.state.uxAddress2}
+                id="address2"
+                name="address2"
+                value={uxProfile.address2}
                 label="Address2"
                 fullWidth
-                onChange={this.handleProfileChange.bind(this)}
+                onChange={handleProfileChange.bind(this)}
               />
             </Grid>
             <Grid  item xs={12} style={{padding: 5}}>
               <TextField
-                id="uxCity"
-                name="uxCity"
-                value={this.state.uxCity}
+                id="city"
+                name="city"
+                value={uxProfile.city}
                 label="City"
                 required
                 fullWidth
-                onChange={this.handleProfileChange.bind(this)}
+                onChange={handleProfileChange.bind(this)}
               />
             </Grid>
 
@@ -151,17 +346,17 @@ class UserProfileDetail extends Component {
                 <Select
                   required
                   label= "States"
-                  name="uxStateAbrev"
-                  id="uxStateAbrev"
-                  value={this.state.uxStateAbrev}
-                  onChange={this.handleProfileChange.bind(this)}
+                  name="stateAbrev"
+                  id="stateAbrev"
+                  value={uxProfile.stateAbrev}
+                  onChange={handleProfileChange.bind(this)}
                   inputProps={{
                     id: 'age-native-required',
                   }}
                 >
                   {/* <MenuItem value=""><em>Select a State</em></MenuItem> */}
-                  {this.state.countryStatesList.map(aItem => (
-                    <MenuItem key={aItem.stateAbrev} key={aItem.stateAbrev} value={aItem.stateAbrev} >
+                  {countryStatesList.map(aItem => (
+                    <MenuItem key={aItem.stateAbrev} value={aItem.stateAbrev} >
                       {aItem.stateName}
                     </MenuItem>
                   ))}
@@ -171,13 +366,13 @@ class UserProfileDetail extends Component {
             </Grid>
             <Grid  item xs={12} style={{padding: 5}}>
               <TextField
-                id="uxZipCode"
-                name="uxZipCode"
-                value={this.state.uxZipCode}
+                id="zipCode"
+                name="zipCode"
+                value={uxProfile.zipCode}
                 label="ZipCode"
                 required 
                 type="number"
-                onChange={this.handleProfileChange.bind(this)}
+                onChange={handleProfileChange.bind(this)}
               />
             </Grid>
             <Grid container item xs={12} justify="center">
@@ -186,13 +381,13 @@ class UserProfileDetail extends Component {
                 color="primary"
                 size="small"
                 style={{ padding: 4, margin: 10, borderRadius: 25 }}
-                onClick={this.props.onCancel}
+                onClick={props.onCancel}
                 startIcon={<CancelIcon />}
                 type="button"
                 >
                 Cancel
               </Button>
-              <Hidden smUp={this.props.profile ? true : false}>
+              <Hidden smUp={props.profile ? true : false}>
                 <Button
                   variant="contained"
                   color="primary"
@@ -204,7 +399,7 @@ class UserProfileDetail extends Component {
                   Add
                 </Button>
               </Hidden>
-              <Hidden smUp={this.props.profile ? false : true}>
+              <Hidden smUp={props.profile ? false : true}>
                 <Button
                   variant="contained"
                   color="primary"
@@ -222,242 +417,5 @@ class UserProfileDetail extends Component {
     );
   }
 
-  handleSubmit = (event) => {
-
-
-    event.preventDefault() ;
-//    this.testConfirm();
-
-    if(this.props.profile === null){
-        this.handleAddProfile(event);
-    } else {
-      this.handleUpdateProfile(event);
-    }
-
-    return false;
-
-}
-
-  handleProfileChangeBool = event => {
-
-    const { name, value } = event.target;
-
-    let ValueBool = (value === "true")
- 
-    this.setState({
-      [name]: ValueBool
-    });
-  };
-
-  handleProfileChange = event => {
-    const { name, value } = event.target;
-
-    this.setState({
-      [name]: value
-    });
-  };
-
-  handleAddProfile = event => {
-
-    const {
-      uxFirstName,
-      uxLastName,
-      uxActive,
-      uxAddress1,
-      uxAddress2,
-      uxCity,
-      uxStateAbrev,
-      uxZipCode
-    } = this.state;
-
-     let ProfileNew = {
-      "firstName": uxFirstName,
-      "lastName": uxLastName,
-      "active": uxActive,
-      "addresses": [
-          {
-              "isPrimary": true,
-              "address1": uxAddress1,
-              "address2": uxAddress2,
-              "city": uxCity,
-              "stateAbrev": uxStateAbrev,
-              "zipCode": uxZipCode
-          }
-    
-      ]
-    }
-
-    this.putProfileData(ProfileNew)
-    .then(response => {
-
-      if(this.state.successProfileCommitt === true) {
-
-        this.props.onCreate(response);
-
-      } else {
-
-        this.setState({
-          errorMessages : response
-        })
-
-      }
-
-    });
-
-
-  }
-  handleUpdateProfile = event => {
-    const { profile } = this.props;
-
-    fetch("http://localhost:54969/api/v1/profiles/" + profile.profileId)
-      .then(resp => resp.json())
-      .then(aProfileToUpdate => {
-        const AUpdateProfile = { ...aProfileToUpdate };
-
-        let APropAddressPrimary = AUpdateProfile?.addresses?.find(
-          aItem => aItem.isPrimary == true
-        );
-
-        const {
-          uxFirstName,
-          uxLastName,
-          uxActive,
-          uxAddress1,
-          uxAddress2,
-          uxCity,
-          uxStateAbrev,
-          uxZipCode
-        } = this.state;
-
-        AUpdateProfile.firstName = uxFirstName;
-        AUpdateProfile.lastName = uxLastName;
-        AUpdateProfile.active = uxActive;
-
-        APropAddressPrimary.address1 = uxAddress1;
-        APropAddressPrimary.address2 = uxAddress2;
-        APropAddressPrimary.city = uxCity;
-        APropAddressPrimary.stateAbrev = uxStateAbrev;
-        APropAddressPrimary.zipCode = uxZipCode;
-
-        this.postProfileData(AUpdateProfile)
-          .then(response => {
-
-            if(this.state.successProfileCommitt === true) {
-
-              this.props.onUpdate(AUpdateProfile);
-
-            } else {
-
-              this.setState({
-                errorMessages : response
-              })
-
-            }
-
-          });
-
-      })
-      .catch(error => {
-        console.log(error);
-      });
-  };
-
-  postProfileData = (profile) => {
-
-    return fetch("http://localhost:54969/api/v1/profiles/", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json"
-      },
-
-      body: JSON.stringify(profile)
-    })
-      .then(resp => {
-        if (!resp.ok) {
-          this.setState({ successProfileCommitt: false });
-        } else {
-          this.setState({ successProfileCommitt: true });
-        }
-        return resp.json();
-      })
-      .then(data => {
-        return data;
-      })
-      .catch(error => {
-        console.error(error.message);
-      });
-
-  }
-
-  putProfileData = (profile) => {
-
-    return fetch("http://localhost:54969/api/v1/profiles/", {
-      method: "PUT",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json"
-      },
-
-      body: JSON.stringify(profile)
-    })
-      .then(resp => {
-
-        if (!resp.ok) {
-          this.setState({ successProfileCommitt: false });
-        } else {
-          this.setState({ successProfileCommitt: true });
-        }
-
-        return resp.json();
-
-      })
-      .then(data => {
-
-        return data;
-
-      })
-      .catch(error => {
-        console.error(error);
-      });
-  }
-
-  componentDidUpdate(prevProps) {
-    if (this.props?.profile?.profileId != prevProps?.profile?.profileId) {
-      this.populateProfileDetail();
-    }
-  }
-
-  populateProfileDetail() {
-    const AProfile = this.props.profile;
-
-    let AddressPrimary = AProfile?.addresses?.find(
-      aItem => aItem.isPrimary == true
-    );
-
-    this.setState({
-      uxFirstName: AProfile?.firstName ?? "",
-      uxLastName: AProfile?.lastName ?? "",
-      uxActive: AProfile?.active,
-      uxAddress1: AddressPrimary?.address1 ?? "",
-      uxAddress2: AddressPrimary?.address2 ?? "",
-      uxCity: AddressPrimary?.city ?? "",
-      uxStateAbrev: AddressPrimary?.stateAbrev ?? "",
-      uxZipCode: AddressPrimary?.zipCode ?? ""
-    });
-  }
-
-  populateCountryStates() {
-    if (this.state.countryStatesList.length > 0) return;
-
-    let countryStates = [];
-    return fetch("http://localhost:54969/api/v1/states")
-      .then(resp => resp.json())
-      .then(json => {
-        this.setState({ countryStatesList: json });
-      });
-  }
-}
-
-
-export default UserProfileDetail;
+const root = ReactDOM.createRoot(document.getElementById("root"));
+root.render(<UserProfileDetail />);
