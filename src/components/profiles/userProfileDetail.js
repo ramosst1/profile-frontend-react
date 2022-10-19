@@ -1,5 +1,4 @@
 import React, {useState, useEffect} from 'react';
-import ReactDOM from 'react-dom/client';
 import {
   Grid,
   TextField,
@@ -415,6 +414,3 @@ export default function UserProfileDetail(props) {
       </form>
     );
   }
-
-const root = ReactDOM.createRoot(document.getElementById("root"));
-root.render(<UserProfileDetail />);

@@ -21,7 +21,6 @@ import {
   Hidden
   
 } from "@material-ui/core";
-import ReactDOM from 'react-dom/client';
 import UserProfileDetail from './userProfileDetail';
 import { makeStyles } from '@material-ui/core/styles';
 import DeleteIcon from '@material-ui/icons/Delete';
@@ -333,6 +332,3 @@ const useStyles = makeStyles(theme => ({
       </div>
     );
 }
-
-const root = ReactDOM.createRoot(document.getElementById("root"));
-root.render(<Profiles />);
