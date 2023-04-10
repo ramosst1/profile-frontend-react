@@ -148,8 +148,8 @@ const useStyles = makeStyles(theme => ({
   const populateProfileList = () => {
     return fetch("http://localhost:54969/api/v1/profiles")
       .then(resp => resp.json())
-      .then(profileList => {
-        setProfiles(profileList);
+      .then(profileResponse => {
+        setProfiles(profileResponse.profiles);
       },[]);
   }
 

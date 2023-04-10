@@ -95,7 +95,7 @@ export default function UserProfileDetail(props) {
       ]
     }
 
-    putProfileData(ProfileNew)
+    postProfileData(ProfileNew)
     .then(response => {
 
       if(successProfileCommitt === true) {
@@ -103,7 +103,7 @@ export default function UserProfileDetail(props) {
         props.onCreate(response);
 
       } else {
-        setErrorMessages(response);
+//        setErrorMessages(response);
       }
     });
 
@@ -116,7 +116,7 @@ export default function UserProfileDetail(props) {
     fetch("http://localhost:54969/api/v1/profiles/" + profile.profileId)
       .then(resp => resp.json())
       .then(aProfileToUpdate => {
-        const AUpdateProfile = { ...aProfileToUpdate };
+        const AUpdateProfile = { ...aProfileToUpdate.profile };
 
         let APropAddressPrimary = AUpdateProfile?.addresses?.find(
           aItem => aItem.isPrimary === true
@@ -132,7 +132,7 @@ export default function UserProfileDetail(props) {
         APropAddressPrimary.stateAbrev = uxProfile.stateAbrev;
         APropAddressPrimary.zipCode = uxProfile.zipCode;
 
-        postProfileData(AUpdateProfile)
+        putProfileData(AUpdateProfile)
           .then(response => {
 
             if(successProfileCommitt === true) {
@@ -140,7 +140,7 @@ export default function UserProfileDetail(props) {
               props.onUpdate(AUpdateProfile);
 
             } else {
-              setErrorMessages(response);
+              // setErrorMessages(response);
             }
 
           });
@@ -225,7 +225,7 @@ export default function UserProfileDetail(props) {
       address1: AddressPrimary?.address1 ?? "",
       address2: AddressPrimary?.address2 ?? "",
       city: AddressPrimary?.city ?? "",
-      stateAbrev: AddressPrimary?.stateAbrev ?? "",
+      stateAbrev: AddressPrimary?.stateAbrev ?? null,
       zipCode: AddressPrimary?.zipCode ?? ""
     });
  
@@ -236,9 +236,9 @@ export default function UserProfileDetail(props) {
 
     return fetch("http://localhost:54969/api/v1/states")
       .then(resp => resp.json())
-      .then(json => {
+      .then(statesResponse => {
 
-        setCountryStatesList(json);
+        setCountryStatesList(statesResponse.states);
       });
   }  
     return (
@@ -337,12 +337,11 @@ export default function UserProfileDetail(props) {
 
             <Grid  item xs={12} style={{padding: 5}}>
               <FormControl
-                required
+                required sx={{ m: 1 }}
               >
 
                 <InputLabel htmlFor="age-native-required">State</InputLabel>
                 <Select
-                  required
                   label= "States"
                   name="stateAbrev"
                   id="stateAbrev"
@@ -352,7 +351,9 @@ export default function UserProfileDetail(props) {
                     id: 'age-native-required',
                   }}
                 >
-                  {/* <MenuItem value=""><em>Select a State</em></MenuItem> */}
+                  <MenuItem value="">
+                    <em>None</em>
+                  </MenuItem>
                   {countryStatesList.map(aItem => (
                     <MenuItem key={aItem.stateAbrev} value={aItem.stateAbrev} >
                       {aItem.stateName}
