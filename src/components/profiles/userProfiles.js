@@ -26,6 +26,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
+import ProfilesService from './services/profiles-service';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -129,12 +130,7 @@ const useStyles = makeStyles(theme => ({
   };
 
   const deleteProfileData = () => {
-    return fetch(
-      "http://localhost:54969/api/v1/profiles/" + selectedProfile.profileId,
-      {
-        method: "delete"
-      }
-    )
+    return ProfilesService.deleteProfile(selectedProfile.profileId)
       .then(resp => resp.json())
       .then(response => response);
   };
@@ -146,7 +142,8 @@ const useStyles = makeStyles(theme => ({
   };
 
   const populateProfileList = () => {
-    return fetch("http://localhost:54969/api/v1/profiles")
+
+    return ProfilesService.getProfiles()
       .then(resp => resp.json())
       .then(profileResponse => {
         setProfiles(profileResponse.profiles);

@@ -17,7 +17,8 @@ import {
 import PersonIcon from '@material-ui/icons/Person';
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import CancelIcon from '@material-ui/icons/Cancel';
-
+import ProfilesService from './services/profiles-service';
+import StatesServices from '../../services/states/states-services';
 export default function UserProfileDetail(props) {
 
   const APropProfile = props.profile;
@@ -113,7 +114,7 @@ export default function UserProfileDetail(props) {
   const handleUpdateProfile = event => {
     const { profile } = props;
 
-    fetch("http://localhost:54969/api/v1/profiles/" + profile.profileId)
+      ProfilesService.getProfile(profile.profileId)
       .then(resp => resp.json())
       .then(aProfileToUpdate => {
         const AUpdateProfile = { ...aProfileToUpdate.profile };
@@ -153,15 +154,7 @@ export default function UserProfileDetail(props) {
 
   const postProfileData = (profile) => {
 
-    return fetch("http://localhost:54969/api/v1/profiles/", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json"
-      },
-
-      body: JSON.stringify(profile)
-    })
+      return ProfilesService.createProfile(profile)
       .then(resp => {
         if (!resp.ok) {
           successProfileCommitt = false;
@@ -181,15 +174,7 @@ export default function UserProfileDetail(props) {
 
   const putProfileData = (profile) => {
 
-    return fetch("http://localhost:54969/api/v1/profiles/", {
-      method: "PUT",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json"
-      },
-
-      body: JSON.stringify(profile)
-    })
+      return ProfilesService.updateProfile(profile)
       .then(resp => {
 
         if (!resp.ok) {
@@ -234,7 +219,7 @@ export default function UserProfileDetail(props) {
   const populateCountryStates = () => {
     if (countryStatesList.length > 0) return;
 
-    return fetch("http://localhost:54969/api/v1/states")
+      return StatesServices.getStates()
       .then(resp => resp.json())
       .then(statesResponse => {
 
