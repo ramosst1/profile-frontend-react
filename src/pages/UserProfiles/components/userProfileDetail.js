@@ -17,8 +17,8 @@ import {
 import PersonIcon from '@material-ui/icons/Person';
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import CancelIcon from '@material-ui/icons/Cancel';
-import ProfilesService from './services/profiles-service';
-import StatesServices from '../../services/states/states-services';
+import ProfilesService from '../services/profiles-service';
+import StatesServices from '../../../services/states/states-services';
 export default function UserProfileDetail(props) {
 
   const APropProfile = props.profile;
@@ -43,10 +43,11 @@ export default function UserProfileDetail(props) {
     });
 
 
-  useEffect(() => {
+    useEffect(() => {
       populateCountryStates();
       populateProfileDetail();      
   },[APropProfile?.profileId]); 
+
   
   const handleSubmit = (event) => {
 

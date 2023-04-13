@@ -21,7 +21,7 @@ import {
   Hidden
   
 } from "@material-ui/core";
-import UserProfileDetail from './userProfileDetail';
+import UserProfileDetail from './components/userProfileDetail';
 import { makeStyles } from '@material-ui/core/styles';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';

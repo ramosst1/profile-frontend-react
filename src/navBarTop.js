@@ -1,7 +1,5 @@
 import React from 'react';
-import UserProfiles from './components/profiles/userProfiles';
-import Home from './components/home';
-import AboutUs from './components/aboutUs';
+import {Home, AboutUs, UserProfiles} from './pages/index'
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';

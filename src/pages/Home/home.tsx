@@ -14,20 +14,6 @@ import {
           </Grid>
         );
     }
-
-    handleSubmit = (event) => {
-
-
-        event.preventDefault() ;
-        this.testConfirm();
-
-        return false;
-
-    }
-    testConfirm = (event) => {
-        return false;
-
-    }
 }
  
 export default Home;
