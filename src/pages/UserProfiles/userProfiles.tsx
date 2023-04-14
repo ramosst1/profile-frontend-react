@@ -127,9 +127,10 @@ const useStyles = makeStyles(theme => ({
 
   const deleteProfileData = () => {
     return ProfilesService.deleteProfile(selectedProfile?.profileId ?? 0)
-      .then(resp => resp.json())
-      .then(response => response);
-
+      .then(response => response)
+      .catch((error) => {
+        // Handle error
+      });
     };
 
   const handleEditProfile = (profile: IProfileModel) => {
@@ -141,10 +142,13 @@ const useStyles = makeStyles(theme => ({
   const populateProfileList = () => {
 
     return ProfilesService.getProfiles()
-      .then(resp => resp.json())
-      .then(profileResponse => {
-        setProfiles(profileResponse.profiles);
+      .then(response => {
+        setProfiles(response.profiles);
       })
+      .catch((error) => {
+        // Handle error
+      });
+
   }
 
   const renderDeleteProfileDialogBox = () => {
@@ -188,7 +192,6 @@ const useStyles = makeStyles(theme => ({
           <Grid item xs={6} spacing={0}>
             <form>
               <Grid 
-//                containeritem xs={12} spacing={0} 
               >
                 <Grid container>
                   <Grid item xs={9} style={{padding: "0px 0px 0px 10px"}}>
@@ -220,7 +223,6 @@ const useStyles = makeStyles(theme => ({
               <TableContainer
                 component={Paper}
                 style={{ borderRadius: "15px" }}
-//                elevation={10}
               >
                 <Table size="small" aria-label="a dense table">
                   <TableHead style={{ backgroundColor: "whitesmoke" }}>

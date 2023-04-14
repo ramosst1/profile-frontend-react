@@ -10,5 +10,5 @@ export interface IProfileResponse {
 export interface IProfilesResponse {
     success: boolean;
     messages: IMessageModel[];
-    profile: IProfileModel [];
+    profiles: IProfileModel [];
 };

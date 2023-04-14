@@ -115,9 +115,12 @@ export default function UserProfileDetail(this: any, props: { profile?: IProfile
         props.onCreate(response);
 
       } else {
-          setErrorMessages(response);
+//          setErrorMessages(response);
       }
-    });
+    })
+    .catch((error) => {
+      // Handle error
+    });    ;
 
     return true;
   }
@@ -126,14 +129,13 @@ export default function UserProfileDetail(this: any, props: { profile?: IProfile
     const { profile } = props;
 
       ProfilesService.getProfile(profile?.profileId?? 0)
-      .then(resp => resp.json())
-      .then(aProfileToUpdate => {
+      .then(response => {
 
-        const AUpdateProfile: IProfileModel = { ...aProfileToUpdate.profile };
+        const AUpdateProfile = { ...response.profile };
 
         let APropAddressPrimary = AUpdateProfile.addresses.find(
            aItem  => aItem.isPrimary === true
-        );
+        )
 
         AUpdateProfile.firstName = uxProfile.firstName;
         AUpdateProfile.lastName = uxProfile.lastName;
@@ -155,7 +157,7 @@ export default function UserProfileDetail(this: any, props: { profile?: IProfile
               props.onUpdate(AUpdateProfile);
 
             } else {
-              setErrorMessages(response);
+//              setErrorMessages(response);
             }
 
           });
@@ -170,15 +172,11 @@ export default function UserProfileDetail(this: any, props: { profile?: IProfile
 
       return ProfilesService.createProfile(profile)
       .then(resp => {
-        if (!resp.ok) {
+        if (!resp.success) {
           successProfileCommitt = false;
         } else {
           successProfileCommitt = true;
         }
-        return resp.json();
-      })
-      .then(data => {
-        return data;
       })
       .catch(error => {
         console.error(error.message);
@@ -189,20 +187,17 @@ export default function UserProfileDetail(this: any, props: { profile?: IProfile
   const updateProfileData = (profile:IProfileUpdateModel) => {
 
       return ProfilesService.updateProfile(profile)
-      .then(resp => {
+      .then(response => {
 
-        if (!resp.ok) {
+        console.log(response)
+        
+        if (!response.success) {
           successProfileCommitt = false;
         } else {
           successProfileCommitt = true;          
         }
 
-        return resp.json();
-
-      })
-      .then(data => {
-
-        return data;
+        return response;
 
       })
       .catch(error => {
@@ -234,11 +229,12 @@ export default function UserProfileDetail(this: any, props: { profile?: IProfile
     if (countryStatesList.length > 0) return;
 
       return StatesServices.getStates()
-      .then(resp => resp.json())
       .then(statesResponse => {
-
         setCountryStatesList(statesResponse.states);
-      });
+      })
+      .catch((error) => {
+        // Handle error
+      });      
   }  
     return (
       <form onSubmit={handleSubmit} >

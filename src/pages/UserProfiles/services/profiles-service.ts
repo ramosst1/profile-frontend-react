@@ -1,52 +1,33 @@
 import { IProfileCreateModel, IProfileUpdateModel } from "../interfaces/profiles/profile-models";
+import http from "../../../util/http";
+import { IProfileResponse, IProfilesResponse } from "../interfaces/profiles/profile-responses";
 
 class ProfilesService {
 
     private readonly ULR_BASE: string = 'http://localhost:54969/api/v1/profiles/';
 
     public async getProfiles() {
-       return await fetch(this.ULR_BASE)
+
+      return await http.get<IProfilesResponse>(this.ULR_BASE);
     }
 
     public async getProfile(profileId:number) {
-      return await fetch(this.ULR_BASE+profileId)
+      return await http.get<IProfileResponse>(this.ULR_BASE+profileId);
    }
 
     public async createProfile(newProfile:IProfileCreateModel) {
-      return fetch(this.ULR_BASE, {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json"
-        },
-  
-        body: JSON.stringify(newProfile)
-      });
+      return await http.post<IProfileResponse>(this.ULR_BASE, newProfile);
     }
 
     public async updateProfile(profile:IProfileUpdateModel){
-      return fetch(this.ULR_BASE, {
-        method: "PUT",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json"
-        },
-  
-        body: JSON.stringify(profile)
-      });
 
+      return await http.put<IProfileResponse>(this.ULR_BASE,profile);
     }
   
     public async deleteProfile(profileId:number){
-      return await fetch(
-        this.ULR_BASE + profileId,
-        {
-          method: "delete"
-        }
-      )
+      return await http.delete<any>(this.ULR_BASE + profileId)
     }
 
   }
-
   
   export default new ProfilesService();
