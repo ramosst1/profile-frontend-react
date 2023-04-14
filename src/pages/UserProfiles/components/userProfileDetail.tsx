@@ -21,7 +21,7 @@ import ProfilesService from '../services/profiles-service';
 import StatesServices from '../../../services/states/states-services';
 import { IProfileCreateModel, IProfileModel, IProfileAddressCreateModel, IProfileUpdateModel } from '../interfaces/profiles/profile-models';
 import { IStateModel } from '../../../interfaces/states/states-model';
-import { SelectChangeEvent } from '@mui/material';
+// import { SelectChangeEvent } from '@mui/material';
 
 export default function UserProfileDetail(this: any, props: { profile?: IProfileModel; onCreate?: any; onUpdate?: any; onCancel?: any; }) {
 
@@ -89,11 +89,11 @@ export default function UserProfileDetail(this: any, props: { profile?: IProfile
 
   };
 
-  const handleChange = (event: SelectChangeEvent) => {
-    const { name, value } = event.target;
+  // const handleChange = (event: SelectChangeEvent) => {
+  //   const { name, value } = event.target;
 
-    //    setAge(event.target.value as string);
-  };
+  //   //    setAge(event.target.value as string);
+  // };
 
   const handleAddProfile = () => {
 
@@ -292,7 +292,7 @@ export default function UserProfileDetail(this: any, props: { profile?: IProfile
                 value={uxProfile.active}
                 row
 //                required
-                onChange={handleProfileChangeBool.bind(this)}
+//                onChange={handleProfileChangeBool.bind(this)}
               >
                 <FormControlLabel
                   value={true}
