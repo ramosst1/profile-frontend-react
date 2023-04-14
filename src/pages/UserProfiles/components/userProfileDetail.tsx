@@ -21,6 +21,7 @@ import ProfilesService from '../services/profiles-service';
 import StatesServices from '../../../services/states/states-services';
 import { IProfileCreateModel, IProfileModel, IProfileAddressCreateModel, IProfileUpdateModel } from '../interfaces/profiles/profile-models';
 import { IStateModel } from '../../../interfaces/states/states-model';
+import IErrorMessagesMode from '../../../interfaces/api-error-message'
 
 export default function UserProfileDetail(this: any, props: { profile?: IProfileModel; onCreate?: any; onUpdate?: any; onCancel?: any; }) {
 
@@ -31,7 +32,7 @@ export default function UserProfileDetail(this: any, props: { profile?: IProfile
   );
 
   const [countryStatesList, setCountryStatesList] = useState<IStateModel[]>([]);
-  const [errorMessages, setErrorMessages] = useState([]);
+  const [errorMessages, setErrorMessages] = useState<IErrorMessagesMode[]>([]);
 
   let successProfileCommitt = false;
 
@@ -56,11 +57,10 @@ export default function UserProfileDetail(this: any, props: { profile?: IProfile
 
     event.preventDefault() ;
 
-//    if(props.profile === null){
-    if(props.profile === undefined){
-        handleAddProfile();
-    } else {
+    if(props.profile){
       handleUpdateProfile();
+    } else {
+      handleAddProfile();
     }
 
     return false;
@@ -115,7 +115,7 @@ export default function UserProfileDetail(this: any, props: { profile?: IProfile
         props.onCreate(response);
 
       } else {
-//        setErrorMessages(response);
+          setErrorMessages(response);
       }
     });
 
@@ -155,7 +155,7 @@ export default function UserProfileDetail(this: any, props: { profile?: IProfile
               props.onUpdate(AUpdateProfile);
 
             } else {
-              // setErrorMessages(response);
+              setErrorMessages(response);
             }
 
           });
@@ -246,9 +246,9 @@ export default function UserProfileDetail(this: any, props: { profile?: IProfile
             <Grid item xs={12} >
               <Box color="error.main">
                 <ul >
-                  {/* {errorMessages.map(errorMessage => (
+                  {errorMessages.map(errorMessage => (
                     <li>{errorMessage.message}</li>
-                  ))} */}
+                  ))}
                 </ul>
               </Box>
             </Grid>
