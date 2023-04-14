@@ -1,5 +1,5 @@
 
 export interface IStateModel {
-    StateName: string;
-    StateAbrev: string;
+    stateName: string;
+    stateAbrev: string;
 }

@@ -12,8 +12,6 @@ export interface IProfileAddressModel {
 };
 
 export interface IProfileAddressCreateModel {
-  profileId: number;
-  addressId: number;
   address1: string;
   address2: string;
   city: string;

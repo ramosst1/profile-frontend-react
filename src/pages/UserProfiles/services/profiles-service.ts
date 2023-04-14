@@ -1,3 +1,5 @@
+import { IProfileCreateModel, IProfileUpdateModel } from "../interfaces/profiles/profile-models";
+
 class ProfilesService {
 
     private readonly ULR_BASE: string = 'http://localhost:54969/api/v1/profiles/';
@@ -10,7 +12,7 @@ class ProfilesService {
       return await fetch(this.ULR_BASE+profileId)
    }
 
-    public async createProfile(newProfile:any) {
+    public async createProfile(newProfile:IProfileCreateModel) {
       return fetch(this.ULR_BASE, {
         method: "POST",
         headers: {
@@ -22,7 +24,7 @@ class ProfilesService {
       });
     }
 
-    public async updateProfile(profile:any){
+    public async updateProfile(profile:IProfileUpdateModel){
       return fetch(this.ULR_BASE, {
         method: "PUT",
         headers: {

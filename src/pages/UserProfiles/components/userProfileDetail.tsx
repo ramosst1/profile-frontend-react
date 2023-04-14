@@ -19,7 +19,11 @@ import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import CancelIcon from '@material-ui/icons/Cancel';
 import ProfilesService from '../services/profiles-service';
 import StatesServices from '../../../services/states/states-services';
-export default function UserProfileDetail(props) {
+import { IProfileCreateModel, IProfileModel, IProfileAddressCreateModel, IProfileUpdateModel } from '../interfaces/profiles/profile-models';
+import { IStateModel } from '../../../interfaces/states/states-model';
+import { SelectChangeEvent } from '@mui/material';
+
+export default function UserProfileDetail(this: any, props: { profile?: IProfileModel; onCreate?: any; onUpdate?: any; onCancel?: any; }) {
 
   const APropProfile = props.profile;
 
@@ -27,8 +31,9 @@ export default function UserProfileDetail(props) {
     aItem => aItem.isPrimary === true
   );
 
-  const [countryStatesList, setCountryStatesList] = useState([]);
+  const [countryStatesList, setCountryStatesList] = useState<IStateModel[]>([]);
   const [errorMessages, setErrorMessages] = useState([]);
+
   let successProfileCommitt = false;
 
   const [uxProfile, setUxProfile] = useState({
@@ -42,27 +47,26 @@ export default function UserProfileDetail(props) {
       zipCode: APropAddressPrimary?.zipCode ?? ""
     });
 
-
     useEffect(() => {
       populateCountryStates();
       populateProfileDetail();      
   },[APropProfile?.profileId]); 
 
   
-  const handleSubmit = (event) => {
+  const handleSubmit = (event: { preventDefault: () => void; }) => {
 
     event.preventDefault() ;
 
     if(props.profile === null){
-      handleAddProfile(event);
+      handleAddProfile();
     } else {
-      handleUpdateProfile(event);
+      handleUpdateProfile();
     }
 
     return false;
   }
 
-  const handleProfileChangeBool = event => {
+  const handleProfileChangeBool = (event: React.ChangeEvent<HTMLInputElement> ) => {
 
     const { name, value } = event.target;
 
@@ -71,33 +75,46 @@ export default function UserProfileDetail(props) {
     setUxProfile({ ...uxProfile, [name]: ValueBool });
   };
 
-  const handleProfileChange = event => {
+  const handleProfileChange = (event: React.ChangeEvent<HTMLInputElement> )  => {
     const { name, value } = event.target;
 
     setUxProfile({ ...uxProfile, [name]: value });
 
   };
 
-  const handleAddProfile = event => {
+  const handleProfileSelectChange = (event: React.ChangeEvent<HTMLSelectElement> )  => {
+    const { name, value } = event.target;
 
-     let ProfileNew = {
-      "firstName": uxProfile.firstName,
-      "lastName": uxProfile.lastName,
-      "active": uxProfile.active,
-      "addresses": [
-          {
-              "isPrimary": true,
-              "address1": uxProfile.address1,
-              "address2": uxProfile.address2,
-              "city": uxProfile.city,
-              "stateAbrev": uxProfile.stateAbrev,
-              "zipCode": uxProfile.zipCode
-          }
-    
-      ]
+//    setUxProfile({ ...uxProfile, [name]: value });
+
+  };
+
+  const handleChange = (event: SelectChangeEvent) => {
+    const { name, value } = event.target;
+
+    //    setAge(event.target.value as string);
+  };
+
+  const handleAddProfile = () => {
+
+    let newAddress: IProfileAddressCreateModel = {
+      isPrimary: true,
+      address1: uxProfile.address1,
+      address2: uxProfile.address2,
+      city: uxProfile.city,
+      stateAbrev: uxProfile.stateAbrev,
+      zipCode: uxProfile.zipCode,
+      isSecondary: false
     }
 
-    postProfileData(ProfileNew)
+    let ProfileNew:IProfileCreateModel = {
+      firstName: uxProfile.firstName,
+      lastName: uxProfile.lastName,
+      active: uxProfile.active,
+      addresses: [newAddress]
+    }
+
+    createProfileData(ProfileNew)
     .then(response => {
 
       if(successProfileCommitt === true) {
@@ -112,29 +129,32 @@ export default function UserProfileDetail(props) {
     return true;
   }
   
-  const handleUpdateProfile = event => {
+  const handleUpdateProfile = () => {
     const { profile } = props;
 
-      ProfilesService.getProfile(profile.profileId)
+      ProfilesService.getProfile(profile?.profileId?? 0)
       .then(resp => resp.json())
       .then(aProfileToUpdate => {
-        const AUpdateProfile = { ...aProfileToUpdate.profile };
 
-        let APropAddressPrimary = AUpdateProfile?.addresses?.find(
-          aItem => aItem.isPrimary === true
+        const AUpdateProfile: IProfileModel = { ...aProfileToUpdate.profile };
+
+        let APropAddressPrimary = AUpdateProfile.addresses.find(
+           aItem  => aItem.isPrimary === true
         );
 
         AUpdateProfile.firstName = uxProfile.firstName;
         AUpdateProfile.lastName = uxProfile.lastName;
         AUpdateProfile.active = uxProfile.active;
 
-        APropAddressPrimary.address1 = uxProfile.address1;
-        APropAddressPrimary.address2 = uxProfile.address2;
-        APropAddressPrimary.city = uxProfile.city;
-        APropAddressPrimary.stateAbrev = uxProfile.stateAbrev;
-        APropAddressPrimary.zipCode = uxProfile.zipCode;
+        if(APropAddressPrimary !== undefined) {
+          APropAddressPrimary.address1 = uxProfile.address1;
+          APropAddressPrimary.address2 = uxProfile.address2;
+          APropAddressPrimary.city = uxProfile.city;
+          APropAddressPrimary.stateAbrev = uxProfile.stateAbrev;
+          APropAddressPrimary.zipCode = uxProfile.zipCode;
+        }
 
-        putProfileData(AUpdateProfile)
+        updateProfileData(AUpdateProfile)
           .then(response => {
 
             if(successProfileCommitt === true) {
@@ -153,7 +173,7 @@ export default function UserProfileDetail(props) {
       });
   };
 
-  const postProfileData = (profile) => {
+  const createProfileData = (profile: IProfileCreateModel) => {
 
       return ProfilesService.createProfile(profile)
       .then(resp => {
@@ -173,7 +193,7 @@ export default function UserProfileDetail(props) {
 
   }
 
-  const putProfileData = (profile) => {
+  const updateProfileData = (profile:IProfileUpdateModel) => {
 
       return ProfilesService.updateProfile(profile)
       .then(resp => {
@@ -211,7 +231,7 @@ export default function UserProfileDetail(props) {
       address1: AddressPrimary?.address1 ?? "",
       address2: AddressPrimary?.address2 ?? "",
       city: AddressPrimary?.city ?? "",
-      stateAbrev: AddressPrimary?.stateAbrev ?? null,
+      stateAbrev: AddressPrimary?.stateAbrev ?? "",
       zipCode: AddressPrimary?.zipCode ?? ""
     });
  
@@ -233,9 +253,9 @@ export default function UserProfileDetail(props) {
             <Grid item xs={12} >
               <Box color="error.main">
                 <ul >
-                  {errorMessages.map(errorMessage => (
+                  {/* {errorMessages.map(errorMessage => (
                     <li>{errorMessage.message}</li>
-                  ))}
+                  ))} */}
                 </ul>
               </Box>
             </Grid>
@@ -271,7 +291,7 @@ export default function UserProfileDetail(props) {
                 name="active"
                 value={uxProfile.active}
                 row
-                required
+//                required
                 onChange={handleProfileChangeBool.bind(this)}
               >
                 <FormControlLabel
@@ -323,16 +343,16 @@ export default function UserProfileDetail(props) {
 
             <Grid  item xs={12} style={{padding: 5}}>
               <FormControl
-                required sx={{ m: 1 }}
+                // required sx={{ m: 1 }}
+                required 
               >
-
                 <InputLabel htmlFor="age-native-required">State</InputLabel>
                 <Select
                   label= "States"
                   name="stateAbrev"
                   id="stateAbrev"
-                  value={uxProfile.stateAbrev}
-                  onChange={handleProfileChange.bind(this)}
+                  value={uxProfile.stateAbrev} 
+//                  onChange={handleChange)}
                   inputProps={{
                     id: 'age-native-required',
                   }}
