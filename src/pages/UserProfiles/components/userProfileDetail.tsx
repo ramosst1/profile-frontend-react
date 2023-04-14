@@ -21,7 +21,6 @@ import ProfilesService from '../services/profiles-service';
 import StatesServices from '../../../services/states/states-services';
 import { IProfileCreateModel, IProfileModel, IProfileAddressCreateModel, IProfileUpdateModel } from '../interfaces/profiles/profile-models';
 import { IStateModel } from '../../../interfaces/states/states-model';
-// import { SelectChangeEvent } from '@mui/material';
 
 export default function UserProfileDetail(this: any, props: { profile?: IProfileModel; onCreate?: any; onUpdate?: any; onCancel?: any; }) {
 
@@ -57,8 +56,9 @@ export default function UserProfileDetail(this: any, props: { profile?: IProfile
 
     event.preventDefault() ;
 
-    if(props.profile === null){
-      handleAddProfile();
+//    if(props.profile === null){
+    if(props.profile === undefined){
+        handleAddProfile();
     } else {
       handleUpdateProfile();
     }
@@ -82,18 +82,11 @@ export default function UserProfileDetail(this: any, props: { profile?: IProfile
 
   };
 
-  const handleProfileSelectChange = (event: React.ChangeEvent<HTMLSelectElement> )  => {
+  const handleProfileSelectChange = (event: any) => {
     const { name, value } = event.target;
 
-//    setUxProfile({ ...uxProfile, [name]: value });
-
-  };
-
-  // const handleChange = (event: SelectChangeEvent) => {
-  //   const { name, value } = event.target;
-
-  //   //    setAge(event.target.value as string);
-  // };
+    setUxProfile({ ...uxProfile, [name]: value });
+};
 
   const handleAddProfile = () => {
 
@@ -291,8 +284,7 @@ export default function UserProfileDetail(this: any, props: { profile?: IProfile
                 name="active"
                 value={uxProfile.active}
                 row
-//                required
-//                onChange={handleProfileChangeBool.bind(this)}
+                onChange={handleProfileChangeBool.bind(this)}
               >
                 <FormControlLabel
                   value={true}
@@ -343,7 +335,6 @@ export default function UserProfileDetail(this: any, props: { profile?: IProfile
 
             <Grid  item xs={12} style={{padding: 5}}>
               <FormControl
-                // required sx={{ m: 1 }}
                 required 
               >
                 <InputLabel htmlFor="age-native-required">State</InputLabel>
@@ -352,7 +343,7 @@ export default function UserProfileDetail(this: any, props: { profile?: IProfile
                   name="stateAbrev"
                   id="stateAbrev"
                   value={uxProfile.stateAbrev} 
-//                  onChange={handleChange)}
+                  onChange={handleProfileSelectChange}
                   inputProps={{
                     id: 'age-native-required',
                   }}

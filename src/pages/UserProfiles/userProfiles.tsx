@@ -17,7 +17,6 @@ import {
   DialogContentText,
   DialogTitle,
   Box,
-  Slide,
   Hidden
   
 } from "@material-ui/core";
@@ -46,10 +45,6 @@ const useStyles = makeStyles(theme => ({
     // }    
 
   }));
-
-  const Transition = React.forwardRef(function Transition(props, ref) {
-    return <Slide direction="up" ref={ref} {...props} />;
-  });
 
   const classes = useStyles;
   
@@ -156,7 +151,6 @@ const useStyles = makeStyles(theme => ({
     return (
       <Dialog
         open={openDeleteConfirm}
-//        TransitionComponent={Transition}
         keepMounted
         onClose={handleDialogClose}
         aria-labelledby="alert-dialog-slide-title"
