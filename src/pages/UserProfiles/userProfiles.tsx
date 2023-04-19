@@ -46,9 +46,7 @@ const useStyles = makeStyles(theme => ({
     },
 
   }));
-
-  const classes = useStyles;
-  
+ 
   export default function Profiles() {
 
     const [keyProfileKey,setKeyProfileKey] = useState(0);
@@ -58,11 +56,13 @@ const useStyles = makeStyles(theme => ({
     const [selectedProfile, setSelectedProfile] = useState<IProfileModel>();
     const [openProfileDetail, setOpenProfileDetail] = useState(false);
     const [errorMessages, setErrorMessages] = useState<IErrorMessageModel[]>([]);
-    const [profilesResponse, setProfilesResponse] = useState<Promise<IProfilesResponse> | undefined>(undefined);
-    const [deleteProfileResponse, setDeleteProfileResponse] = useState<Promise<IApiResponse> | undefined>(undefined);
- 
-    const { apiResponse:apiProfileResponse, messages:apiProfileMessage} = useServiceApiResponse<IProfilesResponse>(profilesResponse);
+
+    const [profilesResponse, setProfilesResponse] = useState<Promise<IProfilesResponse> | undefined>();
+    const { apiResponse:apiProfilesResponse, messages:apiProfilesMessage, loading:apiProfilesLoading} = useServiceApiResponse<IProfilesResponse>(profilesResponse);
+
+    const [deleteProfileResponse, setDeleteProfileResponse] = useState<Promise<IApiResponse> | undefined>();
     const {apiResponse:apiProfileDeleteResponse, messages:apiProfileDeleteMessage} = useServiceApiResponse<IApiResponse>(deleteProfileResponse);
+
 
     useEffect(() => {
        populateProfileList();
@@ -70,11 +70,10 @@ const useStyles = makeStyles(theme => ({
 
     useEffect(() => {
 
-      apiProfileResponse && setProfiles(apiProfileResponse.profiles);     
-      apiProfileMessage && setErrorMessages(apiProfileMessage);     
-      apiProfileResponse && console.log(apiProfileResponse.success+ ' hello');
+      apiProfilesResponse && setProfiles(apiProfilesResponse.profiles);     
+      apiProfilesMessage && setErrorMessages(apiProfilesMessage);     
 
-    }, [apiProfileResponse])
+    }, [apiProfilesResponse])
 
     useEffect(() =>{
 
@@ -153,8 +152,7 @@ const useStyles = makeStyles(theme => ({
 
     function populateProfileList(){
 
-      const aServiceCallResponse2 = ProfilesService.getProfilesAsync();
-      setProfilesResponse(aServiceCallResponse2) ;
+      setProfilesResponse(ProfilesService.getProfilesAsync()) ;
     }
 
     function renderDeleteProfileDialogBox(){
@@ -201,6 +199,12 @@ const useStyles = makeStyles(theme => ({
                   ))}
                 </ul>
               </Box>
+          </Grid>
+          <Grid item xs={12} >
+            <Hidden smUp={apiProfilesLoading ? false : true} >
+                <Box > Profiles are loading...
+                </Box>
+            </Hidden>
           </Grid>
 
           <Grid container item xs={12} spacing={5}  >

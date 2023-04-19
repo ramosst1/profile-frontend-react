@@ -11,15 +11,23 @@ export default function useServiceApiResponse<TResponse>(service:Promise<any> | 
 
     useEffect(() => {
 
-        setLoading(true);
-
+ 
         if(service) { 
-            service.then(response => {
+
+          setLoading(true);
+
+          service.then(response => {
     
 
               setApiResponse(response);
+              
+              if(response?.length){
     
-               if(response.messages.length) {
+                 setMessage(response);
+                
+              };
+
+              if(response?.messages) {
     
                 const errormessages = Array.from<IMessageModel>(response.messages).map( (item) =>  {
                   const tempMessage: IErrorMessageModel = {
@@ -35,7 +43,7 @@ export default function useServiceApiResponse<TResponse>(service:Promise<any> | 
         
               })
               .catch((error) => {
-                setMessage(error)
+                setMessage(error.messages)
               })
               .finally(() => {
                 

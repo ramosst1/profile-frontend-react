@@ -29,11 +29,11 @@ export default function UserProfileDetail(this: any, props: { profile?: IProfile
 
   const APropProfile = props.profile;
 
-  const [profileCreateResponse, setProfilesCreateResponse] = useState<Promise<IProfileResponse> | undefined>(undefined);
-  const { apiResponse:apiProfileCreateResponse, messages:apiProfileCreateMessages} = useServiceApiResponse<IProfileResponse>(profileCreateResponse);
+  const [profileCreateResponse, setProfilesCreateResponse] = useState<Promise<IProfileResponse> | undefined>();
+  const { apiResponse:apiProfileCreateResponse, messages:apiProfileCreateMessages, loading: apiProfileCreateLoading} = useServiceApiResponse<IProfileResponse>(profileCreateResponse);
 
-  const [profileUpdateResponse, setProfilesUpdateeResponse] = useState<Promise<IProfileResponse> | undefined>(undefined);
-  const { apiResponse:apiProfileUpdateResponse, messages:apiProfileUpdateMessages} = useServiceApiResponse<IProfileResponse>(profileUpdateResponse);
+  const [profileUpdateResponse, setProfilesUpdateeResponse] = useState<Promise<IProfileResponse> | undefined>();
+  const { apiResponse:apiProfileUpdateResponse, messages:apiProfileUpdateMessages, loading:apiProfileUpdateLoading} = useServiceApiResponse<IProfileResponse>(profileUpdateResponse);
 
   const APropAddressPrimary = APropProfile?.addresses?.find(
     aItem => aItem.isPrimary === true
@@ -144,7 +144,7 @@ export default function UserProfileDetail(this: any, props: { profile?: IProfile
 
       ProfilesService.getProfileAsync(profile?.profileId?? 0)
       .then(response => {
-
+        
         const aUpdateProfile = { ...response.profile };
 
         let aPropAddressPrimary = aUpdateProfile.addresses.find(
@@ -214,6 +214,17 @@ export default function UserProfileDetail(this: any, props: { profile?: IProfile
                 </ul>
               </Box>
             </Grid>
+            <Grid item xs={12} >
+            <Hidden smUp={apiProfileUpdateLoading? false : true} >
+                <Box > Profiles is updating ...
+                </Box>
+            </Hidden>
+            <Hidden smUp={apiProfileCreateLoading? false : true} >
+                <Box > Profiles is being created...
+                </Box>
+            </Hidden>
+          </Grid>
+
             <Grid container item xs={12} >
                 <Grid item xs={6} style={{padding: 5}} >
                   <TextField
