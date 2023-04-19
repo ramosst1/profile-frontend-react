@@ -22,10 +22,18 @@ import StatesServices from '../../../services/states/states-services';
 import { IProfileCreateModel, IProfileModel, IProfileAddressCreateModel, IProfileUpdateModel } from '../interfaces/profiles/profile-models';
 import { IStateModel } from '../../../interfaces/states/states-model';
 import IErrorMessageModel from '../../../interfaces/api-error-message'
+import { IProfileResponse } from '../interfaces/profiles/profile-responses';
+import useServiceApiResponse from '../../../hooks/useServiceApiResponse';
 
 export default function UserProfileDetail(this: any, props: { profile?: IProfileModel; onCreate?: any; onUpdate?: any; onCancel?: any; }) {
 
   const APropProfile = props.profile;
+
+  const [profileCreateResponse, setProfilesCreateResponse] = useState<Promise<IProfileResponse> | undefined>(undefined);
+  const { apiResponse:apiProfileCreateResponse, messages:apiProfileCreateMessages} = useServiceApiResponse<IProfileResponse>(profileCreateResponse);
+
+  const [profileUpdateResponse, setProfilesUpdateeResponse] = useState<Promise<IProfileResponse> | undefined>(undefined);
+  const { apiResponse:apiProfileUpdateResponse, messages:apiProfileUpdateMessages} = useServiceApiResponse<IProfileResponse>(profileUpdateResponse);
 
   const APropAddressPrimary = APropProfile?.addresses?.find(
     aItem => aItem.isPrimary === true
@@ -33,8 +41,6 @@ export default function UserProfileDetail(this: any, props: { profile?: IProfile
 
   const [countryStatesList, setCountryStatesList] = useState<IStateModel[]>([]);
   const [errorMessages, setErrorMessages] = useState<IErrorMessageModel[]>([]);
-
-  let successProfileCommitt = false;
 
   const [uxProfile, setUxProfile] = useState({
       firstName: APropProfile?.firstName ?? "",
@@ -52,8 +58,29 @@ export default function UserProfileDetail(this: any, props: { profile?: IProfile
       populateProfileDetail();      
   },[APropProfile?.profileId]); 
 
+  useEffect(() => {
+
+      if (!apiProfileCreateResponse?.success) {
+      } else {
+        props.onCreate(apiProfileCreateResponse);
+      }
+    
+      apiProfileCreateMessages && setErrorMessages(apiProfileCreateMessages)
+
+  }, [apiProfileCreateResponse])
   
-  const handleSubmit = (event: { preventDefault: () => void; }) => {
+  useEffect(() => {
+
+        if (!apiProfileUpdateResponse?.success) {
+        } else {
+          props.onUpdate(apiProfileUpdateResponse);          
+        }
+    
+        apiProfileUpdateMessages && setErrorMessages(apiProfileUpdateMessages)
+
+  }, [apiProfileUpdateResponse])
+
+  function handleSubmit(event: { preventDefault: () => void; }){
 
     event.preventDefault() ;
 
@@ -66,7 +93,7 @@ export default function UserProfileDetail(this: any, props: { profile?: IProfile
     return false;
   }
 
-  const handleProfileChangeBool = (event: React.ChangeEvent<HTMLInputElement> ) => {
+  function handleProfileChangeBool(event: React.ChangeEvent<HTMLInputElement> ){
 
     const { name, value } = event.target;
 
@@ -75,20 +102,20 @@ export default function UserProfileDetail(this: any, props: { profile?: IProfile
     setUxProfile({ ...uxProfile, [name]: ValueBool });
   };
 
-  const handleProfileChange = (event: React.ChangeEvent<HTMLInputElement> )  => {
+  function handleProfileChange(event: React.ChangeEvent<HTMLInputElement> ){
     const { name, value } = event.target;
 
     setUxProfile({ ...uxProfile, [name]: value });
 
   };
 
-  const handleProfileSelectChange = (event: any) => {
+  function handleProfileSelectChange (event: any){
     const { name, value } = event.target;
 
     setUxProfile({ ...uxProfile, [name]: value });
 };
 
-  const handleAddProfile = () => {
+  function handleAddProfile(){
 
     let newAddress: IProfileAddressCreateModel = {
       isPrimary: true,
@@ -107,62 +134,36 @@ export default function UserProfileDetail(this: any, props: { profile?: IProfile
       addresses: [newAddress]
     }
 
-    createProfileData(ProfileNew)
-    .then(response => {
-
-      if(successProfileCommitt === true) {
-
-        props.onCreate(response);
-
-      } else {
-//          setErrorMessages(response);
-      }
-    })
-    .catch((error:IErrorMessageModel[]) => {
-
-      setErrorMessages(error)
-      // Handle error
-    });    ;
+    setProfilesCreateResponse(ProfilesService.createProfileAsync(ProfileNew));
 
     return true;
   }
   
-  const handleUpdateProfile = () => {
+  function handleUpdateProfile(){
     const { profile } = props;
 
       ProfilesService.getProfileAsync(profile?.profileId?? 0)
       .then(response => {
 
-        const AUpdateProfile = { ...response.profile };
+        const aUpdateProfile = { ...response.profile };
 
-        let APropAddressPrimary = AUpdateProfile.addresses.find(
+        let aPropAddressPrimary = aUpdateProfile.addresses.find(
            aItem  => aItem.isPrimary === true
         )
 
-        AUpdateProfile.firstName = uxProfile.firstName;
-        AUpdateProfile.lastName = uxProfile.lastName;
-        AUpdateProfile.active = uxProfile.active;
+        aUpdateProfile.firstName = uxProfile.firstName;
+        aUpdateProfile.lastName = uxProfile.lastName;
+        aUpdateProfile.active = uxProfile.active;
 
-        if(APropAddressPrimary !== undefined) {
-          APropAddressPrimary.address1 = uxProfile.address1;
-          APropAddressPrimary.address2 = uxProfile.address2;
-          APropAddressPrimary.city = uxProfile.city;
-          APropAddressPrimary.stateAbrev = uxProfile.stateAbrev;
-          APropAddressPrimary.zipCode = uxProfile.zipCode;
+        if(aPropAddressPrimary !== undefined) {
+          aPropAddressPrimary.address1 = uxProfile.address1;
+          aPropAddressPrimary.address2 = uxProfile.address2;
+          aPropAddressPrimary.city = uxProfile.city;
+          aPropAddressPrimary.stateAbrev = uxProfile.stateAbrev;
+          aPropAddressPrimary.zipCode = uxProfile.zipCode;
         }
 
-        updateProfileData(AUpdateProfile)
-          .then(response => {
-
-            if(successProfileCommitt === true) {
-
-              props.onUpdate(AUpdateProfile);
-
-            } else {
-//              setErrorMessages(response);
-            }
-
-          });
+        setProfilesUpdateeResponse(ProfilesService.updateProfileAsync(aUpdateProfile));
 
       })
       .catch((error: IErrorMessageModel[]) => {
@@ -170,42 +171,7 @@ export default function UserProfileDetail(this: any, props: { profile?: IProfile
       });
   };
 
-  const createProfileData = (profile: IProfileCreateModel) => {
-
-      return ProfilesService.createProfileAsync(profile)
-      .then(resp => {
-        if (!resp.success) {
-          successProfileCommitt = false;
-        } else {
-          successProfileCommitt = true;
-        }
-      })
-      .catch((error: IErrorMessageModel[]) => {
-        setErrorMessages(error)
-      });
-
-  }
-
-  const updateProfileData = (profile:IProfileUpdateModel) => {
-
-      return ProfilesService.updateProfileAsync(profile)
-      .then(response => {
-       
-        if (!response.success) {
-          successProfileCommitt = false;
-        } else {
-          successProfileCommitt = true;          
-        }
-
-        return response;
-
-      })
-      .catch((error: IErrorMessageModel[]) => {
-        setErrorMessages(error)
-      });
-  }
-
-  const populateProfileDetail = () => {
+  function populateProfileDetail(){
     const AProfile = props.profile;
 
     let AddressPrimary = AProfile?.addresses?.find(
@@ -225,7 +191,7 @@ export default function UserProfileDetail(this: any, props: { profile?: IProfile
  
   }
 
-  const populateCountryStates = () => {
+  function populateCountryStates(){
     if (countryStatesList.length > 0) return;
 
       return StatesServices.getStatesAsync()

@@ -62,7 +62,7 @@ const useStyles = makeStyles(theme => ({
     const [deleteProfileResponse, setDeleteProfileResponse] = useState<Promise<IApiResponse> | undefined>(undefined);
  
     const { apiResponse:apiProfileResponse, messages:apiProfileMessage} = useServiceApiResponse<IProfilesResponse>(profilesResponse);
-    const {apiResponse:apiProfileDeleteResponse, messages:apiProfileDeleteMessage} = useServiceApiResponse<IProfilesResponse>(deleteProfileResponse);
+    const {apiResponse:apiProfileDeleteResponse, messages:apiProfileDeleteMessage} = useServiceApiResponse<IApiResponse>(deleteProfileResponse);
 
     useEffect(() => {
        populateProfileList();
@@ -79,19 +79,19 @@ const useStyles = makeStyles(theme => ({
     useEffect(() =>{
 
       if(apiProfileDeleteResponse?.success){
-        const ProfileNew = profiles.filter(
+        const profileListNew = profiles.filter(
           aItem => aItem.profileId !== selectedProfile?.profileId
         );
 
         setOpenDeleteConfirm(false);
-        setProfiles(ProfileNew);
+        setProfiles(profileListNew);
         setOpenProfileDetail(false);
       };
 
 
-    }, [deleteProfileResponse])
+    }, [apiProfileDeleteResponse])
 
-    const getProfileFilters = () => {
+    function getProfileFilters() {
       const ProfileFiltered = profiles.filter(
         aProfile =>
           profileActiveStatus === null ||
@@ -101,81 +101,63 @@ const useStyles = makeStyles(theme => ({
       return ProfileFiltered;
     }
 
-    const handleProfileFilterChange = (event: any, profileActiveStatus: React.SetStateAction<string>) => {
+    function handleProfileFilterChange(event: any, profileActiveStatus: React.SetStateAction<string>){
       setOpenProfileDetail(false);
       setProfileActiveStatus(profileActiveStatus);
     };
 
-    const handleDialogOpen = (profile: IProfileModel) => {
+    function handleDialogOpen(profile: IProfileModel){
       setOpenDeleteConfirm(true);
       setSelectedProfile(profile);
     };
 
-    const handleDialogClose = (event: any) => {
+    function handleDialogClose(event: any){
       setOpenDeleteConfirm(false);
     };
 
-    const handleAddProfile = () => {
+    function handleAddProfile() {
 
       setOpenProfileDetail(true)
       setKeyProfileKey(0);
       setSelectedProfile(undefined);
     };
 
-    const handleProfileDetailUpdate = (profile: any) => {
+    function handleProfileDetailUpdate(profile: any) {
       populateProfileList();
 
       setOpenProfileDetail(false);
       setSelectedProfile(undefined);
     };
 
-    const handleProfileCreate = (profile: any) => {
+    function handleProfileCreate(profile: any){
       populateProfileList();
 
       setOpenProfileDetail(false);
       setSelectedProfile(undefined);
     };
 
-    const handleProfileDetailCancel = () => {
+    function handleProfileDetailCancel() {
       setOpenProfileDetail(false);
       setSelectedProfile(undefined);
     };
 
-    const handleDeleteProfile = () => {
-      deleteProfileData()
-        .then((newProfile) => {
-  
-          const ProfileNew = profiles.filter(
-            aItem => aItem.profileId !== selectedProfile?.profileId
-          );
-  
-          setOpenDeleteConfirm(false);
-          setProfiles(ProfileNew);
-          setOpenProfileDetail(false);
-      });
+    function handleDeleteProfile(){
+      setDeleteProfileResponse(ProfilesService.deleteProfileAsync(selectedProfile?.profileId ?? 0));
     };
   
-    const deleteProfileData = () => {
-      return ProfilesService.deleteProfileAsync(selectedProfile?.profileId ?? 0)
-        .then(response => response)
-        .catch((error) => {
-          // Handle error
-        });
-      };
-  
-    const handleEditProfile = (profile: IProfileModel) => {
+    function handleEditProfile (profile: IProfileModel){
       setOpenProfileDetail(true);
       setKeyProfileKey(profile.profileId);
       setSelectedProfile(profile);
     };
 
-    const populateProfileList = () => {
+    function populateProfileList(){
 
       const aServiceCallResponse2 = ProfilesService.getProfilesAsync();
       setProfilesResponse(aServiceCallResponse2) ;
     }
 
-    const renderDeleteProfileDialogBox = () => {
+    function renderDeleteProfileDialogBox(){
       return (
         <Dialog
           open={openDeleteConfirm}
