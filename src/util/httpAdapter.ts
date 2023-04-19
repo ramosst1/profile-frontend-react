@@ -1,4 +1,4 @@
-class http {
+class httpAdapter {
 
     async get<TResponse>(url: string) {
 
@@ -53,4 +53,4 @@ class http {
     }
   }
   
-  export default new http();
+  export default new httpAdapter();

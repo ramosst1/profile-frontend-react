@@ -21,7 +21,7 @@ import ProfilesService from '../services/profiles-service';
 import StatesServices from '../../../services/states/states-services';
 import { IProfileCreateModel, IProfileModel, IProfileAddressCreateModel, IProfileUpdateModel } from '../interfaces/profiles/profile-models';
 import { IStateModel } from '../../../interfaces/states/states-model';
-import IErrorMessagesMode from '../../../interfaces/api-error-message'
+import IErrorMessageModel from '../../../interfaces/api-error-message'
 
 export default function UserProfileDetail(this: any, props: { profile?: IProfileModel; onCreate?: any; onUpdate?: any; onCancel?: any; }) {
 
@@ -32,7 +32,7 @@ export default function UserProfileDetail(this: any, props: { profile?: IProfile
   );
 
   const [countryStatesList, setCountryStatesList] = useState<IStateModel[]>([]);
-  const [errorMessages, setErrorMessages] = useState<IErrorMessagesMode[]>([]);
+  const [errorMessages, setErrorMessages] = useState<IErrorMessageModel[]>([]);
 
   let successProfileCommitt = false;
 
@@ -118,7 +118,9 @@ export default function UserProfileDetail(this: any, props: { profile?: IProfile
 //          setErrorMessages(response);
       }
     })
-    .catch((error) => {
+    .catch((error:IErrorMessageModel[]) => {
+
+      setErrorMessages(error)
       // Handle error
     });    ;
 
@@ -128,7 +130,7 @@ export default function UserProfileDetail(this: any, props: { profile?: IProfile
   const handleUpdateProfile = () => {
     const { profile } = props;
 
-      ProfilesService.getProfile(profile?.profileId?? 0)
+      ProfilesService.getProfileAsync(profile?.profileId?? 0)
       .then(response => {
 
         const AUpdateProfile = { ...response.profile };
@@ -163,14 +165,14 @@ export default function UserProfileDetail(this: any, props: { profile?: IProfile
           });
 
       })
-      .catch(error => {
-        console.log(error);
+      .catch((error: IErrorMessageModel[]) => {
+        setErrorMessages(error)
       });
   };
 
   const createProfileData = (profile: IProfileCreateModel) => {
 
-      return ProfilesService.createProfile(profile)
+      return ProfilesService.createProfileAsync(profile)
       .then(resp => {
         if (!resp.success) {
           successProfileCommitt = false;
@@ -178,19 +180,17 @@ export default function UserProfileDetail(this: any, props: { profile?: IProfile
           successProfileCommitt = true;
         }
       })
-      .catch(error => {
-        console.error(error.message);
+      .catch((error: IErrorMessageModel[]) => {
+        setErrorMessages(error)
       });
 
   }
 
   const updateProfileData = (profile:IProfileUpdateModel) => {
 
-      return ProfilesService.updateProfile(profile)
+      return ProfilesService.updateProfileAsync(profile)
       .then(response => {
-
-        console.log(response)
-        
+       
         if (!response.success) {
           successProfileCommitt = false;
         } else {
@@ -200,8 +200,8 @@ export default function UserProfileDetail(this: any, props: { profile?: IProfile
         return response;
 
       })
-      .catch(error => {
-        console.error(error);
+      .catch((error: IErrorMessageModel[]) => {
+        setErrorMessages(error)
       });
   }
 
@@ -228,12 +228,12 @@ export default function UserProfileDetail(this: any, props: { profile?: IProfile
   const populateCountryStates = () => {
     if (countryStatesList.length > 0) return;
 
-      return StatesServices.getStates()
+      return StatesServices.getStatesAsync()
       .then(statesResponse => {
         setCountryStatesList(statesResponse.states);
       })
-      .catch((error) => {
-        // Handle error
+      .catch((error: IErrorMessageModel[]) => {
+        setErrorMessages(error)
       });      
   }  
     return (

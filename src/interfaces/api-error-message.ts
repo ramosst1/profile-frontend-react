@@ -1,5 +1,5 @@
 
-export default interface IErrorMessagesModel {
+export default interface IErrorMessageModel {
     message:String;
     statusCode:String;
 } 

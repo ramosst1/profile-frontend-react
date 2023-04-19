@@ -1,31 +1,32 @@
 import { IProfileCreateModel, IProfileUpdateModel } from "../interfaces/profiles/profile-models";
-import http from "../../../util/http";
-import { IProfileResponse, IProfilesResponse } from "../interfaces/profiles/profile-responses";
+import httpAdapter from "../../../util/httpAdapter";
+import {IProfileResponse, IProfilesResponse } from "../interfaces/profiles/profile-responses";
+import { IApiResponse } from "../interfaces/profiles/api-response";
 
 class ProfilesService {
 
     private readonly ULR_BASE: string = 'http://localhost:54969/api/v1/profiles/';
 
-    public async getProfiles() {
+    public async getProfilesAsync() {
 
-      return await http.get<IProfilesResponse>(this.ULR_BASE);
+      return await httpAdapter.get<IProfilesResponse>(this.ULR_BASE);
     }
 
-    public async getProfile(profileId:number) {
-      return await http.get<IProfileResponse>(this.ULR_BASE+profileId);
+    public async getProfileAsync(profileId:number) {
+      return await httpAdapter.get<IProfileResponse>(this.ULR_BASE+profileId);
    }
 
-    public async createProfile(newProfile:IProfileCreateModel) {
-      return await http.post<IProfileResponse>(this.ULR_BASE, newProfile);
+    public async createProfileAsync(newProfile:IProfileCreateModel) {
+      return await httpAdapter.post<IProfileResponse>(this.ULR_BASE, newProfile);
     }
 
-    public async updateProfile(profile:IProfileUpdateModel){
+    public async updateProfileAsync(profile:IProfileUpdateModel){
 
-      return await http.put<IProfileResponse>(this.ULR_BASE,profile);
+      return await httpAdapter.put<IProfileResponse>(this.ULR_BASE,profile);
     }
   
-    public async deleteProfile(profileId:number){
-      return await http.delete<any>(this.ULR_BASE + profileId)
+    public async deleteProfileAsync(profileId:number){
+      return await httpAdapter.delete<IApiResponse>(this.ULR_BASE + profileId)
     }
 
   }
