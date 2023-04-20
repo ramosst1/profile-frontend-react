@@ -10,51 +10,49 @@ export default function useServiceApiResponse<TResponse>(service:Promise<any> | 
     const [messages, setMessage] = useState<IErrorMessageModel[]>([]);
 
     useEffect(() => {
-        if(!service) return;
 
-        let finalResponse: any = undefined;
+      if(!service) return;
 
-        if(service) { 
+      let finalResponse: any = undefined;
 
-          setLoading(true);
 
-          service.then(response => {
+      setLoading(true);
 
-            finalResponse = response;
+      service.then(response => {
 
-              if(response?.length){
-    
-                 setMessage(response);
-                
+        finalResponse = response;
+
+          if(response?.length){
+
+              setMessage(response);
+            
+          };
+
+          if(response?.messages) {
+
+            const errormessages = Array.from<IMessageModel>(response.messages).map( (item) =>  {
+              const tempMessage: IErrorMessageModel = {
+                message: item.internalMessage,
+                statusCode: item.statusCode
               };
 
-              if(response?.messages) {
-    
-                const errormessages = Array.from<IMessageModel>(response.messages).map( (item) =>  {
-                  const tempMessage: IErrorMessageModel = {
-                    message: item.internalMessage,
-                    statusCode: item.statusCode
-                  };
-    
-                  return tempMessage;
-                });
-    
-                 setMessage(errormessages);
-               };
-        
-              })
-              .catch((error) => {
-                setMessage([{ message: 'An unexpect error occured while retrieving data.', statusCode: '999'  } as IErrorMessageModel]);
-              })
-              .finally(() => {
+              return tempMessage;
+            });
 
-                setApiResponse(finalResponse);
-                setLoading(false);
-
-              });
+              setMessage(errormessages);
+            };
     
-            }
+        })
+        .catch((error) => {
+          setMessage([{ message: 'An unexpect error occured while retrieving data.', statusCode: '999'  } as IErrorMessageModel]);
+        })
+        .finally(() => {
 
+          setApiResponse(finalResponse);
+          setLoading(false);
+
+        });
+  
       return () => {
         finalResponse = undefined;
       }
