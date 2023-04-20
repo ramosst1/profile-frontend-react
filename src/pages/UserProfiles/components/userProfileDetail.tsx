@@ -24,7 +24,6 @@ import { IStateModel } from '../../../interfaces/states/states-model';
 import IErrorMessageModel from '../../../interfaces/api-error-message'
 import { IProfileResponse } from '../interfaces/profiles/profile-responses';
 import useServiceApiResponse from '../../../hooks/useServiceApiResponse';
-import { IStatesResponse } from '../../../interfaces/states/states-responses';
 
 export default function UserProfileDetail(this: any, props: { profile?: IProfileModel; onCreate?: any; onUpdate?: any; onCancel?: any; }) {
 
@@ -36,18 +35,15 @@ export default function UserProfileDetail(this: any, props: { profile?: IProfile
   const [profileUpdateResponse, setProfilesUpdateResponse] = useState<Promise<IProfileResponse> | undefined>();
   const { apiResponse:apiProfileUpdateResponse, messages:apiProfileUpdateMessages, loading:apiProfileUpdateLoading} = useServiceApiResponse<IProfileResponse>(profileUpdateResponse);
 
-  const [existingProfileResponse, setExistingProfileResponse] = useState<Promise<IProfileResponse> | undefined>();
-  const { apiResponse:apiExistingProfileResponse, messages:apiExistingProfileMessages, loading:apiExistingProfileLoading} = useServiceApiResponse<IProfileResponse>(existingProfileResponse);
-
-  const [statesListResponse, setStatesListResponse] = useState<Promise<IStatesResponse> | undefined>();
-  const { apiResponse:apiStatesListResponse, messages:apiStatesListeMessages, loading:apiStatesListLoading} = useServiceApiResponse<IStatesResponse>(statesListResponse);
-
   const APropAddressPrimary = APropProfile?.addresses?.find(
     aItem => aItem.isPrimary === true
   );
 
   const [countryStatesList, setCountryStatesList] = useState<IStateModel[]>([]);
   const [errorMessages, setErrorMessages] = useState<IErrorMessageModel[]>([]);
+
+  const [retrievingData, setRetrievingData] = useState<boolean>(false);
+
 
   const [uxProfile, setUxProfile] = useState({
       firstName: APropProfile?.firstName ?? "",
@@ -60,16 +56,16 @@ export default function UserProfileDetail(this: any, props: { profile?: IProfile
       zipCode: APropAddressPrimary?.zipCode ?? ""
     });
 
+    useEffect(() => {
+
+
+      if(!countryStatesList.length) populateCountryStatesAsync();
+
+    }, [])
 
     useEffect(() => {
-      if(!countryStatesList.length) populateCountryStates();
       populateProfileDetail();      
   },[APropProfile?.profileId]); 
-
-  useEffect(() => {
-      apiStatesListResponse && setCountryStatesList(apiStatesListResponse.states)
-
-  }, [apiStatesListResponse])
 
   useEffect(() => {
 
@@ -98,7 +94,7 @@ export default function UserProfileDetail(this: any, props: { profile?: IProfile
     event.preventDefault() ;
 
     if(props.profile){
-      handleUpdateProfile();
+      handleUpdateProfileAsync();
     } else {
       handleAddProfile();
     }
@@ -129,61 +125,66 @@ export default function UserProfileDetail(this: any, props: { profile?: IProfile
 };
 
   function handleAddProfile(){
+    try {
 
-    let newAddress: IProfileAddressCreateModel = {
-      isPrimary: true,
-      address1: uxProfile.address1,
-      address2: uxProfile.address2,
-      city: uxProfile.city,
-      stateAbrev: uxProfile.stateAbrev,
-      zipCode: uxProfile.zipCode,
-      isSecondary: false
+      let newAddress: IProfileAddressCreateModel = {
+        isPrimary: true,
+        address1: uxProfile.address1,
+        address2: uxProfile.address2,
+        city: uxProfile.city,
+        stateAbrev: uxProfile.stateAbrev,
+        zipCode: uxProfile.zipCode,
+        isSecondary: false
+
+
+      }
+
+      let ProfileNew:IProfileCreateModel = {
+        firstName: uxProfile.firstName,
+        lastName: uxProfile.lastName,
+        active: uxProfile.active,
+        addresses: [newAddress]
+      }
+
+      setProfilesCreateResponse(ProfilesService.createProfileAsync(ProfileNew));
+
+    } catch(e){
+      setErrorMessages([{ message: 'An unexpect error occured while attempting to add a profile.', statusCode: '999'  } as IErrorMessageModel]);
     }
-
-    let ProfileNew:IProfileCreateModel = {
-      firstName: uxProfile.firstName,
-      lastName: uxProfile.lastName,
-      active: uxProfile.active,
-      addresses: [newAddress]
-    }
-
-    setProfilesCreateResponse(ProfilesService.createProfileAsync(ProfileNew));
-
-    return true;
   }
 
-  
-  async function handleUpdateProfile(){
+  async function handleUpdateProfileAsync(){
 
-    const { profile } = props;
+    try {
 
-      ProfilesService.getProfileAsync(profile?.profileId?? 0)
-      .then(response => {
-        
-        const aUpdateProfile = { ...response.profile };
 
-        let aPropAddressPrimary = aUpdateProfile.addresses.find(
-           aItem  => aItem.isPrimary === true
-        )
+      const { profile } = props;
 
-        aUpdateProfile.firstName = uxProfile.firstName;
-        aUpdateProfile.lastName = uxProfile.lastName;
-        aUpdateProfile.active = uxProfile.active;
+      const response = await ProfilesService.getProfileAsync(profile?.profileId?? 0)
+      
+      const aUpdateProfile = { ...response.profile };
 
-        if(aPropAddressPrimary !== undefined) {
-          aPropAddressPrimary.address1 = uxProfile.address1;
-          aPropAddressPrimary.address2 = uxProfile.address2;
-          aPropAddressPrimary.city = uxProfile.city;
-          aPropAddressPrimary.stateAbrev = uxProfile.stateAbrev;
-          aPropAddressPrimary.zipCode = uxProfile.zipCode;
-        }
+      let aPropAddressPrimary = aUpdateProfile.addresses.find(
+          aItem  => aItem.isPrimary === true
+      )
 
-        setProfilesUpdateResponse(ProfilesService.updateProfileAsync(aUpdateProfile));
+      aUpdateProfile.firstName = uxProfile.firstName;
+      aUpdateProfile.lastName = uxProfile.lastName;
+      aUpdateProfile.active = uxProfile.active;
 
-      })
-      .catch((error: IErrorMessageModel[]) => {
-        setErrorMessages(error)
-      });
+      if(aPropAddressPrimary !== undefined) {
+        aPropAddressPrimary.address1 = uxProfile.address1;
+        aPropAddressPrimary.address2 = uxProfile.address2;
+        aPropAddressPrimary.city = uxProfile.city;
+        aPropAddressPrimary.stateAbrev = uxProfile.stateAbrev;
+        aPropAddressPrimary.zipCode = uxProfile.zipCode;
+      }
+
+      setProfilesUpdateResponse(ProfilesService.updateProfileAsync(aUpdateProfile));
+
+    } catch(e){
+      setErrorMessages([{ message: 'An unexpect error occured while attempting to update the profile.', statusCode: '999'  } as IErrorMessageModel]);
+    }
   };
 
   function populateProfileDetail(){
@@ -206,8 +207,17 @@ export default function UserProfileDetail(this: any, props: { profile?: IProfile
  
   }
 
-  function populateCountryStates(){
-    setStatesListResponse(StatesServices.getStatesAsync());
+  async function populateCountryStatesAsync(){
+
+    try {
+      const response = await StatesServices.getStatesAsync();
+
+      setCountryStatesList(response.states);
+  
+    } catch (e) {
+      setErrorMessages([{ message: 'An unexpect error occured.', statusCode: '999'  } as IErrorMessageModel]);
+    }
+ 
   }
 
     return (
@@ -231,7 +241,7 @@ export default function UserProfileDetail(this: any, props: { profile?: IProfile
                 <Box > <strong>Profiles is being created...</strong>
                 </Box>
             </Hidden>
-            <Hidden smUp={!apiStatesListLoading} >
+            <Hidden smUp={!retrievingData} >
                 <Box > <strong>Retrieving Information...</strong>
                 </Box>
             </Hidden>

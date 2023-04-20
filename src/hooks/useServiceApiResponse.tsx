@@ -19,7 +19,6 @@ export default function useServiceApiResponse<TResponse>(service:Promise<any> | 
           setLoading(true);
 
           service.then(response => {
-    
 
             finalResponse = response;
 
@@ -45,7 +44,7 @@ export default function useServiceApiResponse<TResponse>(service:Promise<any> | 
         
               })
               .catch((error) => {
-                setMessage(error.messages)
+                setMessage([{ message: 'An unexpect error occured while retrieving data.', statusCode: '999'  } as IErrorMessageModel]);
               })
               .finally(() => {
 
