@@ -21,7 +21,6 @@ import {
   
 } from "@material-ui/core";
 import UserProfileDetail from './components/userProfileDetail';
-import { makeStyles } from '@material-ui/core/styles';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
@@ -32,21 +31,6 @@ import useServiceApiResponse from '../../hooks/useServiceApiResponse';
 import IErrorMessageModel from '../../interfaces/api-error-message';
 import { IApiResponse } from './interfaces/profiles/api-response';
 
-const useStyles = makeStyles(theme => ({
-    root: {
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      '& > *': {
-        margin: theme.spacing(1),
-      },
-    },
-    userProfileUnselected: {
-      backgroundColor: "",
-    },
-
-  }));
- 
   export default function Profiles() {
 
     const [keyProfileKey,setKeyProfileKey] = useState(0);
@@ -57,12 +41,11 @@ const useStyles = makeStyles(theme => ({
     const [openProfileDetail, setOpenProfileDetail] = useState(false);
     const [errorMessages, setErrorMessages] = useState<IErrorMessageModel[]>([]);
 
-    const [profilesResponse, setProfilesResponse] = useState<Promise<IProfilesResponse> | undefined>();
-    const { apiResponse:apiProfilesResponse, messages:apiProfilesMessage, loading:apiProfilesLoading} = useServiceApiResponse<IProfilesResponse>(profilesResponse);
+    const [profilesResponse, setProfilesResponse] = useState<Promise<IProfilesResponse>>();
+    const { apiResponse:apiProfilesResponse, messages:apiProfilesMessage, loading:apiProfilesLoading,completed:apiProfilesCompleted} = useServiceApiResponse<IProfilesResponse>(profilesResponse);
 
     const [deleteProfileResponse, setDeleteProfileResponse] = useState<Promise<IApiResponse> | undefined>();
-    const {apiResponse:apiProfileDeleteResponse, messages:apiProfileDeleteMessage} = useServiceApiResponse<IApiResponse>(deleteProfileResponse);
-
+    const {apiResponse:apiProfileDeleteResponse,completed:apiProfileDeleteCompleted} = useServiceApiResponse<IApiResponse>(deleteProfileResponse);
 
     useEffect(() => {
        populateProfileList();
@@ -73,7 +56,9 @@ const useStyles = makeStyles(theme => ({
       apiProfilesResponse && setProfiles(apiProfilesResponse.profiles);     
       apiProfilesMessage && setErrorMessages(apiProfilesMessage);     
 
-    }, [apiProfilesResponse])
+      console.log(apiProfilesCompleted);
+
+    }, [apiProfilesCompleted])
 
     useEffect(() =>{
 
@@ -88,7 +73,7 @@ const useStyles = makeStyles(theme => ({
       };
 
 
-    }, [apiProfileDeleteResponse])
+    }, [apiProfileDeleteCompleted])
 
     function getProfileFilters() {
       const ProfileFiltered = profiles.filter(

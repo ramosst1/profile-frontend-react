@@ -19,7 +19,7 @@ import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import CancelIcon from '@material-ui/icons/Cancel';
 import ProfilesService from '../services/profiles-service';
 import StatesServices from '../../../services/states/states-services';
-import { IProfileCreateModel, IProfileModel, IProfileAddressCreateModel, IProfileUpdateModel } from '../interfaces/profiles/profile-models';
+import { IProfileCreateModel, IProfileModel, IProfileAddressCreateModel } from '../interfaces/profiles/profile-models';
 import { IStateModel } from '../../../interfaces/states/states-model';
 import IErrorMessageModel from '../../../interfaces/api-error-message'
 import { IProfileResponse } from '../interfaces/profiles/profile-responses';
@@ -30,10 +30,10 @@ export default function UserProfileDetail(this: any, props: { profile?: IProfile
   const APropProfile = props.profile;
 
   const [profileCreateResponse, setProfilesCreateResponse] = useState<Promise<IProfileResponse> | undefined>();
-  const { apiResponse:apiProfileCreateResponse, messages:apiProfileCreateMessages, loading: apiProfileCreateLoading} = useServiceApiResponse<IProfileResponse>(profileCreateResponse);
+  const { apiResponse:apiProfileCreateResponse, messages:apiProfileCreateMessages, loading: apiProfileCreateLoading, completed:apiProfileCreateCompleted} = useServiceApiResponse<IProfileResponse>(profileCreateResponse);
 
   const [profileUpdateResponse, setProfilesUpdateeResponse] = useState<Promise<IProfileResponse> | undefined>();
-  const { apiResponse:apiProfileUpdateResponse, messages:apiProfileUpdateMessages, loading:apiProfileUpdateLoading} = useServiceApiResponse<IProfileResponse>(profileUpdateResponse);
+  const { apiResponse:apiProfileUpdateResponse, messages:apiProfileUpdateMessages, loading:apiProfileUpdateLoading, completed:apiProfileUpdateCompleted} = useServiceApiResponse<IProfileResponse>(profileUpdateResponse);
 
   const APropAddressPrimary = APropProfile?.addresses?.find(
     aItem => aItem.isPrimary === true
@@ -67,7 +67,7 @@ export default function UserProfileDetail(this: any, props: { profile?: IProfile
     
       apiProfileCreateMessages && setErrorMessages(apiProfileCreateMessages)
 
-  }, [apiProfileCreateResponse])
+  }, [apiProfileCreateCompleted])
   
   useEffect(() => {
 
@@ -78,7 +78,7 @@ export default function UserProfileDetail(this: any, props: { profile?: IProfile
     
         apiProfileUpdateMessages && setErrorMessages(apiProfileUpdateMessages)
 
-  }, [apiProfileUpdateResponse])
+  }, [apiProfileUpdateCompleted])
 
   function handleSubmit(event: { preventDefault: () => void; }){
 
@@ -201,7 +201,8 @@ export default function UserProfileDetail(this: any, props: { profile?: IProfile
       .catch((error: IErrorMessageModel[]) => {
         setErrorMessages(error)
       });      
-  }  
+  }
+
     return (
       <form onSubmit={handleSubmit} >
          <Grid container xs={12} spacing={1} >
