@@ -8,11 +8,11 @@ export default function useServiceApiResponse<TResponse>(service:Promise<any> | 
     const [loading, setLoading] = useState(false);
     const [apiResponse, setApiResponse] = useState<TResponse>();
     const [messages, setMessage] = useState<IErrorMessageModel[]>([]);
-    const [completed, setComplete] = useState(false);
-
 
     useEffect(() => {
         if(!service) return;
+
+        let finalResponse: any = undefined;
 
         if(service) { 
 
@@ -21,8 +21,8 @@ export default function useServiceApiResponse<TResponse>(service:Promise<any> | 
           service.then(response => {
     
 
-              setApiResponse(response);
-              
+            finalResponse = response;
+
               if(response?.length){
     
                  setMessage(response);
@@ -48,20 +48,20 @@ export default function useServiceApiResponse<TResponse>(service:Promise<any> | 
                 setMessage(error.messages)
               })
               .finally(() => {
-                
+
+                setApiResponse(finalResponse);
                 setLoading(false);
 
-                setComplete(true);
               });
     
             }
 
       return () => {
-        setComplete(false);
+        finalResponse = undefined;
       }
 
     }, [service])
 
 
-    return {loading, messages, apiResponse , completed}
+    return {loading, messages, apiResponse}
 }

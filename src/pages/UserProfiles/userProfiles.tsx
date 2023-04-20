@@ -42,10 +42,10 @@ import { IApiResponse } from './interfaces/profiles/api-response';
     const [errorMessages, setErrorMessages] = useState<IErrorMessageModel[]>([]);
 
     const [profilesResponse, setProfilesResponse] = useState<Promise<IProfilesResponse>>();
-    const { apiResponse:apiProfilesResponse, messages:apiProfilesMessage, loading:apiProfilesLoading,completed:apiProfilesCompleted} = useServiceApiResponse<IProfilesResponse>(profilesResponse);
+    const { apiResponse:apiProfilesResponse, messages:apiProfilesMessage, loading:apiProfilesLoading} = useServiceApiResponse<IProfilesResponse>(profilesResponse);
 
     const [deleteProfileResponse, setDeleteProfileResponse] = useState<Promise<IApiResponse> | undefined>();
-    const {apiResponse:apiProfileDeleteResponse,completed:apiProfileDeleteCompleted} = useServiceApiResponse<IApiResponse>(deleteProfileResponse);
+    const {apiResponse:apiProfileDeleteResponse} = useServiceApiResponse<IApiResponse>(deleteProfileResponse);
 
     useEffect(() => {
        populateProfileList();
@@ -56,9 +56,8 @@ import { IApiResponse } from './interfaces/profiles/api-response';
       apiProfilesResponse && setProfiles(apiProfilesResponse.profiles);     
       apiProfilesMessage && setErrorMessages(apiProfilesMessage);     
 
-      console.log(apiProfilesCompleted);
 
-    }, [apiProfilesCompleted])
+    }, [apiProfilesResponse])
 
     useEffect(() =>{
 
@@ -73,7 +72,7 @@ import { IApiResponse } from './interfaces/profiles/api-response';
       };
 
 
-    }, [apiProfileDeleteCompleted])
+    }, [apiProfileDeleteResponse])
 
     function getProfileFilters() {
       const ProfileFiltered = profiles.filter(
@@ -187,7 +186,7 @@ import { IApiResponse } from './interfaces/profiles/api-response';
           </Grid>
           <Grid item xs={12} >
             <Hidden smUp={apiProfilesLoading ? false : true} >
-                <Box > Profiles are loading...
+                <Box > <strong>Profiles are loading...</strong>
                 </Box>
             </Hidden>
           </Grid>

@@ -24,16 +24,23 @@ import { IStateModel } from '../../../interfaces/states/states-model';
 import IErrorMessageModel from '../../../interfaces/api-error-message'
 import { IProfileResponse } from '../interfaces/profiles/profile-responses';
 import useServiceApiResponse from '../../../hooks/useServiceApiResponse';
+import { IStatesResponse } from '../../../interfaces/states/states-responses';
 
 export default function UserProfileDetail(this: any, props: { profile?: IProfileModel; onCreate?: any; onUpdate?: any; onCancel?: any; }) {
 
   const APropProfile = props.profile;
 
   const [profileCreateResponse, setProfilesCreateResponse] = useState<Promise<IProfileResponse> | undefined>();
-  const { apiResponse:apiProfileCreateResponse, messages:apiProfileCreateMessages, loading: apiProfileCreateLoading, completed:apiProfileCreateCompleted} = useServiceApiResponse<IProfileResponse>(profileCreateResponse);
+  const { apiResponse:apiProfileCreateResponse, messages:apiProfileCreateMessages, loading: apiProfileCreateLoading} = useServiceApiResponse<IProfileResponse>(profileCreateResponse);
 
-  const [profileUpdateResponse, setProfilesUpdateeResponse] = useState<Promise<IProfileResponse> | undefined>();
-  const { apiResponse:apiProfileUpdateResponse, messages:apiProfileUpdateMessages, loading:apiProfileUpdateLoading, completed:apiProfileUpdateCompleted} = useServiceApiResponse<IProfileResponse>(profileUpdateResponse);
+  const [profileUpdateResponse, setProfilesUpdateResponse] = useState<Promise<IProfileResponse> | undefined>();
+  const { apiResponse:apiProfileUpdateResponse, messages:apiProfileUpdateMessages, loading:apiProfileUpdateLoading} = useServiceApiResponse<IProfileResponse>(profileUpdateResponse);
+
+  const [existingProfileResponse, setExistingProfileResponse] = useState<Promise<IProfileResponse> | undefined>();
+  const { apiResponse:apiExistingProfileResponse, messages:apiExistingProfileMessages, loading:apiExistingProfileLoading} = useServiceApiResponse<IProfileResponse>(existingProfileResponse);
+
+  const [statesListResponse, setStatesListResponse] = useState<Promise<IStatesResponse> | undefined>();
+  const { apiResponse:apiStatesListResponse, messages:apiStatesListeMessages, loading:apiStatesListLoading} = useServiceApiResponse<IStatesResponse>(statesListResponse);
 
   const APropAddressPrimary = APropProfile?.addresses?.find(
     aItem => aItem.isPrimary === true
@@ -53,10 +60,16 @@ export default function UserProfileDetail(this: any, props: { profile?: IProfile
       zipCode: APropAddressPrimary?.zipCode ?? ""
     });
 
+
     useEffect(() => {
-      populateCountryStates();
+      if(!countryStatesList.length) populateCountryStates();
       populateProfileDetail();      
   },[APropProfile?.profileId]); 
+
+  useEffect(() => {
+      apiStatesListResponse && setCountryStatesList(apiStatesListResponse.states)
+
+  }, [apiStatesListResponse])
 
   useEffect(() => {
 
@@ -67,7 +80,7 @@ export default function UserProfileDetail(this: any, props: { profile?: IProfile
     
       apiProfileCreateMessages && setErrorMessages(apiProfileCreateMessages)
 
-  }, [apiProfileCreateCompleted])
+  }, [apiProfileCreateResponse])
   
   useEffect(() => {
 
@@ -78,7 +91,7 @@ export default function UserProfileDetail(this: any, props: { profile?: IProfile
     
         apiProfileUpdateMessages && setErrorMessages(apiProfileUpdateMessages)
 
-  }, [apiProfileUpdateCompleted])
+  }, [apiProfileUpdateResponse])
 
   function handleSubmit(event: { preventDefault: () => void; }){
 
@@ -138,8 +151,10 @@ export default function UserProfileDetail(this: any, props: { profile?: IProfile
 
     return true;
   }
+
   
-  function handleUpdateProfile(){
+  async function handleUpdateProfile(){
+
     const { profile } = props;
 
       ProfilesService.getProfileAsync(profile?.profileId?? 0)
@@ -163,7 +178,7 @@ export default function UserProfileDetail(this: any, props: { profile?: IProfile
           aPropAddressPrimary.zipCode = uxProfile.zipCode;
         }
 
-        setProfilesUpdateeResponse(ProfilesService.updateProfileAsync(aUpdateProfile));
+        setProfilesUpdateResponse(ProfilesService.updateProfileAsync(aUpdateProfile));
 
       })
       .catch((error: IErrorMessageModel[]) => {
@@ -192,15 +207,7 @@ export default function UserProfileDetail(this: any, props: { profile?: IProfile
   }
 
   function populateCountryStates(){
-    if (countryStatesList.length > 0) return;
-
-      return StatesServices.getStatesAsync()
-      .then(statesResponse => {
-        setCountryStatesList(statesResponse.states);
-      })
-      .catch((error: IErrorMessageModel[]) => {
-        setErrorMessages(error)
-      });      
+    setStatesListResponse(StatesServices.getStatesAsync());
   }
 
     return (
@@ -217,13 +224,18 @@ export default function UserProfileDetail(this: any, props: { profile?: IProfile
             </Grid>
             <Grid item xs={12} >
             <Hidden smUp={apiProfileUpdateLoading? false : true} >
-                <Box > Profiles is updating ...
+                <Box > <strong>Profiles is updating ...</strong>
                 </Box>
             </Hidden>
             <Hidden smUp={apiProfileCreateLoading? false : true} >
-                <Box > Profiles is being created...
+                <Box > <strong>Profiles is being created...</strong>
                 </Box>
             </Hidden>
+            <Hidden smUp={!apiStatesListLoading} >
+                <Box > <strong>Retrieving Information...</strong>
+                </Box>
+            </Hidden>
+
           </Grid>
 
             <Grid container item xs={12} >
