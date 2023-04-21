@@ -24,6 +24,7 @@ import { IStateModel } from '../../../interfaces/states/states-model';
 import IErrorMessageModel from '../../../interfaces/api-error-message'
 import { IProfileResponse } from '../interfaces/profiles/profile-responses';
 import useServiceApiResponse from '../../../hooks/useServiceApiResponse';
+import ProcessingDialog from '../../../components/ui/ProcessingDialog';
 
 export default function UserProfileDetail(this: any, props: { profile?: IProfileModel; onCreate?: any; onUpdate?: any; onCancel?: any; }) {
 
@@ -234,16 +235,13 @@ export default function UserProfileDetail(this: any, props: { profile?: IProfile
             </Grid>
             <Grid item xs={12} >
             <Hidden smUp={apiProfileUpdateLoading? false : true} >
-                <Box > <strong>Profiles is updating ...</strong>
-                </Box>
+                <ProcessingDialog message='Profile is updating ...' />
             </Hidden>
             <Hidden smUp={apiProfileCreateLoading? false : true} >
-                <Box > <strong>Profiles is being created...</strong>
-                </Box>
+              <ProcessingDialog message='Profile is being created...' />
             </Hidden>
             <Hidden smUp={!retrievingData} >
-                <Box > <strong>Retrieving Information...</strong>
-                </Box>
+              <ProcessingDialog message='Retrieving Information...' />
             </Hidden>
 
           </Grid>
