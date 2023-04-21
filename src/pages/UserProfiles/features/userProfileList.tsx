@@ -43,7 +43,7 @@ export default function UserProfileList(){
     const { apiResponse:apiProfilesResponse, messages:apiProfilesMessage, loading:apiProfilesLoading} = useServiceApiResponse<IProfilesResponse>(profilesResponse);
 
     const [deleteProfileResponse, setDeleteProfileResponse] = useState<Promise<IApiResponse> | undefined>();
-    const {apiResponse:apiProfileDeleteResponse} = useServiceApiResponse<IApiResponse>(deleteProfileResponse);
+    const {apiResponse:apiProfileDeleteResponse, loading:apiProfileDeleteLoading} = useServiceApiResponse<IApiResponse>(deleteProfileResponse);
 
     useEffect(() => {
        populateProfileList();
@@ -157,6 +157,9 @@ export default function UserProfileList(){
         <Grid item xs={12} >
           <Hidden smUp={apiProfilesLoading ? false : true} >
             <ProcessingDialog message='Profiles are loading...' />
+          </Hidden>
+          <Hidden smUp={apiProfileDeleteLoading ? false : true} >
+            <ProcessingDialog message='Profiles is being deleted...' />
           </Hidden>
         </Grid>
 

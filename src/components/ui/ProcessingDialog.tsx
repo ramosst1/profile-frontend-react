@@ -12,10 +12,9 @@ export default function ProcessingDialog( props: {message:string}){
             aria-describedby="alert-dialog-slide-description"
             
             >
-            <DialogTitle id="alert-dialog-slide-title" color="white" bgcolor="primary.main" align="center">
-              
+            <DialogContentText id="alert-dialog-slide-title" color="white" bgcolor="primary.main" align="center">
                 Processing....
-            </DialogTitle>
+            </DialogContentText>
             <DialogContent>
               <DialogContentText id="alert-dialog-slide-description">
                 <strong>{props.message}</strong>
