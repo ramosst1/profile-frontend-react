@@ -1,6 +1,5 @@
-import { Dialog, DialogContent, DialogContentText, DialogTitle, Grid } from "@mui/material"
+import { CircularProgress, Dialog, DialogContent, DialogContentText, DialogTitle, Grid, LinearProgress } from "@mui/material"
 import React from "react"
-import CachedOutlinedIcon from '@mui/icons-material/CachedOutlined';
 export default function ProcessingDialog( props: {message:string}){
 
     return (
@@ -20,7 +19,7 @@ export default function ProcessingDialog( props: {message:string}){
                 <strong>{props.message}</strong>
               </DialogContentText>
               <DialogContentText align="center">
-                  <CachedOutlinedIcon color="info" sx={{ fontSize: 80 }} />
+                <CircularProgress color="info" sx={{ fontSize: 200 }} />
               </DialogContentText>
             </DialogContent>
           </Dialog>

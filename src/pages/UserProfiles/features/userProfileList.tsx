@@ -1,4 +1,3 @@
-
 import React, {useState, useEffect } from 'react';
 import {
   Button,
@@ -23,7 +22,7 @@ import EditIcon from '@material-ui/icons/Edit';
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import ProfilesService from '../services/profiles-service';
 import { IProfileModel } from '../interfaces/profiles/profile-models';
-import { IProfilesResponse} from '../interfaces/profiles/profile-responses';
+import { IProfileResponse, IProfilesResponse} from '../interfaces/profiles/profile-responses';
 import useServiceApiResponse from '../../../hooks/useServiceApiResponse';
 import IErrorMessageModel from '../../../interfaces/api-error-message';
 import { IApiResponse } from '../interfaces/profiles/api-response'; 
@@ -46,14 +45,13 @@ export default function UserProfileList(){
     const {apiResponse:apiProfileDeleteResponse, loading:apiProfileDeleteLoading} = useServiceApiResponse<IApiResponse>(deleteProfileResponse);
 
     useEffect(() => {
-       populateProfileList();
+       initPopulateProfileList();
     },[]);  
 
     useEffect(() => {
 
       apiProfilesResponse && setProfiles(apiProfilesResponse.profiles);     
       apiProfilesMessage && setErrorMessages(apiProfilesMessage);     
-
 
     }, [apiProfilesResponse])
 
@@ -102,19 +100,47 @@ export default function UserProfileList(){
       setSelectedProfile(undefined);
     };
 
-    function handleProfileDetailUpdate(profile: any) {
-      populateProfileList();
+    function handleProfileDetailUpdate(profileResponse: IProfileResponse) {
+
+      const newProfileList = [...profiles].map(item => {
+        return item.profileId === profileResponse.profile.profileId? profileResponse.profile: item;
+      }).sort(sortProfileArrayByName)
+
+      setProfiles(newProfileList);
 
       setOpenProfileDetail(false);
       setSelectedProfile(undefined);
     };
 
-    function handleProfileCreate(profile: any){
-      populateProfileList();
+    function handleProfileCreate(profileResponse: IProfileResponse){
 
+      addProfileToList(profileResponse);
       setOpenProfileDetail(false);
       setSelectedProfile(undefined);
     };
+
+    function addProfileToList(profileResponse:IProfileResponse){
+
+        const newProfiles = [...profiles, profileResponse.profile].sort(sortProfileArrayByName);
+        setProfiles(newProfiles);
+    }
+
+    function sortProfileArrayByName(a, b ) {
+
+      if (a.lastName.toUpperCase() < b.lastName.toUpperCase()) {
+        return -1;
+      }
+      if (a.lastName.toUpperCase() > b.lastName.toUpperCase()) {
+        return 1;
+      }
+      if (a.firstName.toUpperCase() <  b.firstName.toUpperCase()) {
+        return -1;
+      }
+      if (a.firstName.toUpperCase() > b.firstName.toUpperCase()) {
+        return 1;
+      }
+      return 0;
+    }
 
     function handleProfileDetailCancel() {
       setOpenProfileDetail(false);
@@ -133,7 +159,7 @@ export default function UserProfileList(){
       setSelectedProfile(profile);
     };
 
-    function populateProfileList(){
+    function initPopulateProfileList(){
 
       setProfilesResponse(ProfilesService.getProfilesAsync()) ;
     }
@@ -220,11 +246,11 @@ export default function UserProfileList(){
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {getProfileFilters().map(profile => (
+                    {getProfileFilters().map((profile) => (
                       <TableRow
                         key={profile.profileId}
                       >
-                        <TableCell component="th" scope="row">
+                        <TableCell component="th" scope="row"> 
                           {profile.firstName} {profile.lastName}
                         </TableCell>
                         <TableCell
@@ -304,6 +330,4 @@ export default function UserProfileList(){
         )}
       </>
     );
-
-
 }
