@@ -43,8 +43,7 @@ export default function UserProfileDetail(this: any, props: { profile?: IProfile
   const [countryStatesList, setCountryStatesList] = useState<IStateModel[]>([]);
   const [errorMessages, setErrorMessages] = useState<IErrorMessageModel[]>([]);
 
-  const [retrievingData, setRetrievingData] = useState<boolean>(false);
-
+  const [retrievingData] = useState<boolean>(false);
 
   const [uxProfile, setUxProfile] = useState({
       firstName: APropProfile?.firstName ?? "",
@@ -58,7 +57,6 @@ export default function UserProfileDetail(this: any, props: { profile?: IProfile
     });
 
     useEffect(() => {
-
 
       if(!countryStatesList.length) populateCountryStatesAsync();
 
@@ -101,7 +99,7 @@ export default function UserProfileDetail(this: any, props: { profile?: IProfile
     }
 
     return false;
-  }
+  };
 
   function handleProfileChangeBool(event: React.ChangeEvent<HTMLInputElement> ){
 
@@ -123,7 +121,7 @@ export default function UserProfileDetail(this: any, props: { profile?: IProfile
     const { name, value } = event.target;
 
     setUxProfile({ ...uxProfile, [name]: value });
-};
+  };
 
   function handleAddProfile(){
     try {
@@ -161,9 +159,9 @@ export default function UserProfileDetail(this: any, props: { profile?: IProfile
 
       const { profile } = props;
 
-      const response = await ProfilesService.getProfileAsync(profile?.profileId?? 0)
+      const profileResponse = await ProfilesService.getProfileAsync(profile?.profileId?? 0)
       
-      const aUpdateProfile = { ...response.profile };
+      const aUpdateProfile = { ...profileResponse.profile };
 
       let aPropAddressPrimary = aUpdateProfile.addresses.find(
           aItem  => aItem.isPrimary === true
@@ -206,7 +204,7 @@ export default function UserProfileDetail(this: any, props: { profile?: IProfile
       zipCode: AddressPrimary?.zipCode ?? ""
     });
  
-  }
+  };
 
   async function populateCountryStatesAsync(){
 
@@ -219,7 +217,7 @@ export default function UserProfileDetail(this: any, props: { profile?: IProfile
       setErrorMessages([{ message: 'An unexpect error occured.', statusCode: '999'  } as IErrorMessageModel]);
     }
  
-  }
+  };
 
     return (
       <form onSubmit={handleSubmit} >
@@ -333,6 +331,7 @@ export default function UserProfileDetail(this: any, props: { profile?: IProfile
               >
                 <InputLabel htmlFor="age-native-required">State</InputLabel>
                 <Select
+                  defaultValue=''
                   label= "States"
                   name="stateAbrev"
                   id="stateAbrev"
@@ -343,7 +342,7 @@ export default function UserProfileDetail(this: any, props: { profile?: IProfile
                   }}
                 >
                   <MenuItem value="">
-                    <em>None</em>
+                    <em>Select a State</em>
                   </MenuItem>
                   {countryStatesList.map(aItem => (
                     <MenuItem key={aItem.stateAbrev} value={aItem.stateAbrev} >
@@ -405,4 +404,4 @@ export default function UserProfileDetail(this: any, props: { profile?: IProfile
           </Grid>
       </form>
     );
-  }
+  };

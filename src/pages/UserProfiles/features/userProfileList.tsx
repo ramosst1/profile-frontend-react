@@ -30,6 +30,7 @@ import ConfirmationDialog from '../../../components/ui/ConfirmationDialog';
 import ProcessingDialog from '../../../components/ui/ProcessingDialog';
 
 export default function UserProfileList(){
+
     const [keyProfileKey,setKeyProfileKey] = useState(0);
     const [profileActiveStatus,setProfileActiveStatus] = useState("true");
     const[profiles , setProfiles] = useState<IProfileModel[]>([]);
@@ -69,6 +70,11 @@ export default function UserProfileList(){
 
     }, [apiProfileDeleteResponse])
 
+    function initPopulateProfileList(){
+
+      setProfilesResponse(ProfilesService.getProfilesAsync()) ;
+    };
+
     function getProfileFilters() {
       const ProfileFiltered = profiles.filter(
         aProfile =>
@@ -84,12 +90,12 @@ export default function UserProfileList(){
       setProfileActiveStatus(profileActiveStatus);
     };
 
-    function handleDialogOpen(profile: IProfileModel){
+    function handleDeleteDialogOpen(profile: IProfileModel){
       setOpenDeleteConfirm(true);
       setSelectedProfile(profile);
     };
 
-    function handleDialogClose(event: any){
+    function handleDeleteDialogClose(event: any){
       setOpenDeleteConfirm(false);
     };
 
@@ -98,6 +104,12 @@ export default function UserProfileList(){
       setOpenProfileDetail(true)
       setKeyProfileKey(0);
       setSelectedProfile(undefined);
+    };
+
+    function addProfileToList(profileResponse:IProfileResponse){
+
+        const newProfiles = [...profiles, profileResponse.profile].sort(sortProfileArrayByName);
+        setProfiles(newProfiles);
     };
 
     function handleProfileDetailUpdate(profileResponse: IProfileResponse) {
@@ -112,57 +124,52 @@ export default function UserProfileList(){
       setSelectedProfile(undefined);
     };
 
-    function handleProfileCreate(profileResponse: IProfileResponse){
-
-      addProfileToList(profileResponse);
-      setOpenProfileDetail(false);
-      setSelectedProfile(undefined);
-    };
-
-    function addProfileToList(profileResponse:IProfileResponse){
-
-        const newProfiles = [...profiles, profileResponse.profile].sort(sortProfileArrayByName);
-        setProfiles(newProfiles);
-    }
-
-    function sortProfileArrayByName(a, b ) {
-
-      if (a.lastName.toUpperCase() < b.lastName.toUpperCase()) {
-        return -1;
-      }
-      if (a.lastName.toUpperCase() > b.lastName.toUpperCase()) {
-        return 1;
-      }
-      if (a.firstName.toUpperCase() <  b.firstName.toUpperCase()) {
-        return -1;
-      }
-      if (a.firstName.toUpperCase() > b.firstName.toUpperCase()) {
-        return 1;
-      }
-      return 0;
-    }
-
-    function handleProfileDetailCancel() {
-      setOpenProfileDetail(false);
-      setSelectedProfile(undefined);
-    };
-
-    function handleDeleteProfile(){
-      setDeleteProfileResponse(ProfilesService.deleteProfileAsync(selectedProfile?.profileId ?? 0));
-
-      setOpenDeleteConfirm(false);
-    };
-  
     function handleEditProfile (profile: IProfileModel){
       setOpenProfileDetail(true);
       setKeyProfileKey(profile.profileId);
       setSelectedProfile(profile);
     };
 
-    function initPopulateProfileList(){
+    function handleProfileDetailCreate(profileResponse: IProfileResponse){
 
-      setProfilesResponse(ProfilesService.getProfilesAsync()) ;
-    }
+      addProfileToList(profileResponse);
+      setOpenProfileDetail(false);
+      setSelectedProfile(undefined);
+    };
+
+    function handleProfileDetailCancel() {
+      setOpenProfileDetail(false);
+      setSelectedProfile(undefined);
+    };
+
+    function handleDeleteProfileConfirmDialog(){
+      setDeleteProfileResponse(ProfilesService.deleteProfileAsync(selectedProfile?.profileId ?? 0));
+
+      setOpenDeleteConfirm(false);
+    };
+  
+    function sortProfileArrayByName(a: IProfileModel, b:IProfileModel ) {
+
+      const aFirstName = a.firstName.toUpperCase();
+      const aLastName = a.lastName.toLocaleUpperCase();
+
+      const bFirstName = b.firstName.toUpperCase();
+      const bLastName = b.lastName.toLocaleUpperCase();
+
+      if (aLastName < aLastName) {
+        return -1;
+      }
+      if (aLastName > bLastName) {
+        return 1;
+      }
+      if (aFirstName <  bFirstName) {
+        return -1;
+      }
+      if (aFirstName > bFirstName) {
+        return 1;
+      }
+      return 0;
+    };
 
     return (
       <>
@@ -277,7 +284,7 @@ export default function UserProfileList(){
                             size="small"
                             color="secondary"
                             style={{ fontSize: 14 }}
-                            onClick={() => handleDialogOpen(profile)}
+                            onClick={() => handleDeleteDialogOpen(profile)}
                           >
                             <Box color="error.main">
                               <DeleteIcon />
@@ -317,7 +324,7 @@ export default function UserProfileList(){
                       profile={selectedProfile}
                       onUpdate={handleProfileDetailUpdate}
                       onCancel={handleProfileDetailCancel}
-                      onCreate={handleProfileCreate}
+                      onCreate={handleProfileDetailCreate}
                     />
                   </div>
                 </Grid>
@@ -326,7 +333,7 @@ export default function UserProfileList(){
             </Grid>
         </Grid>
         {openDeleteConfirm && (
-          <ConfirmationDialog title='Profile Delete Dialog' message='Are you sure you want to delete the user profile?x' openDialog = {openDeleteConfirm} onConfirm={handleDeleteProfile} onClose={handleDialogClose}/>
+          <ConfirmationDialog title='Profile Delete Dialog' message='Are you sure you want to delete the user profile?x' openDialog = {openDeleteConfirm} onConfirm={handleDeleteProfileConfirmDialog} onClose={handleDeleteDialogClose}/>
         )}
       </>
     );
