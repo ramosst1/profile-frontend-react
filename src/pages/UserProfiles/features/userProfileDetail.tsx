@@ -24,7 +24,7 @@ import { IStateModel } from '../../../interfaces/states/states-model';
 import IErrorMessageModel from '../../../interfaces/api-error-message'
 import { IProfileResponse } from '../interfaces/profiles/profile-responses';
 import useServiceApiResponse from '../../../hooks/useServiceApiResponse';
-import ProcessingDialog from '../../../components/ui/ProcessingDialog';
+import ProcessingDialog from '../../../components/ui/dialogs/ProcessingDialog';
 
 export default function UserProfileDetail(this: any, props: { profile?: IProfileModel; onCreate?: any; onUpdate?: any; onCancel?: any; }) {
 

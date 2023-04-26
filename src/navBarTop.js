@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {Home, AboutUs, UserProfiles} from './pages/index'
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
@@ -15,6 +15,7 @@ import HomeIcon from '@material-ui/icons/Home';
 import PeopleIcon from '@material-ui/icons/People';
 import PeopleOutlineIcon from '@material-ui/icons/PeopleOutline';
 import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
+import LoginModal from './features/Login/login-modal';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -35,12 +36,26 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function ButtonAppBar() {
+
+  const [isOpenLoginModal, setIsOpenLoginModal] = useState(false);
+
   const classes = useStyles();
 
-  return (
-    <div className={classes.root}>
-      <Router>
+  function handleOnSignup(){
+    setIsOpenLoginModal(true);
+  };
 
+  function handleLoginCloseModal(){
+    setIsOpenLoginModal(false);
+  };
+
+  function handleLoginOnLoginModel(){
+    setIsOpenLoginModal(false);
+  }
+
+  return (
+    <>
+      <Router>
         <AppBar position="static">
           <Toolbar>
             <Typography variant="h6" className={classes.title}>
@@ -48,7 +63,7 @@ export default function ButtonAppBar() {
               <Button href="/profiles/profiles/" className={classes.topNavButton} ><PeopleIcon className={classes.topNavIcon} />Profiles</Button>
               <Button href="/aboutus" className={classes.topNavButton} > <FiberManualRecordIcon className={classes.topNavIcon} />About Us</Button>
              </Typography>
-              <Button color="inherit" className={classes.topNavButton} disabled>
+              <Button color="inherit" className={classes.topNavButton} onClick={handleOnSignup}>
                 <PeopleOutlineIcon className={classes.topNavIcon}  />
               Sign In</Button>
           </Toolbar>
@@ -63,10 +78,14 @@ export default function ButtonAppBar() {
             <AboutUs />
           </Route>
           <Route path="/profiles/profiles">
-            <UserProfiles />
+              <UserProfiles />
           </Route>
         </Switch>
       </Router>
-    </div>
+
+      {isOpenLoginModal && (
+        <LoginModal onClose={handleLoginCloseModal} onLogIn={handleLoginOnLoginModel} />
+      )}
+    </>
   );
 }

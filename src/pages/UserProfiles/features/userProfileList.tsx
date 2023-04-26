@@ -26,8 +26,8 @@ import { IProfileResponse, IProfilesResponse} from '../interfaces/profiles/profi
 import useServiceApiResponse from '../../../hooks/useServiceApiResponse';
 import IErrorMessageModel from '../../../interfaces/api-error-message';
 import { IApiResponse } from '../interfaces/profiles/api-response'; 
-import ConfirmationDialog from '../../../components/ui/ConfirmationDialog';
-import ProcessingDialog from '../../../components/ui/ProcessingDialog';
+import ConfirmationDialog from '../../../components/ui/dialogs/ConfirmationDialog';
+import ProcessingDialog from '../../../components/ui/dialogs/ProcessingDialog';
 
 export default function UserProfileList(){
 
@@ -197,7 +197,7 @@ export default function UserProfileList(){
         </Grid>
 
         <Grid container item xs={12} spacing={5}  >
-          <Grid item xs={6} spacing={0}>
+          <Grid item xs={6} spacing={0} >
             <form>
               <Grid 
               >
@@ -213,7 +213,7 @@ export default function UserProfileList(){
                       <Tab label="All" value={null} />
                     </Tabs>
                   </Grid>
-                  <Grid item xs={3} style={{textAlign:"right"}}>
+                  <Grid item xs={3} style={{textAlign:"right"}} >
                     <Button
                       variant="contained"
                       color="primary"
