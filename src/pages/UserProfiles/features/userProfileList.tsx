@@ -218,7 +218,7 @@ export default function UserProfileList(){
                   <Grid item xs={9} style={{padding: "0px 0px 0px 10px"}}>
                     <Tabs
                       value={profileActiveStatus}
-                      indicatorColor="secondary"
+                      indicatorColor="secondary" textColor='secondary'
                       onChange={handleProfileFilterChange}
                     >
                       <Tab label="Active" value="true" />
