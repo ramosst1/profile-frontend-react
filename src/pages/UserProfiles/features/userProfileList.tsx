@@ -13,9 +13,7 @@ import {
   TableRow,
   Box,
   Hidden
-  
-} from "@material-ui/core";
-
+} from "@mui/material";
 import UserProfileDetail from './userProfileDetail';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
@@ -173,31 +171,33 @@ export default function UserProfileList(){
 
     return (
       <>
-        <Grid container item xs={12} spacing={0} >
+        <Grid container spacing={0} >
           <div>
             <h1>User Profiles</h1>
           </div>
         </Grid>
-        <Grid item xs={12} >
-            <Box color="error.main">
-              <ul >
-                {errorMessages.map(errorMessage => (
-                  <li>{errorMessage.message}</li>
-                ))}
-              </ul>
-            </Box>
-        </Grid>
-        <Grid item xs={12} >
-          <Hidden smUp={apiProfilesLoading ? false : true} >
-            <ProcessingDialog message='Profiles are loading...' />
-          </Hidden>
-          <Hidden smUp={apiProfileDeleteLoading ? false : true} >
-            <ProcessingDialog message='Profiles is being deleted...' />
-          </Hidden>
+        <Grid container spacing={0} >
+          <Grid item xs={12} >
+              <Box color="error.main">
+                <ul >
+                  {errorMessages.map(errorMessage => (
+                    <li>{errorMessage.message}</li>
+                  ))}
+                </ul>
+              </Box>
+          </Grid>
+          <Grid item xs={12} >
+            <Hidden smUp={apiProfilesLoading ? false : true} >
+              <ProcessingDialog message='Profiles are loading...' />
+            </Hidden>
+            <Hidden smUp={apiProfileDeleteLoading ? false : true} >
+              <ProcessingDialog message='Profiles is being deleted...' />
+            </Hidden>
+          </Grid>
         </Grid>
 
-        <Grid container item xs={12} spacing={5}  >
-          <Grid item xs={6} spacing={0} >
+        <Grid container spacing={0}  >
+          <Grid item xs={6}>
             <form>
               <Grid 
               >
@@ -235,7 +235,7 @@ export default function UserProfileList(){
                 <Table size="small" aria-label="a dense table">
                   <TableHead style={{ backgroundColor: "whitesmoke" }}>
                     <TableRow>
-                      <TableCell>Name</TableCell>
+                      <TableCell >Name</TableCell>
                       <TableCell
                         style={{
                           width: 10,
@@ -311,7 +311,7 @@ export default function UserProfileList(){
                     <strong>Profile Detail</strong>
                   </Box>
                 </Grid>
-                <Grid item xs={12}>
+                <Grid item xs={12} bgcolor="primary.main" >
                   <div
                     style={{
                       backgroundColor: "whitesmoke",
@@ -333,7 +333,7 @@ export default function UserProfileList(){
             </Grid>
         </Grid>
         {openDeleteConfirm && (
-          <ConfirmationDialog title='Profile Delete Dialog' message='Are you sure you want to delete the user profile?x' openDialog = {openDeleteConfirm} onConfirm={handleDeleteProfileConfirmDialog} onClose={handleDeleteDialogClose}/>
+          <ConfirmationDialog title='Profile Delete Dialog' message='Are you sure you want to delete the user profile?' openDialog = {openDeleteConfirm} onConfirm={handleDeleteProfileConfirmDialog} onClose={handleDeleteDialogClose}/>
         )}
       </>
     );

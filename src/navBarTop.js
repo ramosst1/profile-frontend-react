@@ -1,9 +1,9 @@
 import React, {useState} from 'react';
 import {Home, AboutUs, UserProfiles} from './pages/index'
 import { makeStyles } from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
+import AppBar from '@mui/material/AppBar/AppBar';
+import Toolbar from '@mui/material/Toolbar/Toolbar';
+import Typography from '@mui/material/Typography/Typography';
 import {
   BrowserRouter as Router,
   Switch,
@@ -16,6 +16,8 @@ import PeopleIcon from '@material-ui/icons/People';
 import PeopleOutlineIcon from '@material-ui/icons/PeopleOutline';
 import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
 import LoginModal from './features/Login/login-modal';
+import Box from '@mui/material/Box/Box';
+import CssBaseline from '@mui/material/CssBaseline/CssBaseline';
 
 const useStyles = makeStyles(theme => ({
   root: {

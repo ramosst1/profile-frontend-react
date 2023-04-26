@@ -16,6 +16,7 @@ export default function ModalWindow(props: {title:string, width:string, onClose:
         bgcolor: 'background.paper',
         boxShadow: 24,
         p: 0,
+        borderRadius: 3,
       };
 
 
@@ -32,8 +33,8 @@ export default function ModalWindow(props: {title:string, width:string, onClose:
                 aria-describedby="modal-modal-description"
                 sx={modalWindowStyle}
             >
-                <Box sx={modalStyle}>
-                    <Box textAlign='center' bgcolor={'whitesmoke'}>
+                <Box sx={modalStyle} >
+                    <Box textAlign='center' bgcolor={'whitesmoke'} >
                         <h1>{props.title}</h1>
                     </Box>
 

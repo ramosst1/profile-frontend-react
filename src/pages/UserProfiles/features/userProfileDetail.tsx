@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import {
-  Grid,
+  Button, Grid, 
   TextField,
   RadioGroup,
   Radio,
@@ -8,12 +8,11 @@ import {
   FormControl,
   InputLabel,
   Select,
-  Button,
   Hidden,
   MenuItem,
   FormHelperText, 
   Box
-} from "@material-ui/core";
+} from '@mui/material';
 import PersonIcon from '@material-ui/icons/Person';
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import CancelIcon from '@material-ui/icons/Cancel';
@@ -254,6 +253,7 @@ export default function UserProfileDetail(this: any, props: { profile?: IProfile
                     required
                     fullWidth
                     onChange={handleProfileChange.bind(this)}
+                    variant='standard'
                   />
                 </Grid>
                 <Grid item xs={6} style={{padding: 5}}>
@@ -266,6 +266,7 @@ export default function UserProfileDetail(this: any, props: { profile?: IProfile
                     required
                     fullWidth
                     onChange={handleProfileChange.bind(this)}
+                    variant='standard'
                   />
                 </Grid>
             </Grid>
@@ -300,6 +301,7 @@ export default function UserProfileDetail(this: any, props: { profile?: IProfile
                 label="Address1"
                 required
                 fullWidth
+                variant='standard'
                 onChange={handleProfileChange.bind(this)}
               />
             </Grid>
@@ -310,6 +312,7 @@ export default function UserProfileDetail(this: any, props: { profile?: IProfile
                 value={uxProfile.address2}
                 label="Address2"
                 fullWidth
+                variant='standard'
                 onChange={handleProfileChange.bind(this)}
               />
             </Grid>
@@ -321,6 +324,7 @@ export default function UserProfileDetail(this: any, props: { profile?: IProfile
                 label="City"
                 required
                 fullWidth
+                variant='standard'
                 onChange={handleProfileChange.bind(this)}
               />
             </Grid>
@@ -335,6 +339,7 @@ export default function UserProfileDetail(this: any, props: { profile?: IProfile
                   label= "States"
                   name="stateAbrev"
                   id="stateAbrev"
+                  variant='standard'
                   value={uxProfile.stateAbrev} 
                   onChange={handleProfileSelectChange}
                   inputProps={{
@@ -361,10 +366,11 @@ export default function UserProfileDetail(this: any, props: { profile?: IProfile
                 label="ZipCode"
                 required 
                 type="number"
+                variant='standard'
                 onChange={handleProfileChange.bind(this)}
               />
             </Grid>
-            <Grid container item xs={12} justify="center">
+            <Grid item xs={12} textAlign='center'>
               <Button
                 variant="contained"
                 color="primary"

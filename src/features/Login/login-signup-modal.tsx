@@ -1,5 +1,5 @@
 import React from "react";
-import ModalWindow from "../../components/ui/windowsModals/ModalWindow";
+import ModalWindow from "../../components/ui/windowModals/ModalWindow";
 import { Box, Button, Grid, TextField } from "@mui/material";
 import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
 import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined';

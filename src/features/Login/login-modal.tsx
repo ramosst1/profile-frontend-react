@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import {Box, Button, Grid, TextField} from "@mui/material";
-import ModalWindow from "../../components/ui/windowsModals/ModalWindow";
+import ModalWindow from "../../components/ui/windowModals/ModalWindow";
 import LoginRegisterModal from "./login-signup-modal";
 import LoginForgotModal from "./login-forgot-modal";
 import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
 import LockOpenIcon from '@mui/icons-material/LockOpen';
+import { Visibility, VisibilityOff } from "@material-ui/icons";
 
 export default function LoginModal(
     props: {onClose:any, onLogIn:any}
@@ -18,6 +19,8 @@ export default function LoginModal(
     const [isLoginScreen, setIsLoginScreen] = useState(true);
     const [isRegisterScreen, setIsRegisterScreen] = useState(false);
     const [isForgotPasswordScreen, setIsForgotPasswordScreen] = useState(false);
+
+    // const [showPassword, setShowPassword] = React.useState(false);
 
     useEffect(() => {
 
@@ -101,14 +104,15 @@ export default function LoginModal(
                     >
                         <Grid container spacing={0} textAlign='center' xs={12}>
                             <Grid container spacing={1} >
-                                <Grid item xs={12} textAlign='left'>
+                                <Grid item xs={12} textAlign='center'>
                                     <TextField required type="email" label="Email" id="uxEmail" variant="standard"/>
                                 </Grid>
-                                <Grid item xs={12} textAlign='left'>
+                                <Grid item xs={12} textAlign='center'>
                                     <TextField type="text" label="Password" id='uxPassword' variant="standard" />
                                 </Grid>
-
                                 <Grid item xs={6} textAlign='right' >
+                                    <Button variant='text' color='secondary' onClick={handleForgotPasswordOpenModal}>forgot password</Button>
+                                    <Button variant='text' color='secondary' onClick={handleSignupOpenModal}>sign up</Button>
                                     <Button variant='contained' color='primary' style={{ padding: 4, margin: 10, borderRadius: 25 }} onClick={handleCancelModal}
                                         startIcon={<CancelOutlinedIcon/>}
                                     >cancel</Button>
@@ -117,13 +121,6 @@ export default function LoginModal(
                                     <Button variant='contained' color='primary' style={{ padding: 4, margin: 10, borderRadius: 25 }} onClick={handleOnSignIn }
                                         startIcon={<LockOpenIcon/>}
                                     >sign in </Button>
-                                </Grid>
-
-                                <Grid item xs={12} textAlign='center'>
-                                    <Button variant='text' color='primary' onClick={handleForgotPasswordOpenModal}>forgot password</Button>
-                                    <Button variant='text' color='primary' onClick={handleSignupOpenModal}>sign up</Button>
-                                </Grid>
-                                <Grid item xs={6} textAlign='left'>
                                 </Grid>
                             </Grid>
                         </Grid>
