@@ -16,8 +16,6 @@ import PeopleIcon from '@material-ui/icons/People';
 import PeopleOutlineIcon from '@material-ui/icons/PeopleOutline';
 import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
 import LoginModal from './features/Login/login-modal';
-import Box from '@mui/material/Box/Box';
-import CssBaseline from '@mui/material/CssBaseline/CssBaseline';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -58,9 +56,9 @@ export default function ButtonAppBar() {
   return (
     <>
       <Router>
-        <AppBar position="static">
+        <AppBar color="primary" position="static">
           <Toolbar>
-            <Typography variant="h6" className={classes.title}>
+            <Typography variant="h6" bgcolor='primary.main' className={classes.title}>
               <Button href="/" className={classes.topNavButton}><HomeIcon className={classes.topNavIcon} />Home</Button>
               <Button href="/profiles/profiles/" className={classes.topNavButton} ><PeopleIcon className={classes.topNavIcon} />Profiles</Button>
               <Button href="/aboutus" className={classes.topNavButton} > <FiberManualRecordIcon className={classes.topNavIcon} />About Us</Button>

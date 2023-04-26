@@ -36,7 +36,7 @@ export default function LoginForgotModal(props: {onCancel:any, onSentPasswordRes
                                     startIcon={<CancelOutlinedIcon/>} 
                                 >cancel</Button>
                             </Grid>
-                            <Grid item xs={6} textAlign='left' >
+                            <Grid item xs={6} textAlign='left' whiteSpace='nowrap' >
                                 <Button variant='contained' onClick={handleOnSendRestPassword } style={{ padding: 4, margin: 10, borderRadius: 25 }} 
                                     startIcon={<MailOutlineOutlinedIcon/>}
                                 >send password reset</Button>

@@ -1,4 +1,4 @@
-import { Box, Modal } from '@mui/material';
+import { Box, Grid, Modal } from '@mui/material';
 import React from 'react';
 
 export default function ModalWindow(props: {title:string, width:string, onClose:any, children:any}){
@@ -19,6 +19,15 @@ export default function ModalWindow(props: {title:string, width:string, onClose:
         borderRadius: 3,
       };
 
+      const titleStyle = {
+        bgcolor: 'primary.dark',
+        color: 'white',
+        borderTopLeftRadius: 11,
+        borderTopRightRadius: 11,
+        fontSize: 30,
+        fontWeight: 600,
+        padding: 1
+       };
 
     function handleOnClose() {
         props.onClose();
@@ -34,8 +43,8 @@ export default function ModalWindow(props: {title:string, width:string, onClose:
                 sx={modalWindowStyle}
             >
                 <Box sx={modalStyle} >
-                    <Box textAlign='center' bgcolor={'whitesmoke'} >
-                        <h1>{props.title}</h1>
+                    <Box textAlign='center' sx={titleStyle} >
+                        <div>{props.title}</div>
                     </Box>
 
                     {props.children}

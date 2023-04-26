@@ -12,7 +12,9 @@ import {
   TableHead,
   TableRow,
   Box,
-  Hidden
+  Hidden,
+  tableCellClasses,
+  styled
 } from "@mui/material";
 import UserProfileDetail from './userProfileDetail';
 import DeleteIcon from '@material-ui/icons/Delete';
@@ -28,6 +30,7 @@ import ConfirmationDialog from '../../../components/ui/dialogs/ConfirmationDialo
 import ProcessingDialog from '../../../components/ui/dialogs/ProcessingDialog';
 
 export default function UserProfileList(){
+
 
     const [keyProfileKey,setKeyProfileKey] = useState(0);
     const [profileActiveStatus,setProfileActiveStatus] = useState("true");
@@ -169,6 +172,16 @@ export default function UserProfileList(){
       return 0;
     };
 
+
+    const StyledTableCell = styled(TableCell)(({ theme }) => ({
+      [`&.${tableCellClasses.head}`]: {
+        backgroundColor: theme.palette.secondary.main,
+        color: theme.palette.common.white,
+      },
+      [`&.${tableCellClasses.body}`]: {
+        fontSize: 14,
+      },
+    }));
     return (
       <>
         <Grid container spacing={0} >
@@ -196,7 +209,7 @@ export default function UserProfileList(){
           </Grid>
         </Grid>
 
-        <Grid container spacing={0}  >
+        <Grid container spacing={2}  >
           <Grid item xs={6}>
             <form>
               <Grid 
@@ -205,7 +218,7 @@ export default function UserProfileList(){
                   <Grid item xs={9} style={{padding: "0px 0px 0px 10px"}}>
                     <Tabs
                       value={profileActiveStatus}
-                      indicatorColor="primary"
+                      indicatorColor="secondary"
                       onChange={handleProfileFilterChange}
                     >
                       <Tab label="Active" value="true" />
@@ -213,7 +226,7 @@ export default function UserProfileList(){
                       <Tab label="All" value={null} />
                     </Tabs>
                   </Grid>
-                  <Grid item xs={3} style={{textAlign:"right"}} >
+                  <Grid item xs={3} style={{textAlign:"right", whiteSpace:'nowrap' }} >
                     <Button
                       variant="contained"
                       color="primary"
@@ -233,10 +246,10 @@ export default function UserProfileList(){
                 style={{ borderRadius: "15px" }}
               >
                 <Table size="small" aria-label="a dense table">
-                  <TableHead style={{ backgroundColor: "whitesmoke" }}>
-                    <TableRow>
-                      <TableCell >Name</TableCell>
-                      <TableCell
+                  <TableHead >
+                    <TableRow >
+                      <StyledTableCell color='primary.main' >Name</StyledTableCell>
+                      <StyledTableCell
                         style={{
                           width: 10,
                           display:
@@ -246,10 +259,10 @@ export default function UserProfileList(){
                         }}
                       >
                         Status
-                      </TableCell>
-                      <TableCell align="center" style={{ width: 150 }}>
+                      </StyledTableCell>
+                      <StyledTableCell align="center" style={{ width: 150 }}>
                         Action
-                      </TableCell>
+                      </StyledTableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
@@ -273,23 +286,22 @@ export default function UserProfileList(){
                           </span>
                         </TableCell>
                         <TableCell align="center">
-                          <Button
-                            size="small"
-                            color="primary"
-                            onClick={() => handleEditProfile(profile)}
-                          >
-                            <EditIcon />
-                          </Button>
-                          <Button
-                            size="small"
-                            color="secondary"
-                            style={{ fontSize: 14 }}
-                            onClick={() => handleDeleteDialogOpen(profile)}
-                          >
-                            <Box color="error.main">
-                              <DeleteIcon />
-                            </Box>
-                          </Button>
+                          <Box whiteSpace='nowrap'>
+                            <Button
+                              size="small"
+                              onClick={() => handleEditProfile(profile)}
+                            >
+                              <EditIcon />
+                            </Button>
+                            <Button
+                              size="small"
+                              onClick={() => handleDeleteDialogOpen(profile)}
+                            >
+                              <Box color="error.main">
+                                <DeleteIcon />
+                              </Box>
+                            </Button>
+                          </Box>
                         </TableCell>
                       </TableRow>
                     ))}
@@ -298,7 +310,7 @@ export default function UserProfileList(){
               </TableContainer>
             </form>
           </Grid>
-          <Grid container item xs={6} spacing={0}>
+          <Grid container item xs={6}>
             <Hidden smUp={openProfileDetail ? false : true} >
               <br/>&nbsp; <br/>
               <Grid item xs={12} style={{ borderRadius: "15px", padding: 0 }} component={Paper} elevation={10}>

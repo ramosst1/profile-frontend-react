@@ -110,7 +110,7 @@ export default function LoginModal(
                                 <Grid item xs={12} textAlign='center'>
                                     <TextField type="text" label="Password" id='uxPassword' variant="standard" />
                                 </Grid>
-                                <Grid item xs={6} textAlign='right' >
+                                <Grid item xs={6} textAlign='right' whiteSpace='nowrap' >
                                     <Button variant='text' color='secondary' onClick={handleForgotPasswordOpenModal}>forgot password</Button>
                                     <Button variant='text' color='secondary' onClick={handleSignupOpenModal}>sign up</Button>
                                     <Button variant='contained' color='primary' style={{ padding: 4, margin: 10, borderRadius: 25 }} onClick={handleCancelModal}
