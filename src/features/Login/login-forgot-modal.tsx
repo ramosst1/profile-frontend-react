@@ -4,20 +4,13 @@ import ModalWindow from '../../components/ui/windowModals/ModalWindow';
 import { Box, Button, Grid, TextField } from '@mui/material';
 import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
 import MailOutlineOutlinedIcon from '@mui/icons-material/MailOutlineOutlined';
+import IForgotPasswordRequest from './interfaces/forgotpassword/forgot-password-requests';
+import IForgotPasswordResponse from './interfaces/forgotpassword/forgot-password-response';
 export default function LoginForgotModal(props: {onCancel:any, onSentPasswordReset:any}) {
 
     const [uxInputs, setUxInputs] = useState({
         email: ''
     });
-
-
-    function handleCancelModal(){
-        props.onCancel();
-    };
-
-    function handleOnSendRestPassword(){
-        props.onSentPasswordReset();
-    }
 
     function handleSubmit(event: { preventDefault: () => void; }){
         event.preventDefault()
@@ -29,7 +22,28 @@ export default function LoginForgotModal(props: {onCancel:any, onSentPasswordRes
         const { id, value } = event.target;
         setUxInputs({ ...uxInputs, [id]: value });
     
-      };
+    };
+
+    function handleCancelModal(){
+        props.onCancel();
+    };
+
+    function handleOnSendRestPassword(){
+
+        const request: IForgotPasswordRequest = {
+            userName: uxInputs.email
+        }
+
+        const response: IForgotPasswordResponse = {
+            success: true,
+            messages: [],
+            // signInUser: undefined
+        }
+
+
+
+        props.onSentPasswordReset(response);
+    }
 
     return (
         <>

@@ -1,6 +1,4 @@
-export interface ISignupRequest{
-    firstName:string
-    lastName: string
+export interface ISigninRequest{
     userName:string
     password:string
 }

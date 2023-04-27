@@ -5,7 +5,7 @@ import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined
 import ModalWindow from "../../components/ui/windowModals/ModalWindow";
 import { ISignupResponse } from "./interfaces/signup/signup-responses";
 import { ISignUpModel } from "./interfaces/signup/signup-models";
-import { ISignupRequest } from "./interfaces/signin/signin-requests";
+import { ISignupRequest } from "./interfaces/signup/signup-requests";
 
 export default function LoginSignUpModal(    props: {onCancel:any, onSignup:any}){
 
@@ -18,37 +18,66 @@ export default function LoginSignUpModal(    props: {onCancel:any, onSignup:any}
         passwordConfirm: ''
      })
 
-    function handleCancelModal(){
-        props.onCancel();
-    };
+     const [signupResponse, setSignupResponse] = useState({
+        signInId: 0,
+        firstName: '',
+        lastName: '',
+     })
 
-    function handleOnSignup(){
-
-        props.onSignup();
-
-        const response: ISignupResponse = {
-            success: false,
-            messages: [],
-            signup: undefined
-        }
-
-        return response;
-    }
-
-    function handleChange(event: React.ChangeEvent<HTMLInputElement> ){
-        const { id, value } = event.target;
-        setUxInputs({ ...uxInputs, [id]: value });
-    
-      };
-    
-    function handleSubmit(event: { preventDefault: () => void; }){
+     function handleSubmit(event: { preventDefault: () => void; }){
         event.preventDefault()
 
         handleOnSignup()
         
     };
 
-    return (
+    function handleChange(event: React.ChangeEvent<HTMLInputElement> ){
+        const { id, value } = event.target;
+        setUxInputs({ ...uxInputs, [id]: value });
+    
+    };
+
+    function handleCancelModal(){
+        props.onCancel();
+    };
+
+    function handleOnSignup(){
+
+
+        const request: ISignupRequest = {
+            firstName: uxInputs.firstName,
+            lastName: uxInputs.lastName,
+            userName: uxInputs.email,
+            password: uxInputs.password
+        }
+
+        const aSignuModel: ISignUpModel ={
+            signInId: 1,
+            firstName: request.firstName,
+            lastName: request.lastName,
+            userName: request.userName,
+            password: request.password
+        }
+
+        const response: ISignupResponse = {
+            success: true,
+            messages: [],
+            signup: aSignuModel
+        }
+
+        setSignupResponse({ ...signupResponse, 
+            signInId: 0, 
+            firstName: response.signup.firstName,
+            lastName: response.signup.lastName
+        })
+
+        props.onSignup(response);
+
+        return response;
+
+    };
+
+      return (
         <>
             <ModalWindow title='Sign Up' width='50%' onClose={handleCancelModal} >
             <Box

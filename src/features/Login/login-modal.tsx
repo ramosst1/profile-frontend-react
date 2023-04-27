@@ -5,9 +5,12 @@ import LoginSignUpModal from "./login-signup-modal";
 import LoginForgotModal from "./login-forgot-modal";
 import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
 import LockOpenIcon from '@mui/icons-material/LockOpen';
-
+import { ISignInResponse } from "./interfaces/signin/signin-responses";
+import { ISigninRequest } from "./interfaces/signin/signin-requests";
+import { ISignInModel } from "./interfaces/signin/signin-models";
+import IForgotPasswordResponse from "./interfaces/forgotpassword/forgot-password-response";
 export default function LoginModal(
-    props: {onClose:any, onLogIn:any}
+    props: {onClose:any, onSignIn:any}
 ){
 
     const ACTION_LOGIN = 'LOGIN';
@@ -49,9 +52,29 @@ export default function LoginModal(
     };
 
     function handleOnSignIn(){
+
+
+        const request: ISigninRequest = {
+            userName: uxInputs.email,
+            password: uxInputs.password
+        }
+
+        const aSigninUser: ISignInModel = {
+            loginId: 1,
+            userName: request.userName,
+            firstName: "Joe",
+            lastName: "Smith"
+        }
+
+        const response: ISignInResponse ={
+            success: true,
+            messages: [],
+            signInUser: aSigninUser
+        }
+
         toggleFeatures(ACTION_LOGIN);
 
-        props.onLogIn();
+        props.onSignIn(response);
     };
 
     function handleOnSignupCloseModal(){
@@ -98,8 +121,8 @@ export default function LoginModal(
         toggleFeatures(ACTION_LOGIN);
     };
 
-    function handleOnForgotPasswordSentPasswordReset() {
-        toggleFeatures(ACTION_LOGIN);
+    function handleOnForgotPasswordSentPasswordReset(event: IForgotPasswordResponse) {
+        event.success && toggleFeatures(ACTION_LOGIN);
     };
 
     return (

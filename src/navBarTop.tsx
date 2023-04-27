@@ -6,7 +6,6 @@ import {
   } from "react-router-dom";
 import {AppBar, Box, Container, Toolbar, Typography, Button, IconButton, Menu, MenuItem } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
-import ChildCareIcon from '@mui/icons-material/ChildCare';
 import HomeIcon from '@material-ui/icons/Home';
 import PeopleIcon from '@material-ui/icons/People';
 import PeopleOutlineIcon from '@material-ui/icons/PeopleOutline';
@@ -16,6 +15,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import LoginModal from './features/Login/login-modal';
 import {Home, AboutUs, UserProfiles} from './pages/index'
 import LoginSignUpModal from './features/Login/login-signup-modal';
+import { ISignupResponse } from './features/Login/interfaces/signup/signup-responses';
+import { ISignInResponse } from './features/Login/interfaces/signin/signin-responses';
 
 interface PagesObject {
     pageName: string
@@ -92,9 +93,9 @@ export default function NavBarTop() {
         setIsOpenLoginModal(false);
     };
 
-    function handleLoginOnLoginModel(){
+    function handleLoginOnLoginModel(event:ISignInResponse){
         setIsOpenLoginModal(false);
-    }
+    };
 
 
     function handleOnSignUp(){
@@ -105,157 +106,146 @@ export default function NavBarTop() {
         setIsOpenSignupModal(false);
     };
 
-    function handleLoginOnSignupModel(){
-        setIsOpenSignupModal(false);
-    }
+    function handleLoginOnSignupModel(event:ISignupResponse){
+//        alert(signupResponse.signup.userName);
+        event.success ?? setIsOpenSignupModal(false);
+    };
 
-return (
-<> 
-    <Router>
-        <AppBar position="static">
-            <Container maxWidth="xl" > 
-                <Toolbar disableGutters>
-                    {/* <ChildCareIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} /> */}
-                    <Typography
-                        variant="h3"
-                        noWrap
-                        component="a"
-                        href="/"
-                        sx={{
-                        mr: 2,
-                        display: { xs: 'none', md: 'flex' },
-                        fontFamily: 'monospace',
-                        fontWeight: 900,
-                        letterSpacing: '.3rem',
-                        color: 'inherit',
-                        textDecoration: 'none',
-                        }}
-                    >
-                        &lt;Sample Website&gt;
-                    </Typography>
+    return (
+    <> 
+        <Router>
+            <AppBar position="static">
+                <Container maxWidth="xl" > 
+                    <Toolbar disableGutters>
+                        {/* <ChildCareIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} /> */}
+                        <Typography
+                            variant="h3"
+                            noWrap
+                            component="a"
+                            href="/"
+                            sx={{
+                            mr: 2,
+                            display: { xs: 'none', md: 'flex' },
+                            fontFamily: 'monospace',
+                            fontWeight: 900,
+                            letterSpacing: '.3rem',
+                            color: 'inherit',
+                            textDecoration: 'none',
+                            }}
+                        >
+                            &lt;Sample Website&gt;
+                        </Typography>
 
-                    <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
-                        <IconButton
-                        size="large"
-                        aria-label="account of current user"
-                        aria-controls="menu-appbar"
-                        aria-haspopup="true"
-                        onClick={handleOpenNavMenu}
-                        sx={{ color: '#dbffe0' }}
-                        >
-                        <MenuIcon />
-                        </IconButton>
-                        <Menu
-                        id="menu-appbar"
-                        anchorEl={anchorElNav}
-                        anchorOrigin={{
-                            vertical: 'bottom',
-                            horizontal: 'left',
-                        }}
-                        keepMounted
-                        transformOrigin={{
-                            vertical: 'top',
-                            horizontal: 'left',
-                        }}
-                        open={Boolean(anchorElNav)}
-                        onClose={handleCloseNavMenu}
-                        sx={{ 
-                            display: { xs: 'block', md: 'none' }
-                        }}
-                        >
-                        {pageList.map((page) => (
-                            <MenuItem key={page.pageName} onClick={() => handleRouteToPageNavMenu(page.url)}
+                        <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
+                            <IconButton
+                            size="large"
+                            aria-label="account of current user"
+                            aria-controls="menu-appbar"
+                            aria-haspopup="true"
+                            onClick={handleOpenNavMenu}
+                            sx={{ color: '#dbffe0' }}
                             >
-                                {page.icon}
-                            <Typography textAlign="center">{page.pageName}</Typography>
-                            </MenuItem>
-                        ))}
-                        </Menu>
-                    </Box>
-                    {/* <ChildCareIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} /> */}
+                            <MenuIcon />
+                            </IconButton>
+                            <Menu
+                            id="menu-appbar"
+                            anchorEl={anchorElNav}
+                            anchorOrigin={{
+                                vertical: 'bottom',
+                                horizontal: 'left',
+                            }}
+                            keepMounted
+                            transformOrigin={{
+                                vertical: 'top',
+                                horizontal: 'left',
+                            }}
+                            open={Boolean(anchorElNav)}
+                            onClose={handleCloseNavMenu}
+                            sx={{ 
+                                display: { xs: 'block', md: 'none' }
+                            }}
+                            >
+                            {pageList.map((page) => (
+                                <MenuItem key={page.pageName} onClick={() => handleRouteToPageNavMenu(page.url)}
+                                >
+                                    {page.icon}
+                                <Typography textAlign="center">{page.pageName}</Typography>
+                                </MenuItem>
+                            ))}
+                            </Menu>
+                        </Box>
 
-                    <Typography
-                        variant="h6"
-                        noWrap
-                        component="a"
-                        href=""
-                        sx={{
-                        mr: 2,
-                        display: { xs: 'flex', md: 'none' },
-                        flexGrow: 1,
-                        fontFamily: 'monospace',
-                        fontWeight: 700,
-                        letterSpacing: '.3rem',
-                        color: 'inherit',
-                        textDecoration: 'none',
-                        }}
-                    >
-                        &lt;Sample Website&gt; 
-                    </Typography>
-
-                    <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }} >
-                        {/* {pageList.map((page) => (
-                        <Button
-                            key={page.pageName}
-                            onClick={() => handleRouteToPageNavMenu(page.url)}
-                            sx={{ my: 2, color: '#dbffe0' }}
-                            startIcon = {page.icon}
+                        <Typography
+                            variant="h6"
+                            noWrap
+                            component="a"
+                            href=""
+                            sx={{
+                            mr: 2,
+                            display: { xs: 'flex', md: 'none' },
+                            flexGrow: 1,
+                            fontFamily: 'monospace',
+                            fontWeight: 700,
+                            letterSpacing: '.3rem',
+                            color: 'inherit',
+                            textDecoration: 'none',
+                            }}
                         >
-                            {page.pageName}
-                        </Button>
+                            &lt;Sample Website&gt; 
+                        </Typography>
 
-                        ))} */}
-                    </Box>
+                        <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }} >
+                        </Box>
 
-                    <Box sx={{ flexGrow: 0 }}>
-                        <Button color="inherit"  sx={{color: '#dbffe0'}} onClick={handleOnSignUp}>
-                            <SubscriptionsIcon className={classes.topNavIcon}  />
-                            Sign Up
-                        </Button>
+                        <Box sx={{ flexGrow: 0 }}>
+                            <Button color="inherit"  sx={{color: '#ef6694'}} onClick={handleOnSignUp}>
+                                <SubscriptionsIcon sx={{color: '#ef6694'}} />
+                                Sign Up
+                            </Button>
 
-                        <Button color="inherit"  sx={{color: '#dbffe0'}} onClick={handleOnSignIn}>
-                            <PeopleOutlineIcon className={classes.topNavIcon}  />
-                            Sign In
-                        </Button>
-                    </Box>
-                </Toolbar>
-            </Container>
-            <Container  maxWidth='xl'>
-            <Box sx={{textAlign: 'left', flexGrow: 1, display: { xs: 'none', md: 'flex' } }} >
-                        {pageList.map((page) => (
-                        <Button
-                            key={page.pageName}
-                            onClick={() => handleRouteToPageNavMenu(page.url)}
-                            sx={{ my: 2, color: '#dbffe0' }}
-                            startIcon = {page.icon}
-                        >
-                            {page.pageName}
-                        </Button>
+                            <Button color="inherit"  sx={{color: '#dbffe0'}} onClick={handleOnSignIn}>
+                                <PeopleOutlineIcon className={classes.topNavIcon}  />
+                                Sign In
+                            </Button>
+                        </Box>
+                    </Toolbar>
+                </Container>
+                <Container  maxWidth='xl'>
+                <Box sx={{textAlign: 'left', flexGrow: 1, display: { xs: 'none', md: 'flex' } }} >
+                            {pageList.map((page) => (
+                            <Button
+                                key={page.pageName}
+                                onClick={() => handleRouteToPageNavMenu(page.url)}
+                                sx={{ my: 2, color: '#dbffe0' }}
+                                startIcon = {page.icon}
+                            >
+                                {page.pageName}
+                            </Button>
 
-                        ))}
-                    </Box>
+                            ))}
+                        </Box>
 
-            </Container>
-        </AppBar>
+                </Container>
+            </AppBar>
 
-        <Switch>
-            <Route exact path="/">
-                <Home />
-            </Route>
-            <Route exact path="/aboutus">
-                <AboutUs />
-            </Route>
-            <Route path="/profiles/profiles">
-                <UserProfiles />
-            </Route>
-        </Switch>
+            <Switch>
+                <Route exact path="/">
+                    <Home />
+                </Route>
+                <Route exact path="/aboutus">
+                    <AboutUs />
+                </Route>
+                <Route path="/profiles/profiles">
+                    <UserProfiles />
+                </Route>
+            </Switch>
 
-        {isOpenLoginModal && <LoginModal onClose={handleLoginCloseModal} onLogIn={handleLoginOnLoginModel} />}
+            {isOpenLoginModal && <LoginModal onClose={handleLoginCloseModal} onSignIn={handleLoginOnLoginModel} />}
 
-        {isOpenSignupModal && <LoginSignUpModal onCancel={handleLoginSignupCloseModal} onSignup={handleLoginOnSignupModel}/>}
+            {isOpenSignupModal && <LoginSignUpModal onCancel={handleLoginSignupCloseModal} onSignup={handleLoginOnSignupModel}/>}
 
-    </Router>
-</>
-);
+        </Router>
+    </>
+    );
 };
 

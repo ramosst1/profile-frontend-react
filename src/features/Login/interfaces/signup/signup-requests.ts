@@ -1,6 +1,6 @@
 export interface ISignupRequest{
     firstName: string
-    lasttName: string
+    lastName: string
     userName:string
     password:string
 }
