@@ -14,7 +14,8 @@ import {
   Box,
   Hidden,
   tableCellClasses,
-  styled
+  styled,
+  Tooltip
 } from "@mui/material";
 import UserProfileDetail from './userProfileDetail';
 import DeleteIcon from '@material-ui/icons/Delete';
@@ -287,20 +288,24 @@ export default function UserProfileList(){
                         </TableCell>
                         <TableCell align="center">
                           <Box whiteSpace='nowrap'>
-                            <Button
-                              size="small"
-                              onClick={() => handleEditProfile(profile)}
-                            >
-                              <EditIcon />
-                            </Button>
-                            <Button
-                              size="small"
-                              onClick={() => handleDeleteDialogOpen(profile)}
-                            >
-                              <Box color="error.main">
-                                <DeleteIcon />
-                              </Box>
-                            </Button>
+                            <Tooltip title="Edit" arrow>
+                                <Button
+                                  size="small"
+                                  onClick={() => handleEditProfile(profile)} color='secondary'
+                                >
+                                  <EditIcon />
+                                </Button>
+                            </Tooltip>
+                            <Tooltip title="Delete" arrow>
+                              <Button
+                                size="small"
+                                onClick={() => handleDeleteDialogOpen(profile)}
+                              >
+                                <Box color="error.main">
+                                  <DeleteIcon />
+                                </Box>
+                              </Button>
+                            </Tooltip>
                           </Box>
                         </TableCell>
                       </TableRow>

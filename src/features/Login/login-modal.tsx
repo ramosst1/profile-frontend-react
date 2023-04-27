@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
 import {Box, Button, Grid, TextField} from "@mui/material";
 import ModalWindow from "../../components/ui/windowModals/ModalWindow";
-import LoginRegisterModal from "./login-signup-modal";
+import LoginSignUpModal from "./login-signup-modal";
 import LoginForgotModal from "./login-forgot-modal";
 import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
 import LockOpenIcon from '@mui/icons-material/LockOpen';
-import { Visibility, VisibilityOff } from "@material-ui/icons";
 
 export default function LoginModal(
     props: {onClose:any, onLogIn:any}
@@ -20,14 +19,28 @@ export default function LoginModal(
     const [isRegisterScreen, setIsRegisterScreen] = useState(false);
     const [isForgotPasswordScreen, setIsForgotPasswordScreen] = useState(false);
 
-    // const [showPassword, setShowPassword] = React.useState(false);
-
+    const [uxInputs, setUxInputs] = useState({
+        email:'',
+        password: ''
+    });
+    
     useEffect(() => {
 
         return() => {
             toggleFeatures(ACTION_LOGIN);
         };
     }, [])
+
+    function handleSubmit(event: { preventDefault: () => void; }){
+        event.preventDefault()
+        handleOnSignIn()
+    };
+
+    function handleChange(event: React.ChangeEvent<HTMLInputElement> ){
+        const { id, value } = event.target;
+        setUxInputs({ ...uxInputs, [id]: value });
+    
+      };
 
     function handleCancelModal(){
         toggleFeatures(ACTION_LOGIN);
@@ -39,11 +52,11 @@ export default function LoginModal(
         toggleFeatures(ACTION_LOGIN);
 
         props.onLogIn();
-    }
+    };
 
     function handleOnSignupCloseModal(){
         toggleFeatures(ACTION_LOGIN);
-    }
+    };
     
     function handleOnSignupModal(){
         toggleFeatures(ACTION_LOGIN);
@@ -51,12 +64,11 @@ export default function LoginModal(
 
     function handleForgotPasswordOpenModal(){
         toggleFeatures(ACTION_FORGOT_PASSWORD);
-    }
+    };
 
     function handleSignupOpenModal(){
         toggleFeatures(ACTION_LOGIN_SIGNUP);
-    }
-
+    };
 
     function toggleFeatures(area: string){
         switch(area) {
@@ -88,7 +100,7 @@ export default function LoginModal(
 
     function handleOnForgotPasswordSentPasswordReset() {
         toggleFeatures(ACTION_LOGIN);
-    }
+    };
 
     return (
         <>
@@ -99,26 +111,31 @@ export default function LoginModal(
                         sx={{
                             '& .MuiTextField-root': { m: 2, width: '25ch' },
                         }}
-                        noValidate
+                        // noValidate
                         autoComplete="off"
+                        onSubmit={handleSubmit}
                     >
                         <Grid container spacing={0} textAlign='center' xs={12}>
                             <Grid container spacing={1} >
                                 <Grid item xs={12} textAlign='center'>
-                                    <TextField required type="email" label="Email" id="uxEmail" variant="standard"/>
+                                    <TextField required type="email" label="Email" variant="standard" fullWidth
+                                        id="email" value={uxInputs.email} onChange={handleChange.bind(this)}
+                                    />
                                 </Grid>
                                 <Grid item xs={12} textAlign='center'>
-                                    <TextField type="text" label="Password" id='uxPassword' variant="standard" />
+                                    <TextField type="text" label="Password" variant="standard" fullWidth
+                                        id="password" value={uxInputs.password} onChange={handleChange.bind(this)}
+                                    />
                                 </Grid>
                                 <Grid item xs={6} textAlign='right' whiteSpace='nowrap' >
                                     <Button variant='text' color='secondary' onClick={handleForgotPasswordOpenModal}>forgot password</Button>
                                     <Button variant='text' color='secondary' onClick={handleSignupOpenModal}>sign up</Button>
-                                    <Button variant='contained' color='primary' style={{ padding: 4, margin: 10, borderRadius: 25 }} onClick={handleCancelModal}
+                                    <Button type="button" variant='contained' color='primary' style={{ padding: 4, margin: 10, borderRadius: 25 }} onClick={handleCancelModal}
                                         startIcon={<CancelOutlinedIcon/>}
                                     >cancel</Button>
                                 </Grid>
                                 <Grid item xs={6} textAlign='left' >
-                                    <Button variant='contained' color='primary' style={{ padding: 4, margin: 10, borderRadius: 25 }} onClick={handleOnSignIn }
+                                    <Button type='submit' variant='contained' color='primary' style={{ padding: 4, margin: 10, borderRadius: 25 }}
                                         startIcon={<LockOpenIcon/>}
                                     >sign in </Button>
                                 </Grid>
@@ -130,7 +147,8 @@ export default function LoginModal(
 
             {isForgotPasswordScreen && <LoginForgotModal onCancel={handleOnForgotPasswordCloseModal} onSentPasswordReset={handleOnForgotPasswordSentPasswordReset}/> }
 
-            {isRegisterScreen && <LoginRegisterModal onCancel={handleOnSignupCloseModal} onSignup={handleOnSignupModal} /> }
+            {isRegisterScreen && <LoginSignUpModal onCancel={handleOnSignupCloseModal} onSignup={handleOnSignupModal} /> }
+
         </>
     );
 };

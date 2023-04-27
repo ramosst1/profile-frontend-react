@@ -44,7 +44,7 @@ export default function UserProfileDetail(this: any, props: { profile?: IProfile
 
   const [retrievingData] = useState<boolean>(false);
 
-  const [uxProfile, setUxProfile] = useState({
+  const [uxInputs, setUxInputs] = useState({
       firstName: APropProfile?.firstName ?? "",
       lastName : APropProfile?.lastName ?? "",
       active: APropProfile?.active ?? false,
@@ -106,20 +106,20 @@ export default function UserProfileDetail(this: any, props: { profile?: IProfile
 
     let ValueBool = (value === "true")
 
-    setUxProfile({ ...uxProfile, [name]: ValueBool });
+    setUxInputs({ ...uxInputs, [name]: ValueBool });
   };
 
   function handleProfileChange(event: React.ChangeEvent<HTMLInputElement> ){
     const { name, value } = event.target;
 
-    setUxProfile({ ...uxProfile, [name]: value });
+    setUxInputs({ ...uxInputs, [name]: value });
 
   };
 
   function handleProfileSelectChange (event: any){
     const { name, value } = event.target;
 
-    setUxProfile({ ...uxProfile, [name]: value });
+    setUxInputs({ ...uxInputs, [name]: value });
   };
 
   function handleAddProfile(){
@@ -127,20 +127,20 @@ export default function UserProfileDetail(this: any, props: { profile?: IProfile
 
       let newAddress: IProfileAddressCreateModel = {
         isPrimary: true,
-        address1: uxProfile.address1,
-        address2: uxProfile.address2,
-        city: uxProfile.city,
-        stateAbrev: uxProfile.stateAbrev,
-        zipCode: uxProfile.zipCode,
+        address1: uxInputs.address1,
+        address2: uxInputs.address2,
+        city: uxInputs.city,
+        stateAbrev: uxInputs.stateAbrev,
+        zipCode: uxInputs.zipCode,
         isSecondary: false
 
 
       }
 
       let ProfileNew:IProfileCreateModel = {
-        firstName: uxProfile.firstName,
-        lastName: uxProfile.lastName,
-        active: uxProfile.active,
+        firstName: uxInputs.firstName,
+        lastName: uxInputs.lastName,
+        active: uxInputs.active,
         addresses: [newAddress]
       }
 
@@ -166,16 +166,16 @@ export default function UserProfileDetail(this: any, props: { profile?: IProfile
           aItem  => aItem.isPrimary === true
       )
 
-      aUpdateProfile.firstName = uxProfile.firstName;
-      aUpdateProfile.lastName = uxProfile.lastName;
-      aUpdateProfile.active = uxProfile.active;
+      aUpdateProfile.firstName = uxInputs.firstName;
+      aUpdateProfile.lastName = uxInputs.lastName;
+      aUpdateProfile.active = uxInputs.active;
 
       if(aPropAddressPrimary !== undefined) {
-        aPropAddressPrimary.address1 = uxProfile.address1;
-        aPropAddressPrimary.address2 = uxProfile.address2;
-        aPropAddressPrimary.city = uxProfile.city;
-        aPropAddressPrimary.stateAbrev = uxProfile.stateAbrev;
-        aPropAddressPrimary.zipCode = uxProfile.zipCode;
+        aPropAddressPrimary.address1 = uxInputs.address1;
+        aPropAddressPrimary.address2 = uxInputs.address2;
+        aPropAddressPrimary.city = uxInputs.city;
+        aPropAddressPrimary.stateAbrev = uxInputs.stateAbrev;
+        aPropAddressPrimary.zipCode = uxInputs.zipCode;
       }
 
       setProfilesUpdateResponse(ProfilesService.updateProfileAsync(aUpdateProfile));
@@ -192,7 +192,7 @@ export default function UserProfileDetail(this: any, props: { profile?: IProfile
       aItem => aItem.isPrimary === true
     );
 
-    setUxProfile({
+    setUxInputs({
       firstName: AProfile?.firstName ?? "",
       lastName: AProfile?.lastName ?? "",
       active: AProfile?.active ?? false,
@@ -248,7 +248,7 @@ export default function UserProfileDetail(this: any, props: { profile?: IProfile
                   <TextField
                     id="firstName"
                     name="firstName"
-                    value={uxProfile.firstName}
+                    value={uxInputs.firstName}
                     label="First Name"
                     required
                     fullWidth
@@ -261,7 +261,7 @@ export default function UserProfileDetail(this: any, props: { profile?: IProfile
                   <TextField
                     id="lastName"
                     name="lastName"
-                    value={uxProfile.lastName}
+                    value={uxInputs.lastName}
                     label="Last Name"
                     required
                     fullWidth
@@ -275,7 +275,7 @@ export default function UserProfileDetail(this: any, props: { profile?: IProfile
                 aria-label="position"
                 id="active"
                 name="active"
-                value={uxProfile.active}
+                value={uxInputs.active}
                 row
                 onChange={handleProfileChangeBool.bind(this)}
               >
@@ -297,7 +297,7 @@ export default function UserProfileDetail(this: any, props: { profile?: IProfile
               <TextField
                 id="address1"
                 name="address1"
-                value={uxProfile.address1}
+                value={uxInputs.address1}
                 label="Address1"
                 required
                 fullWidth
@@ -309,7 +309,7 @@ export default function UserProfileDetail(this: any, props: { profile?: IProfile
               <TextField
                 id="address2"
                 name="address2"
-                value={uxProfile.address2}
+                value={uxInputs.address2}
                 label="Address2"
                 fullWidth
                 variant='standard'
@@ -320,7 +320,7 @@ export default function UserProfileDetail(this: any, props: { profile?: IProfile
               <TextField
                 id="city"
                 name="city"
-                value={uxProfile.city}
+                value={uxInputs.city}
                 label="City"
                 required
                 fullWidth
@@ -340,7 +340,7 @@ export default function UserProfileDetail(this: any, props: { profile?: IProfile
                   name="stateAbrev"
                   id="stateAbrev"
                   variant='standard'
-                  value={uxProfile.stateAbrev} 
+                  value={uxInputs.stateAbrev} 
                   onChange={handleProfileSelectChange}
                   inputProps={{
                     id: 'age-native-required',
@@ -362,7 +362,7 @@ export default function UserProfileDetail(this: any, props: { profile?: IProfile
               <TextField
                 id="zipCode"
                 name="zipCode"
-                value={uxProfile.zipCode}
+                value={uxInputs.zipCode}
                 label="ZipCode"
                 required 
                 type="number"

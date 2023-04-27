@@ -12,14 +12,14 @@ const mystyle = {
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#3f51b5',
-      dark: '#2c387e',
-      light: '#6573c3',
+      main: '#0d47a1',
+      dark: '#093170',
+      light: '#3d6bb3',
     },
     secondary: {
-      main: '#1b5e20',
-      dark: '#124116',
-      light: '#487e4c'
+      main: '#00695c',
+      dark: '#004940',
+      light: '#33877c'
     }, 
     error:{
       main: '#d32f2f'
@@ -29,12 +29,10 @@ const theme = createTheme({
 
 export default function App() {
   return (
-    <ThemeProvider theme={theme}>
-        <>
-          <NavBar/>
-          <main className="container, float-md-right" style={mystyle}>
-          </main>
-        </>
-    </ThemeProvider>    
+    <>
+      <ThemeProvider theme={theme}>
+            <NavBar/>
+      </ThemeProvider>    
+    </>
   );
 }
