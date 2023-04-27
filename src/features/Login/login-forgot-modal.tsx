@@ -1,11 +1,11 @@
 
 import React, { useState } from 'react'
-import ModalWindow from '../../components/ui/windowModals/ModalWindow';
+import ModalWindow from '../../components/ui/window-modals/modal_window';
 import { Box, Button, Grid, TextField } from '@mui/material';
 import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
 import MailOutlineOutlinedIcon from '@mui/icons-material/MailOutlineOutlined';
-import IForgotPasswordRequest from './interfaces/forgotpassword/forgot-password-requests';
-import IForgotPasswordResponse from './interfaces/forgotpassword/forgot-password-response';
+import IForgotPasswordRequest from './interfaces/forgot-password/forgot-password-requests';
+import IForgotPasswordResponse from './interfaces/forgot-password/forgot-password-response';
 export default function LoginForgotModal(props: {onCancel:any, onSentPasswordReset:any}) {
 
     const [uxInputs, setUxInputs] = useState({

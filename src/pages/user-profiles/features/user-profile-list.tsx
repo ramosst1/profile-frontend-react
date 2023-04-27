@@ -17,18 +17,19 @@ import {
   styled,
   Tooltip
 } from "@mui/material";
-import UserProfileDetail from './userProfileDetail';
+import UserProfileDetail from './user-profile-detail';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import ProfilesService from '../services/profiles-service';
 import { IProfileModel } from '../interfaces/profiles/profile-models';
 import { IProfileResponse, IProfilesResponse} from '../interfaces/profiles/profile-responses';
-import useServiceApiResponse from '../../../hooks/useServiceApiResponse';
+import useServiceApiResponse from '../../../hooks/use-service-api-response';
 import IErrorMessageModel from '../../../interfaces/api-error-message';
 import { IApiResponse } from '../interfaces/profiles/api-response'; 
-import ConfirmationDialog from '../../../components/ui/dialogs/ConfirmationDialog';
-import ProcessingDialog from '../../../components/ui/dialogs/ProcessingDialog';
+import ConfirmationDialog from '../../../components/ui/dialogs/confirmation-dialog';
+import ProcessingDialog from '../../../components/ui/dialogs/processing-dialog';
+import ErrorMessagesDisplay from '../../../components/ui/error_displays/error-messages-display';
 
 export default function UserProfileList(){
 
@@ -192,13 +193,7 @@ export default function UserProfileList(){
         </Grid>
         <Grid container spacing={0} >
           <Grid item xs={12} >
-              <Box color="error.main">
-                <ul >
-                  {errorMessages.map(errorMessage => (
-                    <li>{errorMessage.message}</li>
-                  ))}
-                </ul>
-              </Box>
+              <ErrorMessagesDisplay errorMessages={errorMessages} />
           </Grid>
           <Grid item xs={12} >
             <Hidden smUp={apiProfilesLoading ? false : true} >

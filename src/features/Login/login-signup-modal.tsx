@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Box, Button, Grid, TextField } from "@mui/material";
 import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
 import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined';
-import ModalWindow from "../../components/ui/windowModals/ModalWindow";
+import ModalWindow from "../../components/ui/window-modals/modal_window";
 import { ISignupResponse } from "./interfaces/signup/signup-responses";
 import { ISignUpModel } from "./interfaces/signup/signup-models";
 import { ISignupRequest } from "./interfaces/signup/signup-requests";

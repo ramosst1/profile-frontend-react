@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {Box, Button, Grid, TextField} from "@mui/material";
-import ModalWindow from "../../components/ui/windowModals/ModalWindow";
+import ModalWindow from "../../components/ui/window-modals/modal_window";
 import LoginSignUpModal from "./login-signup-modal";
 import LoginForgotModal from "./login-forgot-modal";
 import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
@@ -8,7 +8,7 @@ import LockOpenIcon from '@mui/icons-material/LockOpen';
 import { ISignInResponse } from "./interfaces/signin/signin-responses";
 import { ISigninRequest } from "./interfaces/signin/signin-requests";
 import { ISignInModel } from "./interfaces/signin/signin-models";
-import IForgotPasswordResponse from "./interfaces/forgotpassword/forgot-password-response";
+import IForgotPasswordResponse from "./interfaces/forgot-password/forgot-password-response";
 export default function LoginModal(
     props: {onClose:any, onSignIn:any}
 ){

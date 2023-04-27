@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.css';
-import NavBar from './navBarTop';
+import NavBarTop from './nav-bar-top';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 
 const mystyle = {
@@ -31,7 +31,7 @@ export default function App() {
   return (
     <>
       <ThemeProvider theme={theme}>
-            <NavBar/>
+            <NavBarTop/>
       </ThemeProvider>    
     </>
   );

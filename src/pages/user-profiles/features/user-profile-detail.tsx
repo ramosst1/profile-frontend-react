@@ -22,8 +22,9 @@ import { IProfileCreateModel, IProfileModel, IProfileAddressCreateModel } from '
 import { IStateModel } from '../../../interfaces/states/states-model';
 import IErrorMessageModel from '../../../interfaces/api-error-message'
 import { IProfileResponse } from '../interfaces/profiles/profile-responses';
-import useServiceApiResponse from '../../../hooks/useServiceApiResponse';
-import ProcessingDialog from '../../../components/ui/dialogs/ProcessingDialog';
+import useServiceApiResponse from '../../../hooks/use-service-api-response';
+import ProcessingDialog from '../../../components/ui/dialogs/processing-dialog';
+import ErrorMessagesDisplay from '../../../components/ui/error_displays/error-messages-display';
 
 export default function UserProfileDetail(this: any, props: { profile?: IProfileModel; onCreate?: any; onUpdate?: any; onCancel?: any; }) {
 
@@ -222,13 +223,7 @@ export default function UserProfileDetail(this: any, props: { profile?: IProfile
       <form onSubmit={handleSubmit} >
          <Grid container xs={12} spacing={1} >
             <Grid item xs={12} >
-              <Box color="error.main">
-                <ul >
-                  {errorMessages.map(errorMessage => (
-                    <li>{errorMessage.message}</li>
-                  ))}
-                </ul>
-              </Box>
+              <ErrorMessagesDisplay errorMessages={errorMessages} />
             </Grid>
             <Grid item xs={12} >
             <Hidden smUp={apiProfileUpdateLoading? false : true} >
