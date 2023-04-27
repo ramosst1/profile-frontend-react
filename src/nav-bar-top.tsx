@@ -12,11 +12,11 @@ import PeopleOutlineIcon from '@material-ui/icons/PeopleOutline';
 import InfoIcon from '@mui/icons-material/Info';
 import SubscriptionsIcon from '@mui/icons-material/Subscriptions';
 import { makeStyles } from '@material-ui/core/styles';
-import LoginModal from './features/Login/login-modal';
+import LoginModal from './features/Login/signin-modal';
 import {Home, AboutUs, UserProfiles} from './pages/index'
-import LoginSignUpModal from './features/Login/login-signup-modal';
-import { ISignupResponse } from './features/Login/interfaces/signup/signup-responses';
-import { ISigninResponse } from './features/Login/interfaces/signin/signin-responses';
+import LoginSignUpModal from './features/Login/signup-modal';
+import { ISignUpResponse } from './features/Login/interfaces/signup/signup-responses';
+import { ISignInResponse } from './features/Login/interfaces/signin/signin-responses';
 
 interface PagesObject {
     pageName: string
@@ -93,7 +93,7 @@ export default function NavBarTop() {
         setIsOpenLoginModal(false);
     };
 
-    function handleLoginOnLoginModel(event:ISigninResponse){
+    function handleLoginOnLoginModel(event:ISignInResponse){
         setIsOpenLoginModal(false);
     };
 
@@ -106,7 +106,7 @@ export default function NavBarTop() {
         setIsOpenSignupModal(false);
     };
 
-    function handleLoginOnSignupModel(event:ISignupResponse){
+    function handleLoginOnSignupModel(event:ISignUpResponse){
 //        alert(signupResponse.signup.userName);
         event.success ?? setIsOpenSignupModal(false);
     };

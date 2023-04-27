@@ -1,16 +1,16 @@
 import httpAdapter from "../../../util/httpAdapter";
-import { ISigninRequest } from "../interfaces/signin/signin-requests";
-import { ISigninResponse } from "../interfaces/signin/signin-responses";
+import { ISignInRequest } from "../interfaces/signin/signin-requests";
+import { ISignInResponse } from "../interfaces/signin/signin-responses";
 
-class SignInService{
+class SignInServicex{
 
     private readonly ULR_BASE: string = 'http://localhost:54969/api/v1/signin/';
 
-    public async signInAsync(signupRequest: ISigninRequest) {
-      return await httpAdapter.post<ISigninResponse>(this.ULR_BASE, signupRequest);
+    public async SignInAsync(signupRequest: ISignInRequest) {
+      return await httpAdapter.post<ISignInResponse>(this.ULR_BASE, signupRequest);
     }
 }
 
-export default new SignInService();
+export default new SignInServicex();
 
 

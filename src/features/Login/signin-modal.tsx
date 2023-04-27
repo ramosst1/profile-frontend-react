@@ -1,14 +1,20 @@
 import React, { useEffect, useState } from "react";
 import {Box, Button, Grid, TextField} from "@mui/material";
 import ModalWindow from "../../components/ui/window-modals/modal_window";
-import LoginSignUpModal from "./login-signup-modal";
-import LoginForgotModal from "./login-forgot-modal";
+import LoginSignUpModal from "./signup-modal";
+import LoginForgotModal from "./signin-forgot-modal";
 import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
 import LockOpenIcon from '@mui/icons-material/LockOpen';
-import { ISigninResponse } from "./interfaces/signin/signin-responses";
-import { ISigninRequest } from "./interfaces/signin/signin-requests";
-import { ISignInModel } from "./interfaces/signin/signin-models";
+import signinService from "./services/signin-service";
+import { ISignInResponse } from "./interfaces/signin/signin-responses";
+import { ISignInRequest } from "./interfaces/signin/signin-requests";
+
 import ISignInForgotResponse from "./interfaces/signin-forgot/signin-forgot-response";
+import useServiceApiResponse from "../../hooks/use-service-api-response";
+import IErrorMessageModel from "../../interfaces/api-error-message";
+import ErrorMessagesDisplay from "../../components/ui/error_displays/error-messages-display";
+import ProcessingDialog from "../../components/ui/dialogs/processing-dialog";
+
 export default function LoginModal(
     props: {onClose:any, onSignIn:any}
 ){
@@ -22,6 +28,12 @@ export default function LoginModal(
     const [isRegisterScreen, setIsRegisterScreen] = useState(false);
     const [isForgotPasswordScreen, setIsForgotPasswordScreen] = useState(false);
 
+    const [signInResponse, setSignInResponse] = useState<Promise<ISignInResponse> | undefined>();
+    const {apiResponse:apiSignInResponse, messages: apiSignInMessages, loading:apiSignInLoading} = useServiceApiResponse<ISignInResponse>(signInResponse);
+
+    const [errorMessages, setErrorMessages] = useState<IErrorMessageModel[]>([]);
+
+
     const [uxInputs, setUxInputs] = useState({
         email:'',
         password: ''
@@ -34,9 +46,37 @@ export default function LoginModal(
         };
     }, [])
 
+    useEffect(() =>{
+
+        apiSignInMessages && setErrorMessages(apiSignInMessages);
+
+        if(apiSignInResponse?.success !== true) return;
+
+        toggleFeatures(ACTION_LOGIN);
+
+        props.onSignIn(apiSignInResponse);
+
+        // const aSigninUser: ISignInModel = {
+        //     loginId: 1,
+        //     userName: requestSignInUser.userName,
+        //     firstName: "Joe",
+        //     lastName: "Smith"
+        // }
+
+        // const response: ISignInResponse ={
+        //     success: true,
+        //     messages: [],
+        //     signInUser: aSigninUser
+        // }
+
+
+    }, [apiSignInResponse])
+
     function handleSubmit(event: { preventDefault: () => void; }){
         event.preventDefault()
+
         handleOnSignIn()
+
     };
 
     function handleChange(event: React.ChangeEvent<HTMLInputElement> ){
@@ -54,27 +94,12 @@ export default function LoginModal(
     function handleOnSignIn(){
 
 
-        const request: ISigninRequest = {
+        const requestSignInUser: ISignInRequest = {
             userName: uxInputs.email,
             password: uxInputs.password
         }
 
-        const aSigninUser: ISignInModel = {
-            loginId: 1,
-            userName: request.userName,
-            firstName: "Joe",
-            lastName: "Smith"
-        }
-
-        const response: ISigninResponse ={
-            success: true,
-            messages: [],
-            signInUser: aSigninUser
-        }
-
-        toggleFeatures(ACTION_LOGIN);
-
-        props.onSignIn(response);
+        setSignInResponse(signinService.SignInAsync(requestSignInUser));
     };
 
     function handleOnSignupCloseModal(){
@@ -128,16 +153,21 @@ export default function LoginModal(
     return (
         <>
             {isLoginScreen && (
-                <ModalWindow title='Login Screen' width='40%' onClose={handleCancelModal} >
+                <ModalWindow title='Sign In' width='50%' onClose={handleCancelModal} >
                     <Box
                         component="form"
                         sx={{
                             '& .MuiTextField-root': { m: 2, width: '25ch' },
                         }}
-                        // noValidate
+                        noValidate
                         autoComplete="off"
                         onSubmit={handleSubmit}
                     >
+                        <Grid container spacing={0} xs={12}>
+                            <Grid item xs={12} >
+                                    <ErrorMessagesDisplay errorMessages={errorMessages} />
+                            </Grid>
+                        </Grid>
                         <Grid container spacing={0} textAlign='center' xs={12}>
                             <Grid container spacing={1} >
                                 <Grid item xs={12} textAlign='center'>
@@ -166,6 +196,13 @@ export default function LoginModal(
                         </Grid>
                     </Box>                    
                 </ModalWindow>
+            )}
+
+            {apiSignInLoading && (
+                <>
+                <strong>test</strong>
+                <ProcessingDialog message='Signing up is processing...' />
+                </>
             )}
 
             {isForgotPasswordScreen && <LoginForgotModal onCancel={handleOnForgotPasswordCloseModal} onSentPasswordReset={handleOnForgotPasswordSentPasswordReset}/> }

@@ -1,13 +1,34 @@
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import ModalWindow from '../../components/ui/window-modals/modal_window';
-import { Box, Button, Grid, TextField } from '@mui/material';
+import { Box, Button, Grid, Hidden, TextField } from '@mui/material';
 import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
 import MailOutlineOutlinedIcon from '@mui/icons-material/MailOutlineOutlined';
 import ISignInForgotRequest from './interfaces/signin-forgot/signin-forgot-requests';
 import ISignInForgotResponse from './interfaces/signin-forgot/signin-forgot-response';
+import useServiceApiResponse from '../../hooks/use-service-api-response';
+import IErrorMessageModel from '../../interfaces/api-error-message';
+import ErrorMessagesDisplay from '../../components/ui/error_displays/error-messages-display';
+import ProcessingDialog from '../../components/ui/dialogs/processing-dialog';
+import signinForgotService from './services/signin-forgot-service';
+
 
 export default function LoginForgotModal(props: {onCancel:any, onSentPasswordReset:any}) {
+
+    const [signInForgotResponse, setSignInForgotResponse] = useState<Promise<ISignInForgotResponse>>();
+    const { apiResponse:apiSignInForgotResponse, messages:apiSignInForgotMessage, loading:apiSignInForgotLoading} = useServiceApiResponse<ISignInForgotResponse>(signInForgotResponse);
+
+    const [errorMessages, setErrorMessages] = useState<IErrorMessageModel[]>([]);
+
+    useEffect(() => {
+        setErrorMessages(apiSignInForgotMessage);
+
+        if(apiSignInForgotResponse?.success !== true) return;
+
+        props.onSentPasswordReset(apiSignInForgotResponse);
+
+
+    }, [apiSignInForgotResponse])
 
     const [uxInputs, setUxInputs] = useState({
         email: ''
@@ -31,19 +52,12 @@ export default function LoginForgotModal(props: {onCancel:any, onSentPasswordRes
 
     function handleOnSendRestPassword(){
 
-        const request: ISignInForgotRequest = {
+        const requestSignInForgot: ISignInForgotRequest = {
             userName: uxInputs.email
         }
 
-        const response: ISignInForgotResponse = {
-            success: true,
-            messages: [],
-            // signInUser: undefined
-        }
+        setSignInForgotResponse(signinForgotService.signInForgotAsync(requestSignInForgot));
 
-
-
-        props.onSentPasswordReset(response);
     }
 
     return (
@@ -57,6 +71,11 @@ export default function LoginForgotModal(props: {onCancel:any, onSentPasswordRes
                     autoComplete="off"
                     onSubmit={handleSubmit}
                 >
+                    <Grid container spacing={0} xs={12}>
+                        <Grid item xs={12} >
+                            <ErrorMessagesDisplay errorMessages={errorMessages} />
+                        </Grid>
+                    </Grid>
                     <Grid container spacing={0} textAlign='center' xs={12}>
                         <Grid container spacing={1} >
                             <Grid item xs={12} textAlign='left'>
@@ -77,7 +96,11 @@ export default function LoginForgotModal(props: {onCancel:any, onSentPasswordRes
                             </Grid>
                         </Grid>
                     </Grid>
+
+                    {apiSignInForgotLoading && <ProcessingDialog message='Profiles are loading...' />}
+
                 </Box>
+                
             </ModalWindow>
         </>
     );

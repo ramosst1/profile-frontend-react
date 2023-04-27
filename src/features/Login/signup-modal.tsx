@@ -1,14 +1,54 @@
-import React, { useState } from "react";
-import { Box, Button, Grid, TextField } from "@mui/material";
+import React, { useEffect, useState } from "react";
+import { Box, Button, Grid, Hidden, TextField } from "@mui/material";
 import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
 import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined';
 import ModalWindow from "../../components/ui/window-modals/modal_window";
-import { ISignupResponse } from "./interfaces/signup/signup-responses";
 import { ISignUpModel } from "./interfaces/signup/signup-models";
-import { ISignupRequest } from "./interfaces/signup/signup-requests";
+import { ISignUpRequest } from "./interfaces/signup/signup-requests";
+import { ISignUpResponse } from "./interfaces/signup/signup-responses";
+import useServiceApiResponse from "../../hooks/use-service-api-response";
+import IErrorMessageModel from "../../interfaces/api-error-message";
+import ErrorMessagesDisplay from "../../components/ui/error_displays/error-messages-display";
+import SignUpService from "./services/signup-service";
+import ProcessingDialog from "../../components/ui/dialogs/processing-dialog";
 
 export default function LoginSignUpModal(    props: {onCancel:any, onSignup:any}){
 
+    const [signUpResponse, setSignUpResponse] = useState<Promise<ISignUpResponse> | undefined>();
+    const {apiResponse:apiSignUpResponse, messages: apiSignUpMessages, loading:apiSignUpLoading} = useServiceApiResponse<ISignUpResponse>(signUpResponse);
+
+    const [errorMessages, setErrorMessages] = useState<IErrorMessageModel[]>([]);
+
+    useEffect(() => {
+
+        apiSignUpMessages && setErrorMessages(apiSignUpMessages);     
+
+        if(apiSignUpResponse?.success !== true) return;
+        
+        // const aSignuModel: ISignUpModel ={
+        //     signInId: 1,
+        //     firstName: signUpRequest.firstName,
+        //     lastName: signUpRequest.lastName,
+        //     userName: signUpRequest.userName,
+        //     password: signUpRequest.password
+        // }
+
+        // const response: ISignUpResponse = {
+        //     success: true,
+        //     messages: [],
+        //     signupUser: aSignuModel
+        // }
+
+        // setSignupResponse({ ...signupResponse, 
+        //     signInId: 0, 
+        //     firstName: response.signup.firstName,
+        //     lastName: response.signup.lastName
+        // })
+
+         props.onSignup(apiSignUpResponse);
+
+    }, [apiSignUpResponse])
+      
     const [uxInputs, setUxInputs] = useState({     
         firstName: '',
         lastName: '',
@@ -16,13 +56,13 @@ export default function LoginSignUpModal(    props: {onCancel:any, onSignup:any}
         emailConfirm: '',
         password: '',
         passwordConfirm: ''
-     })
+    });
 
-     const [signupResponse, setSignupResponse] = useState({
-        signInId: 0,
-        firstName: '',
-        lastName: '',
-     })
+    //  const [signupResponse, setSignupResponse] = useState({
+    //     signInId: 0,
+    //     firstName: '',
+    //     lastName: '',
+    // });
 
      function handleSubmit(event: { preventDefault: () => void; }){
         event.preventDefault()
@@ -44,41 +84,20 @@ export default function LoginSignUpModal(    props: {onCancel:any, onSignup:any}
     function handleOnSignup(){
 
 
-        const request: ISignupRequest = {
+        const signUpRequest: ISignUpRequest = {
             firstName: uxInputs.firstName,
             lastName: uxInputs.lastName,
             userName: uxInputs.email,
             password: uxInputs.password
         }
 
-        const aSignuModel: ISignUpModel ={
-            signInId: 1,
-            firstName: request.firstName,
-            lastName: request.lastName,
-            userName: request.userName,
-            password: request.password
-        }
-
-        const response: ISignupResponse = {
-            success: true,
-            messages: [],
-            signup: aSignuModel
-        }
-
-        setSignupResponse({ ...signupResponse, 
-            signInId: 0, 
-            firstName: response.signup.firstName,
-            lastName: response.signup.lastName
-        })
-
-        props.onSignup(response);
-
-        return response;
+        setSignUpResponse(SignUpService.SignUpAsync(signUpRequest));
 
     };
 
       return (
         <>
+
             <ModalWindow title='Sign Up' width='50%' onClose={handleCancelModal} >
             <Box
                 component="form"
@@ -87,8 +106,13 @@ export default function LoginSignUpModal(    props: {onCancel:any, onSignup:any}
                 }}
                 autoComplete="off" 
                 onSubmit={handleSubmit}
+                noValidate
             >
+                <Grid item xs={12} >
+                    <ErrorMessagesDisplay errorMessages={errorMessages} />
+                </Grid>
                 <Grid container spacing={0} textAlign='center' xs={12}>
+
                     <Grid container spacing={1} >
                         <Grid item xs={6} textAlign='left'>
                         <TextField required type="text" label="First Name" variant="standard" fullWidth
@@ -134,7 +158,15 @@ export default function LoginSignUpModal(    props: {onCancel:any, onSignup:any}
                         </Grid>
                     </Grid>
                 </Grid>
+                {apiSignUpLoading && (
+                    <>
+                    <strong>test</strong>
+                    <ProcessingDialog message='Signing up is processing...' />
+                    </>
+                )}
+
                 </Box>
+
             </ModalWindow>
         </>
     );
