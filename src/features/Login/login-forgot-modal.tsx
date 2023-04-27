@@ -4,8 +4,9 @@ import ModalWindow from '../../components/ui/window-modals/modal_window';
 import { Box, Button, Grid, TextField } from '@mui/material';
 import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
 import MailOutlineOutlinedIcon from '@mui/icons-material/MailOutlineOutlined';
-import IForgotPasswordRequest from './interfaces/forgot-password/forgot-password-requests';
-import IForgotPasswordResponse from './interfaces/forgot-password/forgot-password-response';
+import ISignInForgotRequest from './interfaces/signin-forgot/signin-forgot-requests';
+import ISignInForgotResponse from './interfaces/signin-forgot/signin-forgot-response';
+
 export default function LoginForgotModal(props: {onCancel:any, onSentPasswordReset:any}) {
 
     const [uxInputs, setUxInputs] = useState({
@@ -30,11 +31,11 @@ export default function LoginForgotModal(props: {onCancel:any, onSentPasswordRes
 
     function handleOnSendRestPassword(){
 
-        const request: IForgotPasswordRequest = {
+        const request: ISignInForgotRequest = {
             userName: uxInputs.email
         }
 
-        const response: IForgotPasswordResponse = {
+        const response: ISignInForgotResponse = {
             success: true,
             messages: [],
             // signInUser: undefined

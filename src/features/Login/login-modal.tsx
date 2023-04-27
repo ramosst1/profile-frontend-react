@@ -5,10 +5,10 @@ import LoginSignUpModal from "./login-signup-modal";
 import LoginForgotModal from "./login-forgot-modal";
 import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
 import LockOpenIcon from '@mui/icons-material/LockOpen';
-import { ISignInResponse } from "./interfaces/signin/signin-responses";
+import { ISigninResponse } from "./interfaces/signin/signin-responses";
 import { ISigninRequest } from "./interfaces/signin/signin-requests";
 import { ISignInModel } from "./interfaces/signin/signin-models";
-import IForgotPasswordResponse from "./interfaces/forgot-password/forgot-password-response";
+import ISignInForgotResponse from "./interfaces/signin-forgot/signin-forgot-response";
 export default function LoginModal(
     props: {onClose:any, onSignIn:any}
 ){
@@ -66,7 +66,7 @@ export default function LoginModal(
             lastName: "Smith"
         }
 
-        const response: ISignInResponse ={
+        const response: ISigninResponse ={
             success: true,
             messages: [],
             signInUser: aSigninUser
@@ -121,7 +121,7 @@ export default function LoginModal(
         toggleFeatures(ACTION_LOGIN);
     };
 
-    function handleOnForgotPasswordSentPasswordReset(event: IForgotPasswordResponse) {
+    function handleOnForgotPasswordSentPasswordReset(event: ISignInForgotResponse) {
         event.success && toggleFeatures(ACTION_LOGIN);
     };
 

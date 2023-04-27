@@ -16,7 +16,7 @@ import LoginModal from './features/Login/login-modal';
 import {Home, AboutUs, UserProfiles} from './pages/index'
 import LoginSignUpModal from './features/Login/login-signup-modal';
 import { ISignupResponse } from './features/Login/interfaces/signup/signup-responses';
-import { ISignInResponse } from './features/Login/interfaces/signin/signin-responses';
+import { ISigninResponse } from './features/Login/interfaces/signin/signin-responses';
 
 interface PagesObject {
     pageName: string
@@ -93,7 +93,7 @@ export default function NavBarTop() {
         setIsOpenLoginModal(false);
     };
 
-    function handleLoginOnLoginModel(event:ISignInResponse){
+    function handleLoginOnLoginModel(event:ISigninResponse){
         setIsOpenLoginModal(false);
     };
 
