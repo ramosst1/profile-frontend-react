@@ -43,7 +43,7 @@ export default function UserProfileDetail(this: any, props: { profile?: IProfile
   const [countryStatesList, setCountryStatesList] = useState<IStateModel[]>([]);
   const [errorMessages, setErrorMessages] = useState<IErrorMessageModel[]>([]);
 
-  const [retrievingData] = useState<boolean>(false);
+  const [retrievingData, setRetrievingData] = useState<boolean>(false);
 
   const [uxInputs, setUxInputs] = useState({
       firstName: APropProfile?.firstName ?? "",
@@ -58,7 +58,7 @@ export default function UserProfileDetail(this: any, props: { profile?: IProfile
 
     useEffect(() => {
 
-      if(!countryStatesList.length) populateCountryStatesAsync();
+      if(countryStatesList.length === 0) populateCountryStatesAsync();
 
     }, [])
 
@@ -208,14 +208,23 @@ export default function UserProfileDetail(this: any, props: { profile?: IProfile
 
   async function populateCountryStatesAsync(){
 
+
+    if(countryStatesList.length = 0) return;
+
     try {
+
+
+      // setRetrievingData(true);
+
       const response = await StatesServices.getStatesAsync();
 
       setCountryStatesList(response.states);
   
     } catch (e) {
       setErrorMessages([{ message: 'An unexpect error occured.', statusCode: '999'  } as IErrorMessageModel]);
-    }
+    } finally{
+      // setRetrievingData(false);
+    };
  
   };
 
@@ -226,16 +235,9 @@ export default function UserProfileDetail(this: any, props: { profile?: IProfile
               <ErrorMessagesDisplay errorMessages={errorMessages} />
             </Grid>
             <Grid item xs={12} >
-            <Hidden smUp={apiProfileUpdateLoading? false : true} >
-                <ProcessingDialog message='Profile is updating ...' />
-            </Hidden>
-            <Hidden smUp={apiProfileCreateLoading? false : true} >
-              <ProcessingDialog message='Profile is being created...' />
-            </Hidden>
-            <Hidden smUp={!retrievingData} >
-              <ProcessingDialog message='Retrieving Information...' />
-            </Hidden>
-
+              <ProcessingDialog open={apiProfileUpdateLoading} message='Profile is updating ...' />
+              <ProcessingDialog open={apiProfileCreateLoading} message='Profile is being created...' />
+              <ProcessingDialog open={retrievingData} message='Retrieving Information...' />
           </Grid>
 
             <Grid container item xs={12} >

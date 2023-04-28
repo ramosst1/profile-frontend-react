@@ -4,7 +4,7 @@ import ISignInForgotResponse from "../interfaces/signin-forgot/signin-forgot-res
 
 class SignInForgotService{
 
-    private readonly ULR_BASE: string = 'http://localhost:54969/api/v1/forgotsignin/';
+    private readonly ULR_BASE: string = 'http://localhost:54969/api/v1/signin/forgot/';
 
     public async signInForgotAsync(signupRequest: ISignInForgotRequest) {
       return await httpAdapter.post<ISignInForgotResponse>(this.ULR_BASE, signupRequest);

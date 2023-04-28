@@ -196,12 +196,8 @@ export default function UserProfileList(){
               <ErrorMessagesDisplay errorMessages={errorMessages} />
           </Grid>
           <Grid item xs={12} >
-            <Hidden smUp={apiProfilesLoading ? false : true} >
-              <ProcessingDialog message='Profiles are loading...' />
-            </Hidden>
-            <Hidden smUp={apiProfileDeleteLoading ? false : true} >
-              <ProcessingDialog message='Profiles is being deleted...' />
-            </Hidden>
+              <ProcessingDialog open={apiProfilesLoading}message='Profiles are loading...' />
+              <ProcessingDialog open={apiProfileDeleteLoading} message='Profiles is being deleted...' />
           </Grid>
         </Grid>
 

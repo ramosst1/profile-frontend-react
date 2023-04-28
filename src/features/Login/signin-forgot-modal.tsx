@@ -62,7 +62,7 @@ export default function LoginForgotModal(props: {onCancel:any, onSentPasswordRes
 
     return (
         <>
-            <ModalWindow title='Forgot Password' width='30%' onClose={handleCancelModal} >
+            <ModalWindow open={true} title='Forgot Password' width='30%' onClose={handleCancelModal} >
                 <Box
                     component="form"
                     sx={{
@@ -97,7 +97,7 @@ export default function LoginForgotModal(props: {onCancel:any, onSentPasswordRes
                         </Grid>
                     </Grid>
 
-                    {apiSignInForgotLoading && <ProcessingDialog message='Profiles are loading...' />}
+                    <ProcessingDialog open={apiSignInForgotLoading} message='Profiles are loading...' />
 
                 </Box>
                 

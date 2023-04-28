@@ -152,8 +152,8 @@ export default function LoginModal(
 
     return (
         <>
-            {isLoginScreen && (
-                <ModalWindow title='Sign In' width='50%' onClose={handleCancelModal} >
+            {/* {isLoginScreen && ( */}
+                <ModalWindow open={isLoginScreen} title='Sign In' width='50%' onClose={handleCancelModal} >
                     <Box
                         component="form"
                         sx={{
@@ -196,14 +196,9 @@ export default function LoginModal(
                         </Grid>
                     </Box>                    
                 </ModalWindow>
-            )}
+            {/* )} */}
 
-            {apiSignInLoading && (
-                <>
-                <strong>test</strong>
-                <ProcessingDialog message='Signing up is processing...' />
-                </>
-            )}
+            <ProcessingDialog open={apiSignInLoading} message='Signing up is processing...' />
 
             {isForgotPasswordScreen && <LoginForgotModal onCancel={handleOnForgotPasswordCloseModal} onSentPasswordReset={handleOnForgotPasswordSentPasswordReset}/> }
 

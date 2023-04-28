@@ -98,7 +98,7 @@ export default function LoginSignUpModal(    props: {onCancel:any, onSignup:any}
       return (
         <>
 
-            <ModalWindow title='Sign Up' width='50%' onClose={handleCancelModal} >
+            <ModalWindow open={true} title='Sign Up' width='50%' onClose={handleCancelModal} >
             <Box
                 component="form"
                 sx={{
@@ -158,12 +158,7 @@ export default function LoginSignUpModal(    props: {onCancel:any, onSignup:any}
                         </Grid>
                     </Grid>
                 </Grid>
-                {apiSignUpLoading && (
-                    <>
-                    <strong>test</strong>
-                    <ProcessingDialog message='Signing up is processing...' />
-                    </>
-                )}
+                <ProcessingDialog open={apiSignUpLoading} message='Signing up is processing...' />
 
                 </Box>
 

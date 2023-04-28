@@ -1,7 +1,7 @@
 import { Box, Grid, Modal } from '@mui/material';
 import React from 'react';
 
-export default function ModalWindow(props: {title:string, width:string, onClose:any, children:any}){
+export default function ModalWindow(props: {open: boolean, title:string, width:string, onClose:any, children:any}){
 
     const modalWindowStyle = {
         margin: '0',
@@ -36,7 +36,7 @@ export default function ModalWindow(props: {title:string, width:string, onClose:
     return (
         <>
             <Modal 
-                open={true}
+                open={props.open}
                 onClose={handleOnClose}
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"

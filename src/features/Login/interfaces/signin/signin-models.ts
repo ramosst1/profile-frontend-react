@@ -1,6 +1,6 @@
 
 export interface ISignInModel{
-    loginId: number
+    signInId: number
     userName: string
     firstName: string
     lastName: string

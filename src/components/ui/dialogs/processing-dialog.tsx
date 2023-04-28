@@ -1,11 +1,11 @@
 import { CircularProgress, Dialog, DialogContent, DialogContentText, DialogTitle, Grid, LinearProgress } from "@mui/material"
 import React from "react"
-export default function ProcessingDialog( props: {message:string}){
+export default function ProcessingDialog( props: { open: boolean, message:string}){
 
     return (
         <>
           <Dialog
-            open={true}
+            open={props.open}
             keepMounted
             aria-labelledby="alert-dialog-slide-title"
             aria-describedby="alert-dialog-slide-description"

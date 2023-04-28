@@ -119,7 +119,7 @@ export default function NavBarTop() {
                     <Toolbar disableGutters>
                         {/* <ChildCareIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} /> */}
                         <Typography
-                            variant="h3"
+                            variant="h6"
                             noWrap
                             component="a"
                             href="/"
