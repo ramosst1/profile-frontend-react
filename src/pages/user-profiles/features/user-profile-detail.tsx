@@ -229,7 +229,7 @@ export default function UserProfileDetail(this: any, props: { profile?: IProfile
   };
 
     return (
-      <form onSubmit={handleSubmit} >
+      <form onSubmit={handleSubmit}  >
          <Grid container xs={12} spacing={1} >
             <Grid item xs={12} >
               <ErrorMessagesDisplay errorMessages={errorMessages} />
