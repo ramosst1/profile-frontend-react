@@ -198,12 +198,12 @@ export default function NavBarTop() {
                         </Box>
 
                         <Box sx={{ flexGrow: 0 }}>
-                            <Button color="inherit"  sx={{color: '#ef6694'}} onClick={handleOnSignUp}>
+                            <Button color="inherit"  sx={{color: '#ef6694', fontSize: 'small'}} onClick={handleOnSignUp}>
                                 <SubscriptionsIcon sx={{color: '#ef6694'}} />
                                 Sign Up
                             </Button>
 
-                            <Button color="inherit"  sx={{color: '#dbffe0'}} onClick={handleOnSignIn}>
+                            <Button color="inherit"  sx={{color: '#dbffe0', fontSize:'small'}} onClick={handleOnSignIn}>
                                 <PeopleOutlineIcon className={classes.topNavIcon}  />
                                 Sign In
                             </Button>
@@ -214,6 +214,7 @@ export default function NavBarTop() {
                 <Box sx={{textAlign: 'left', flexGrow: 1, display: { xs: 'none', md: 'flex' } }} >
                             {pageList.map((page) => (
                             <Button
+                                size='small'
                                 key={page.pageName}
                                 onClick={() => handleRouteToPageNavMenu(page.url)}
                                 sx={{ my: 2, color: '#dbffe0' }}

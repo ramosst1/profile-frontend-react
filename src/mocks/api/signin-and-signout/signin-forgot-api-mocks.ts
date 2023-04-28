@@ -31,8 +31,8 @@ export const signinForgotUserhandlers = [
         //#region Begin no user found
         {
           const messages: IMessageModel[] = [{
-            internalMessage: 'Your account has not been found.',
-            externalMessage: 'Your account has not been found.',
+            internalMessage: 'Your account is not found.',
+            externalMessage: 'Your account is not found.',
             statusCode: '200'
           }];
 

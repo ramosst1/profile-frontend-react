@@ -1,7 +1,7 @@
 
 import React, { useEffect, useState } from 'react'
 import ModalWindow from '../../components/ui/window-modals/modal_window';
-import { Box, Button, Grid, Hidden, TextField } from '@mui/material';
+import { Box, Button, Grid, TextField } from '@mui/material';
 import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
 import MailOutlineOutlinedIcon from '@mui/icons-material/MailOutlineOutlined';
 import ISignInForgotRequest from './interfaces/signin-forgot/signin-forgot-requests';
@@ -21,12 +21,8 @@ export default function LoginForgotModal(props: {onCancel:any, onSentPasswordRes
     const [errorMessages, setErrorMessages] = useState<IErrorMessageModel[]>([]);
 
     useEffect(() => {
+
         setErrorMessages(apiSignInForgotMessage);
-
-        if(apiSignInForgotResponse?.success !== true) return;
-
-        props.onSentPasswordReset(apiSignInForgotResponse);
-
 
     }, [apiSignInForgotResponse])
 
@@ -87,7 +83,7 @@ export default function LoginForgotModal(props: {onCancel:any, onSentPasswordRes
                             <Grid item xs={6} textAlign='right' >
                                 <Button type='button' variant='contained' style={{ padding: 4, margin: 10, borderRadius: 25 }} onClick={handleCancelModal} 
                                     startIcon={<CancelOutlinedIcon/>} 
-                                >cancel</Button>
+                                >close</Button>
                             </Grid>
                             <Grid item xs={6} textAlign='left' whiteSpace='nowrap' >
                                 <Button type='submit' variant='contained' style={{ padding: 4, margin: 10, borderRadius: 25 }} 

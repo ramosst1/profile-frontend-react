@@ -56,19 +56,6 @@ export default function LoginModal(
 
         props.onSignIn(apiSignInResponse);
 
-        // const aSigninUser: ISignInModel = {
-        //     loginId: 1,
-        //     userName: requestSignInUser.userName,
-        //     firstName: "Joe",
-        //     lastName: "Smith"
-        // }
-
-        // const response: ISignInResponse ={
-        //     success: true,
-        //     messages: [],
-        //     signInUser: aSigninUser
-        // }
-
 
     }, [apiSignInResponse])
 
@@ -152,51 +139,48 @@ export default function LoginModal(
 
     return (
         <>
-            {/* {isLoginScreen && ( */}
-                <ModalWindow open={isLoginScreen} title='Sign In' width='50%' onClose={handleCancelModal} >
-                    <Box
-                        component="form"
-                        sx={{
-                            '& .MuiTextField-root': { m: 2, width: '25ch' },
-                        }}
-                        noValidate
-                        autoComplete="off"
-                        onSubmit={handleSubmit}
-                    >
-                        <Grid container spacing={0} xs={12}>
-                            <Grid item xs={12} >
-                                    <ErrorMessagesDisplay errorMessages={errorMessages} />
+            <ModalWindow open={isLoginScreen} title='Sign In' width='50%' onClose={handleCancelModal} >
+                <Box
+                    component="form"
+                    sx={{
+                        '& .MuiTextField-root': { m: 2, width: '25ch' },
+                    }}
+                    autoComplete="off"
+                    onSubmit={handleSubmit}
+                >
+                    <Grid container spacing={0} xs={12}>
+                        <Grid item xs={12} >
+                                <ErrorMessagesDisplay errorMessages={errorMessages} />
+                        </Grid>
+                    </Grid>
+                    <Grid container spacing={0} textAlign='center' xs={12}>
+                        <Grid container spacing={1} >
+                            <Grid item xs={12} textAlign='center'>
+                                <TextField required type="email" label="Email" variant="standard" fullWidth
+                                    id="email" value={uxInputs.email} onChange={handleChange.bind(this)}
+                                />
+                            </Grid>
+                            <Grid item xs={12} textAlign='center'>
+                                <TextField type="password" label="Password" variant="standard" fullWidth
+                                    id="password" value={uxInputs.password} onChange={handleChange.bind(this)}
+                                />
+                            </Grid>
+                            <Grid item xs={6} textAlign='right' whiteSpace='nowrap' >
+                                <Button variant='text' color='secondary' onClick={handleForgotPasswordOpenModal}>forgot password</Button>
+                                <Button variant='text' color='secondary' onClick={handleSignupOpenModal}>sign up</Button>
+                                <Button type="button" variant='contained' color='primary' style={{ padding: 4, margin: 10, borderRadius: 25 }} onClick={handleCancelModal}
+                                    startIcon={<CancelOutlinedIcon/>}
+                                >cancel</Button>
+                            </Grid>
+                            <Grid item xs={6} textAlign='left' >
+                                <Button type='submit' variant='contained' color='primary' style={{ padding: 4, margin: 10, borderRadius: 25 }}
+                                    startIcon={<LockOpenIcon/>}
+                                >sign in </Button>
                             </Grid>
                         </Grid>
-                        <Grid container spacing={0} textAlign='center' xs={12}>
-                            <Grid container spacing={1} >
-                                <Grid item xs={12} textAlign='center'>
-                                    <TextField required type="email" label="Email" variant="standard" fullWidth
-                                        id="email" value={uxInputs.email} onChange={handleChange.bind(this)}
-                                    />
-                                </Grid>
-                                <Grid item xs={12} textAlign='center'>
-                                    <TextField type="text" label="Password" variant="standard" fullWidth
-                                        id="password" value={uxInputs.password} onChange={handleChange.bind(this)}
-                                    />
-                                </Grid>
-                                <Grid item xs={6} textAlign='right' whiteSpace='nowrap' >
-                                    <Button variant='text' color='secondary' onClick={handleForgotPasswordOpenModal}>forgot password</Button>
-                                    <Button variant='text' color='secondary' onClick={handleSignupOpenModal}>sign up</Button>
-                                    <Button type="button" variant='contained' color='primary' style={{ padding: 4, margin: 10, borderRadius: 25 }} onClick={handleCancelModal}
-                                        startIcon={<CancelOutlinedIcon/>}
-                                    >cancel</Button>
-                                </Grid>
-                                <Grid item xs={6} textAlign='left' >
-                                    <Button type='submit' variant='contained' color='primary' style={{ padding: 4, margin: 10, borderRadius: 25 }}
-                                        startIcon={<LockOpenIcon/>}
-                                    >sign in </Button>
-                                </Grid>
-                            </Grid>
-                        </Grid>
-                    </Box>                    
-                </ModalWindow>
-            {/* )} */}
+                    </Grid>
+                </Box>                    
+            </ModalWindow>
 
             <ProcessingDialog open={apiSignInLoading} message='Signing up is processing...' />
 

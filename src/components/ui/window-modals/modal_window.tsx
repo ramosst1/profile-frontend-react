@@ -24,7 +24,7 @@ export default function ModalWindow(props: {open: boolean, title:string, width:s
         color: 'white',
         borderTopLeftRadius: 11,
         borderTopRightRadius: 11,
-        fontSize: 30,
+        fontSize: 15,
         fontWeight: 600,
         padding: 1
        };

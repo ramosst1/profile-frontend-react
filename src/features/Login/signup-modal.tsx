@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Box, Button, Grid, Hidden, TextField } from "@mui/material";
 import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
 import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined';
 import ModalWindow from "../../components/ui/window-modals/modal_window";
-import { ISignUpModel } from "./interfaces/signup/signup-models";
 import { ISignUpRequest } from "./interfaces/signup/signup-requests";
 import { ISignUpResponse } from "./interfaces/signup/signup-responses";
 import useServiceApiResponse from "../../hooks/use-service-api-response";
@@ -19,36 +18,6 @@ export default function LoginSignUpModal(    props: {onCancel:any, onSignup:any}
 
     const [errorMessages, setErrorMessages] = useState<IErrorMessageModel[]>([]);
 
-    useEffect(() => {
-
-        apiSignUpMessages && setErrorMessages(apiSignUpMessages);     
-
-        if(apiSignUpResponse?.success !== true) return;
-        
-        // const aSignuModel: ISignUpModel ={
-        //     signInId: 1,
-        //     firstName: signUpRequest.firstName,
-        //     lastName: signUpRequest.lastName,
-        //     userName: signUpRequest.userName,
-        //     password: signUpRequest.password
-        // }
-
-        // const response: ISignUpResponse = {
-        //     success: true,
-        //     messages: [],
-        //     signupUser: aSignuModel
-        // }
-
-        // setSignupResponse({ ...signupResponse, 
-        //     signInId: 0, 
-        //     firstName: response.signup.firstName,
-        //     lastName: response.signup.lastName
-        // })
-
-         props.onSignup(apiSignUpResponse);
-
-    }, [apiSignUpResponse])
-      
     const [uxInputs, setUxInputs] = useState({     
         firstName: '',
         lastName: '',
@@ -58,23 +27,72 @@ export default function LoginSignUpModal(    props: {onCancel:any, onSignup:any}
         passwordConfirm: ''
     });
 
-    //  const [signupResponse, setSignupResponse] = useState({
-    //     signInId: 0,
-    //     firstName: '',
-    //     lastName: '',
-    // });
+
+    // const [formError, setFormConfirmError] = useState(true);
+
+    const [passwordConfirmError, setPasswordConfirmError] = useState(false);
+    const [passwordConfirmMessage, setPasswordConfirmMessage] = useState('');
+    
+    const [emailConfirmError, setEmailConfirmError] = useState(false);
+    const [emailConfirmMessage, setEmailConfirmMessage] = useState('');
+
+    useEffect(() => {
+
+
+        apiSignUpMessages && setErrorMessages(apiSignUpMessages);     
+
+        if(apiSignUpResponse?.success !== true) return;
+        
+         props.onSignup(apiSignUpResponse);
+
+    }, [apiSignUpResponse])
+      
 
      function handleSubmit(event: { preventDefault: () => void; }){
         event.preventDefault()
 
-        handleOnSignup()
+        setErrorMessages([]);        
+
+        handleOnSignup();
         
     };
 
+    function validateForm(){}
+
     function handleChange(event: React.ChangeEvent<HTMLInputElement> ){
         const { id, value } = event.target;
+
+        // setFormConfirmError(false);
+
+        setPasswordConfirmError(false);                    
+        setPasswordConfirmMessage('');                    
+
+        setEmailConfirmError(false);                    
+        setEmailConfirmMessage('');                    
+
         setUxInputs({ ...uxInputs, [id]: value });
-    
+
+        switch(id){
+            case 'passwordConfirm':
+                if(!validateCompareValues(uxInputs.password, value)){
+
+                    // setFormConfirmError(true);
+
+                    setPasswordConfirmError(true);                    
+                    setPasswordConfirmMessage('The confirm password don\'t match');                    
+                }
+                console.log(true);
+            break;
+            case 'emailConfirm':
+                if(!validateCompareValues(uxInputs.email, value)){
+
+                    // setFormConfirmError(true);
+
+                    setEmailConfirmError(true);                    
+                    setEmailConfirmMessage('The confirm email don\'t match');                    
+                }
+            break;
+        }
     };
 
     function handleCancelModal(){
@@ -92,10 +110,17 @@ export default function LoginSignUpModal(    props: {onCancel:any, onSignup:any}
         }
 
         setSignUpResponse(SignUpService.SignUpAsync(signUpRequest));
-
     };
 
-      return (
+    function validateCompareValues(value1:string, value2:string){
+
+        if(value1 === value2) return true;
+
+        return false;
+
+    }
+
+    return (
         <>
 
             <ModalWindow open={true} title='Sign Up' width='50%' onClose={handleCancelModal} >
@@ -106,7 +131,7 @@ export default function LoginSignUpModal(    props: {onCancel:any, onSignup:any}
                 }}
                 autoComplete="off" 
                 onSubmit={handleSubmit}
-                noValidate
+                
             >
                 <Grid item xs={12} >
                     <ErrorMessagesDisplay errorMessages={errorMessages} />
@@ -137,12 +162,14 @@ export default function LoginSignUpModal(    props: {onCancel:any, onSignup:any}
                         </Grid>
 
                         <Grid item xs={6} textAlign='left'>
-                            <TextField required type="email" label="Email Confirm" variant="standard" fullWidth
+                            <TextField required type="email"  label="Email Confirm" variant="standard" fullWidth
+                                error={emailConfirmError} helperText={emailConfirmMessage}
                                 id="emailConfirm" value={uxInputs.emailConfirm} onChange={handleChange.bind(this)}
                             />
                         </Grid>
                         <Grid item xs={5} textAlign='left'>
                             <TextField required type="password" label="Password Confirm" variant="standard"  fullWidth
+                                error={passwordConfirmError} helperText={passwordConfirmMessage}
                                 id="passwordConfirm" value={uxInputs.passwordConfirm} onChange={handleChange.bind(this)}
                             />
                         </Grid>
@@ -153,7 +180,7 @@ export default function LoginSignUpModal(    props: {onCancel:any, onSignup:any}
                             style={{ padding: 4, margin: 10, borderRadius: 25 }} startIcon={<CancelOutlinedIcon/>} >cancel</Button>
                         </Grid>
                         <Grid item xs={6} textAlign='left' >
-                            <Button variant="contained" type="submit" 
+                            <Button variant="contained" type="submit"
                                 style={{ padding: 4, margin: 10, borderRadius: 25 }} startIcon={<PersonOutlineOutlinedIcon/>} >sign up</Button>
                         </Grid>
                     </Grid>
