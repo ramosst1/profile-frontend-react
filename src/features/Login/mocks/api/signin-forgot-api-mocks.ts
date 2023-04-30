@@ -1,7 +1,7 @@
 import { rest } from 'msw'
-import { IMessageModel } from '../../../interfaces/states/error-message-model';
-import ISignInForgotRequest from '../../../features/Login/interfaces/signin-forgot/signin-forgot-requests';
-import ISignInForgotResponse from '../../../features/Login/interfaces/signin-forgot/signin-forgot-response';
+import { IMessageModel } from '../../interfaces/error-messages-models';
+import ISignInForgotRequest from '../../interfaces/signin-forgot/signin-forgot-requests';
+import ISignInForgotResponse from '../../interfaces/signin-forgot/signin-forgot-response';
 
 export const signinForgotUserhandlers = [  
   //#endregion post to sign in

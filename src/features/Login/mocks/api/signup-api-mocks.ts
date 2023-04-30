@@ -1,8 +1,8 @@
 import { rest } from 'msw'
-import { IMessageModel } from '../../../interfaces/states/error-message-model';
-import { ISignUpRequest } from '../../../features/Login/interfaces/signup/signup-requests';
-import { ISignUpResponse } from '../../../features/Login/interfaces/signup/signup-responses';
-import { ISignUpModel } from '../../../features/Login/interfaces/signup/signup-models';
+import { IMessageModel } from '../../interfaces/error-messages-models';
+import { ISignUpRequest } from '../../interfaces/signup/signup-requests';
+import { ISignUpResponse } from '../../interfaces/signup/signup-responses';
+import { ISignUpModel } from '../../interfaces/signup/signup-models';
 
 export const signupUserhandlers = [  
 

@@ -1,8 +1,8 @@
-import { ISignInModel } from '../../../features/Login/interfaces/signin/signin-models';
+import { ISignInModel } from '../../interfaces/signin/signin-models';
 import { rest } from 'msw'
-import { ISignInRequest } from '../../../features/Login/interfaces/signin/signin-requests'
-import { ISignInResponse } from '../../../features/Login/interfaces/signin/signin-responses';
-import { IMessageModel } from '../../../interfaces/states/error-message-model';
+import { ISignInRequest } from '../../interfaces/signin/signin-requests'
+import { ISignInResponse } from '../../interfaces/signin/signin-responses';
+import { IMessageModel } from '../../../../interfaces/states/error-message-model';
 
 export const signinUserhandlers = [  
   //#endregion post to sign in
@@ -57,6 +57,6 @@ export const signinUserhandlers = [
         }
         //#endregion
 
-  })
+  }),
   //#endregion
 ]

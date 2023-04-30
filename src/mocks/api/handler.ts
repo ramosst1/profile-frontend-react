@@ -1,9 +1,14 @@
-import { signupUserhandlers } from "./signin-and-signout/signup-api-mocks";
-import { signinUserhandlers } from './signin-and-signout/signin-api-mocks';
-import { signinForgotUserhandlers } from "./signin-and-signout/signin-forgot-api-mocks";
+import { loginApiMockHandler } from "../../features/Login/mocks/api/loginApiMockHandler"
+import { profilesApiMockHandler } from "../../pages/user-profiles/mocks/api/profilesApiMockHandler"
+import { statesGetApiMockHandlers } from "./states/states-get-api-mocks"
 
-export const handler = [  
-  signinUserhandlers[0], 
-  signupUserhandlers[0],
-  signinForgotUserhandlers[0]
+
+export const handler = [ 
+  loginApiMockHandler[0],
+  loginApiMockHandler[1],
+  loginApiMockHandler[2],
+  profilesApiMockHandler[0],
+  profilesApiMockHandler[1],
+  profilesApiMockHandler[2],
+  statesGetApiMockHandlers[0]
 ]
