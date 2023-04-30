@@ -1,8 +1,4 @@
 import { profilesGetHandlers } from "./profiles-get-profiles-api-mocks";
 import { profilesPutHandlers } from "./profiles-put-profiles-api-mocks";
 
-export const profilesApiMockHandler = [  
-  profilesGetHandlers[0],
-  profilesGetHandlers[1],
-  profilesPutHandlers[0]
-]
+export const profilesApiMockHandler = [...profilesGetHandlers,...profilesPutHandlers] 
