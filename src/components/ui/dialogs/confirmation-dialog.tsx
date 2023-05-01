@@ -1,7 +1,7 @@
 import React from "react";
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@material-ui/core";
 
-export default function ConfirmationDialog(props: {title: string, message: string,openDialog:boolean, onConfirm:any, onClose:any}) {
+export default function ConfirmationDialog(props: {open: boolean, title: string, message: string,openDialog:boolean,  onConfirm:any, onClose:any}) {
 
   function handleOnClickNo(event: any){
     props.onClose();    
@@ -14,7 +14,7 @@ export default function ConfirmationDialog(props: {title: string, message: strin
   return (
       <>
         <Dialog
-          open={true}
+          open={props.open}
           keepMounted
           onClose={handleOnClickNo}
           aria-labelledby="alert-dialog-slide-title"

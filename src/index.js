@@ -6,7 +6,6 @@ import App from "./App";
 if(process.env.NODE_ENV === 'development'){
     const { worker, signupWorker } = require('./mocks/api/browser')
     worker.start()
-//    signupWorker.start()
 }
 
 const root = ReactDOM.createRoot(document.getElementById("root"));

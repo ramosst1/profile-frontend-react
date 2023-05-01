@@ -10,8 +10,7 @@ import {
   Select,
   Hidden,
   MenuItem,
-  FormHelperText, 
-  Box
+  FormHelperText
 } from '@mui/material';
 import PersonIcon from '@material-ui/icons/Person';
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
@@ -214,17 +213,13 @@ export default function UserProfileDetail(this: any, props: { profile?: IProfile
     try {
 
 
-      // setRetrievingData(true);
-
       const response = await StatesServices.getStatesAsync();
 
       setCountryStatesList(response.states);
   
     } catch (e) {
       setErrorMessages([{ message: 'An unexpect error occured.', statusCode: '999'  } as IErrorMessageModel]);
-    } finally{
-      // setRetrievingData(false);
-    };
+    } 
  
   };
 

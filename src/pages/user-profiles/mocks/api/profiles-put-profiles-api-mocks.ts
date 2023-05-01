@@ -29,7 +29,7 @@ export const profilesPutHandlers = [
       );
   
       const aProfileModel: IProfileModel ={
-        profileId: 0,
+        profileId: updateItem.profileId,
         firstName: updateItem.firstName,
         lastName: updateItem.lastName,
         active: updateItem.active,

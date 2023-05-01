@@ -2,7 +2,7 @@ import { ISignInModel } from '../../interfaces/signin/signin-models';
 import { rest } from 'msw'
 import { ISignInRequest } from '../../interfaces/signin/signin-requests'
 import { ISignInResponse } from '../../interfaces/signin/signin-responses';
-import { IMessageModel } from '../../../../interfaces/states/error-message-model';
+import { IMessageModel } from '../../interfaces/error-messages-models';
 
 export const signinUserhandlers = [  
   //#endregion post to sign in

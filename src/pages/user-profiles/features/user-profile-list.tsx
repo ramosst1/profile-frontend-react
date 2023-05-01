@@ -340,9 +340,7 @@ export default function UserProfileList(){
             </Hidden>
             </Grid>
         </Grid>
-        {openDeleteConfirm && (
-          <ConfirmationDialog title='Profile Delete Dialog' message='Are you sure you want to delete the user profile?' openDialog = {openDeleteConfirm} onConfirm={handleDeleteProfileConfirmDialog} onClose={handleDeleteDialogClose}/>
-        )}
+          <ConfirmationDialog open={openDeleteConfirm} title='Profile Delete Dialog' message='Are you sure you want to delete the user profile?' openDialog = {openDeleteConfirm} onConfirm={handleDeleteProfileConfirmDialog} onClose={handleDeleteDialogClose}/>
       </>
     );
 }
