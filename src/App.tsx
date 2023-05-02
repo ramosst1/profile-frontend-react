@@ -1,13 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './App.css';
 import NavBarTop from './nav-bar-top';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-
-const mystyle = {
-  backgroundColor: "whitesmoke",
-  margins: "100px",
-  
-};  
+import { AuthProvider } from './context/AuthContext';
 
 const theme = createTheme({
   palette: {
@@ -27,12 +22,16 @@ const theme = createTheme({
   },
 });
 
+
 export default function App() {
+
   return (
     <>
-      <ThemeProvider theme={theme}>
-            <NavBarTop/>
-      </ThemeProvider>    
+     <ThemeProvider theme={theme}>
+        <AuthProvider>
+          <NavBarTop/>
+        </AuthProvider>
+    </ThemeProvider>
     </>
   );
 }

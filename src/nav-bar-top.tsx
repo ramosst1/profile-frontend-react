@@ -1,4 +1,4 @@
-import React, {useState } from 'react';
+import React, {useContext, useEffect, useState } from 'react';
 import {
     BrowserRouter as Router,
     Switch,
@@ -17,6 +17,8 @@ import {Home, AboutUs, UserProfiles} from './pages/index'
 import LoginSignUpModal from './features/Login/signup-modal';
 import { ISignUpResponse } from './features/Login/interfaces/signup/signup-responses';
 import { ISignInResponse } from './features/Login/interfaces/signin/signin-responses';
+import AuthContext from './context/AuthContext';
+import { ISignInModel } from './features/Login/interfaces/signin/signin-models';
 
 interface PagesObject {
     pageName: string
@@ -42,9 +44,20 @@ const useStyles = makeStyles(theme => ({
     },
   }));  
 
+
 export default function NavBarTop() {
 
+    const [currentUser, setCurrentUser] = useState<ISignInModel>() 
+
+    const {auth} = useContext(AuthContext)
+
     const classes = useStyles();
+
+    useEffect(() => {
+
+        setCurrentUser(auth);
+
+    },[])
 
     const pageList: PagesObject[] = [
         {
@@ -97,7 +110,6 @@ export default function NavBarTop() {
         setIsOpenLoginModal(false);
     };
 
-
     function handleOnSignUp(){
         setIsOpenSignupModal(true);
     };
@@ -107,7 +119,6 @@ export default function NavBarTop() {
     };
 
     function handleLoginOnSignupModel(event:ISignUpResponse){
-//        alert(signupResponse.signup.userName);
         event.success ?? setIsOpenSignupModal(false);
     };
 
@@ -208,6 +219,8 @@ export default function NavBarTop() {
                                 Sign In
                             </Button>
                         </Box>
+                        <br/>
+                        {auth && 'UserName:'}  {auth.firstName}  {auth?.lastName}
                     </Toolbar>
                 </Container>
                 <Container  maxWidth='xl'>

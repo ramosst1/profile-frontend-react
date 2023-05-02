@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {Box, Button, Grid, TextField} from "@mui/material";
 import ModalWindow from "../../components/ui/window-modals/modal_window";
 import LoginSignUpModal from "./signup-modal";
@@ -16,9 +16,14 @@ import IErrorMessageModel from "../../interfaces/api-error-message";
 import ErrorMessagesDisplay from "../../components/ui/error_displays/error-messages-display";
 import ProcessingDialog from "../../components/ui/dialogs/processing-dialog";
 
+import AuthContext from "../../context/AuthContext";
+import { ISignInModel } from "./interfaces/signin/signin-models";
+
 export default function LoginModal(
     props: {onClose:any, onSignIn:any}
 ){
+
+    const {setAuth} = useContext(AuthContext)
 
     const ACTION_LOGIN = 'LOGIN';
     const ACTION_FORGOT_PASSWORD = 'FORGOT PASSWORD';
@@ -52,6 +57,15 @@ export default function LoginModal(
         apiSignInMessages && setErrorMessages(apiSignInMessages);
 
         if(apiSignInResponse?.success !== true) return;
+
+        const aUser: ISignInModel = {
+            signInId: apiSignInResponse.signInUser.signInId,
+            userName: apiSignInResponse.signInUser.userName,
+            firstName: apiSignInResponse.signInUser.firstName,
+            lastName: apiSignInResponse.signInUser.lastName
+        }
+
+        setAuth(aUser);
 
         toggleFeatures(ACTION_LOGIN);
 
