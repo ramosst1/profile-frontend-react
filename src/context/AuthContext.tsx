@@ -1,14 +1,14 @@
 import React, {createContext, useState } from 'react';
 import { ISignInModel } from '../features/Login/interfaces/signin/signin-models';
 
-const a: ISignInModel = undefined;
+interface IUser {
+    auth: ISignInModel,
+    setAuth: React.Dispatch<React.SetStateAction<ISignInModel>>
+};
 
-const test = {auth:a, setAuth:undefined}
-
-const AuthContext = createContext({auth:undefined, setAuth:undefined});
+const AuthContext = createContext<IUser>({auth:undefined, setAuth:undefined});
 
 export function AuthProvider({children}){
-
 
     const[auth, setAuth] = useState<ISignInModel>({
         signInId: 0,
@@ -17,8 +17,13 @@ export function AuthProvider({children}){
         lastName: undefined
     });
 
+    const providerValue: IUser = {
+        auth: auth,
+        setAuth: setAuth
+    }
+
     return (
-        <AuthContext.Provider value={{auth, setAuth}}>
+        <AuthContext.Provider value={providerValue}>
             {children}
         </AuthContext.Provider>
     )

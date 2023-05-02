@@ -209,6 +209,7 @@ export default function NavBarTop() {
                         </Box>
 
                         <Box sx={{ flexGrow: 0 }}>
+                            {auth.userName && 'Welcome Back:'}  {auth.firstName}  {auth.lastName}
                             <Button color="inherit"  sx={{color: '#ef6694', fontSize: 'small'}} onClick={handleOnSignUp}>
                                 <SubscriptionsIcon sx={{color: '#ef6694'}} />
                                 Sign Up
@@ -219,8 +220,6 @@ export default function NavBarTop() {
                                 Sign In
                             </Button>
                         </Box>
-                        <br/>
-                        {auth && 'UserName:'}  {auth.firstName}  {auth?.lastName}
                     </Toolbar>
                 </Container>
                 <Container  maxWidth='xl'>
