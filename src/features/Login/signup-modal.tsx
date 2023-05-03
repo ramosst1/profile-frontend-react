@@ -27,9 +27,6 @@ export default function LoginSignUpModal(    props: {onCancel:any, onSignup:any}
         passwordConfirm: ''
     });
 
-
-    // const [formError, setFormConfirmError] = useState(true);
-
     const [passwordConfirmError, setPasswordConfirmError] = useState(false);
     const [passwordConfirmMessage, setPasswordConfirmMessage] = useState('');
     

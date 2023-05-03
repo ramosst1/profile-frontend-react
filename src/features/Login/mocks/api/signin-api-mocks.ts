@@ -21,15 +21,37 @@ export const signinUserhandlers = [
           }
 
 
-          const messages: IMessageModel[] = [{
-            internalMessage: 'My error message',
-            externalMessage: 'My error message',
-            statusCode: '999'
-          }];
+          // const messages: IMessageModel[] = [{
+          //   internalMessage: 'My error message',
+          //   externalMessage: 'My error message',
+          //   statusCode: '999'
+          // }];
 
           const response: ISignInResponse = {
             success: true,
-            messages: messages,
+            messages: [],
+            signInUser: aSignInModel
+          }
+
+          return res(ctx.json(response))
+
+        }
+        //#endregion
+
+        //#region Begin an existing user
+        if(password === 'password2'){
+
+          const aSignInModel: ISignInModel ={
+            signInId: 1,
+            userName: userName,
+            firstName: 'Jill',
+            lastName: 'Peterson'
+          }
+
+
+          const response: ISignInResponse = {
+            success: true,
+            messages: [],
             signInUser: aSignInModel
           }
 

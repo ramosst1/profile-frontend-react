@@ -17,8 +17,8 @@ import {Home, AboutUs, UserProfiles} from './pages/index'
 import LoginSignUpModal from './features/Login/signup-modal';
 import { ISignUpResponse } from './features/Login/interfaces/signup/signup-responses';
 import { ISignInResponse } from './features/Login/interfaces/signin/signin-responses';
-import AuthContext from './context/AuthContext';
-import { ISignInModel } from './features/Login/interfaces/signin/signin-models';
+import useAuthUser from './features/Login/hooks/auth-user';
+import useLogout from './features/Login/hooks/auth-logout';
 
 interface PagesObject {
     pageName: string
@@ -44,20 +44,21 @@ const useStyles = makeStyles(theme => ({
     },
   }));  
 
-
 export default function NavBarTop() {
 
-    const [currentUser, setCurrentUser] = useState<ISignInModel>() 
+    const {user} = useAuthUser();
 
-    const {auth} = useContext(AuthContext)
-
-    const classes = useStyles();
+    const {logout,setLogout} = useLogout();
 
     useEffect(() => {
+       
+        if(logout){
+            alert('signout page')
+        }
 
-        setCurrentUser(auth);
+    },[logout])
 
-    },[])
+    const classes = useStyles();
 
     const pageList: PagesObject[] = [
         {
@@ -100,6 +101,10 @@ export default function NavBarTop() {
 
     function handleOnSignIn(){
         setIsOpenLoginModal(true);
+    };
+
+    function handleOnSignOut(){
+        setLogout(true);
     };
 
     function handleLoginCloseModal(){
@@ -209,7 +214,7 @@ export default function NavBarTop() {
                         </Box>
 
                         <Box sx={{ flexGrow: 0 }}>
-                            {auth.userName && 'Welcome Back:'}  {auth.firstName}  {auth.lastName}
+                            {user?.userName && 'Welcome Back:'}  {user?.firstName}  {user?.lastName}
                             <Button color="inherit"  sx={{color: '#ef6694', fontSize: 'small'}} onClick={handleOnSignUp}>
                                 <SubscriptionsIcon sx={{color: '#ef6694'}} />
                                 Sign Up
@@ -218,6 +223,10 @@ export default function NavBarTop() {
                             <Button color="inherit"  sx={{color: '#dbffe0', fontSize:'small'}} onClick={handleOnSignIn}>
                                 <PeopleOutlineIcon className={classes.topNavIcon}  />
                                 Sign In
+                            </Button>
+                            <Button color="inherit"  sx={{color: '#dbffe0', fontSize:'small'}} onClick={handleOnSignOut}>
+                                <PeopleOutlineIcon className={classes.topNavIcon}  />
+                                Sign out
                             </Button>
                         </Box>
                     </Toolbar>

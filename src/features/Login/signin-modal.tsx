@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {Box, Button, Grid, TextField} from "@mui/material";
 import ModalWindow from "../../components/ui/window-modals/modal_window";
 import LoginSignUpModal from "./signup-modal";
@@ -16,19 +16,19 @@ import IErrorMessageModel from "../../interfaces/api-error-message";
 import ErrorMessagesDisplay from "../../components/ui/error_displays/error-messages-display";
 import ProcessingDialog from "../../components/ui/dialogs/processing-dialog";
 
-import AuthContext from "../../context/AuthContext";
 import { ISignInModel } from "./interfaces/signin/signin-models";
+import useAuthLogin from "./hooks/auth-login";
 
 export default function LoginModal(
     props: {onClose:any, onSignIn:any}
 ){
 
-    const {setAuth} = useContext(AuthContext)
-
     const ACTION_LOGIN = 'LOGIN';
     const ACTION_FORGOT_PASSWORD = 'FORGOT PASSWORD';
     const ACTION_LOGIN_SIGNUP = 'LOGIN REGISTRATION';
     const ACTION_CANCEL = 'CANCEL';
+
+    const {user, setUser} = useAuthLogin();
 
     const [isLoginScreen, setIsLoginScreen] = useState(true);
     const [isRegisterScreen, setIsRegisterScreen] = useState(false);
@@ -45,6 +45,10 @@ export default function LoginModal(
         password: ''
     });
     
+    useEffect(() => {
+//        alert(user?.firstName)
+    }, [user])
+
     useEffect(() => {
 
         return() => {
@@ -65,11 +69,16 @@ export default function LoginModal(
             lastName: apiSignInResponse.signInUser.lastName
         }
 
-        setAuth(aUser);
+        setUser(aUser);
+        // setTest(aUser);        
+        // const LOCAL_STORAGE_USER = 'LOCAL_STORAGE_USER'
+        // if(aUser?.signInId !== 0){
+        //     window.localStorage.setItem(LOCAL_STORAGE_USER, JSON.stringify(aUser))                
+        // };
 
-        toggleFeatures(ACTION_LOGIN);
+        // toggleFeatures(ACTION_LOGIN);
 
-        props.onSignIn(apiSignInResponse);
+        // props.onSignIn(apiSignInResponse);
 
 
     }, [apiSignInResponse])
