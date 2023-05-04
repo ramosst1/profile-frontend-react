@@ -7,7 +7,7 @@ export default function useAuthLogin(){
 
     const LOCAL_STORAGE_USER = 'LOCAL_STORAGE_USER'
 
-    const  {auth:authContext, setAuth:setAuthContext} = useContext(AuthContext)
+    const  {setAuth:setAuthContext} = useContext(AuthContext)
 
     const [user, setUser] = useState<ISignInModel>()
 
@@ -19,13 +19,10 @@ export default function useAuthLogin(){
 
                 window.localStorage.setItem(LOCAL_STORAGE_USER, JSON.stringify(user))                
                 setAuthContext(user);
-                //  alert(user);
             }
         }
 
     }, [user])
 
-    useEffect(()=>{alert('authContext')}, [authContext])
-    
     return {user, setUser};
 }

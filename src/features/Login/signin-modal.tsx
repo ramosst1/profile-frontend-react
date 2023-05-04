@@ -56,7 +56,7 @@ export default function LoginModal(
         };
     }, [])
 
-    useEffect(() =>{
+    useEffect(() => {
 
         apiSignInMessages && setErrorMessages(apiSignInMessages);
 
@@ -70,16 +70,10 @@ export default function LoginModal(
         }
 
         setUser(aUser);
-        // setTest(aUser);        
-        // const LOCAL_STORAGE_USER = 'LOCAL_STORAGE_USER'
-        // if(aUser?.signInId !== 0){
-        //     window.localStorage.setItem(LOCAL_STORAGE_USER, JSON.stringify(aUser))                
-        // };
 
-        // toggleFeatures(ACTION_LOGIN);
+        toggleFeatures(ACTION_LOGIN);
 
-        // props.onSignIn(apiSignInResponse);
-
+        props.onSignIn(apiSignInResponse);
 
     }, [apiSignInResponse])
 

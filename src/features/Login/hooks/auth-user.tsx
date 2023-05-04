@@ -6,21 +6,18 @@ export default function useAuthUser(){
 
     const LOCAL_STORAGE_USER = 'LOCAL_STORAGE_USER'
 
-    const {auth:authContext} = useContext(AuthContext)
+    const {auth:authContext, setAuth:setAuthContext} = useContext(AuthContext)
 
     const [user, setUser] = useState<ISignInModel>();
 
     useEffect(() => {
-
-//       window.localStorage.removeItem(LOCAL_STORAGE_USER);
 
         const localSignInModel = window.localStorage.getItem(LOCAL_STORAGE_USER);
 
         if(localSignInModel === null) {
 
             if(authContext?.signInId !== 0){
-                window.localStorage.setItem(LOCAL_STORAGE_USER, JSON.stringify(authContext))                
-
+                window.localStorage.setItem(LOCAL_STORAGE_USER, JSON.stringify(authContext))      
                 setUser(authContext);
             };
         };
@@ -32,6 +29,11 @@ export default function useAuthUser(){
 
     },[])
 
-
+    useEffect(() => {
+        if(authContext?.signInId !== 0){
+            setUser(authContext);
+        }
+    }, [authContext])
+    
     return {user}
 } 

@@ -50,13 +50,13 @@ export default function NavBarTop() {
 
     const {logout,setLogout} = useLogout();
 
-    useEffect(() => {
+    // useEffect(() => {
        
-        if(logout){
-            alert('signout page')
-        }
+    //     if(logout){
+    //         alert('signout page')
+    //     }
 
-    },[logout])
+    // },[logout])
 
     const classes = useStyles();
 
@@ -112,7 +112,7 @@ export default function NavBarTop() {
     };
 
     function handleLoginOnLoginModel(event:ISignInResponse){
-        setIsOpenLoginModal(false);
+//        setIsOpenLoginModal(false);
     };
 
     function handleOnSignUp(){
