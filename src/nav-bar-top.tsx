@@ -219,15 +219,18 @@ export default function NavBarTop() {
                                 <SubscriptionsIcon sx={{color: '#ef6694'}} />
                                 Sign Up
                             </Button>
-
-                            <Button color="inherit"  sx={{color: '#dbffe0', fontSize:'small'}} onClick={handleOnSignIn}>
-                                <PeopleOutlineIcon className={classes.topNavIcon}  />
-                                Sign In
-                            </Button>
-                            <Button color="inherit"  sx={{color: '#dbffe0', fontSize:'small'}} onClick={handleOnSignOut}>
-                                <PeopleOutlineIcon className={classes.topNavIcon}  />
-                                Sign out
-                            </Button>
+                            {!user?.userName && 
+                                <Button  color="inherit"  sx={{color: '#dbffe0', fontSize:'small'}} onClick={handleOnSignIn}>
+                                    <PeopleOutlineIcon className={classes.topNavIcon}  />
+                                    Sign In
+                                </Button>
+                            }
+                            {user?.userName && 
+                                <Button color="inherit"  sx={{color: '#dbffe0', fontSize:'small'}} onClick={handleOnSignOut}>
+                                        <PeopleOutlineIcon className={classes.topNavIcon}  />
+                                        Sign out
+                                </Button>
+                            }
                         </Box>
                     </Toolbar>
                 </Container>

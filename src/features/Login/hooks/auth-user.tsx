@@ -22,9 +22,9 @@ export default function useAuthUser(){
             };
         };
 
-        if(localSignInModel !== null) {
-            const aItem: ISignInModel =  JSON.parse(window.localStorage.getItem(LOCAL_STORAGE_USER))
-            setUser(aItem);
+        if(localSignInModel !== 'undefined') {
+           const aItem: ISignInModel =  JSON.parse(window.localStorage.getItem(LOCAL_STORAGE_USER))
+           setUser(aItem);
         };
 
     },[])
