@@ -21,10 +21,15 @@ export const signupUserhandlers = [
               lastName: lastName,
               password: password
             }
+            const messages: IMessageModel[] = [{
+              internalMessage: 'The user was created. An email was sent to verify.',
+              externalMessage: 'The user was created. An email was sent to verify.',
+              statusCode: '100'
+            }];
 
             const response: ISignUpResponse = {
               success: true,
-              messages: undefined,
+              messages: messages,
               signupUser: aSignInModel
             }
 
@@ -33,7 +38,7 @@ export const signupUserhandlers = [
           }
           //#endregion
 
-          //#region Begin could not make a user.
+          //#region Begin could not create a user.
           {
 
             const messages: IMessageModel[] = [{
