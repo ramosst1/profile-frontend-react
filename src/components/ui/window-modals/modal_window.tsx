@@ -12,7 +12,7 @@ export default function ModalWindow(props: {open: boolean, title:string, width:s
         top: '50%',
         left: '50%',
         transform: 'translate(-50%, -50%)',
-        width: props.width,
+        // width: props.width,
         bgcolor: 'background.paper',
         boxShadow: 24,
         p: 0,

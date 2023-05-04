@@ -130,47 +130,43 @@ export default function LoginSignUpModal(    props: {onCancel:any, onSignup:any}
                 onSubmit={handleSubmit}
                 
             >
-                <Grid item xs={12} >
-                    <ErrorMessagesDisplay errorMessages={errorMessages} />
-                </Grid>
                 <Grid container spacing={0} textAlign='center' xs={12}>
-
-                    <Grid container spacing={1} >
-                        <Grid item xs={6} textAlign='left'>
+                    <Grid item xs={12} >
+                        <ErrorMessagesDisplay errorMessages={errorMessages} />
+                    </Grid>
+                    <Grid item xs={12} md={6} direction='column' textAlign='left'>
                         <TextField required type="text" label="First Name" variant="standard" fullWidth
                             id="firstName" value={uxInputs.firstName} onChange={handleChange.bind(this)}
                         />
-                        </Grid>
-                        <Grid item xs={6} textAlign='left'>
-                            <TextField required type="text" label="Last Name" variant="standard" fullWidth
-                                id="lastName" value={uxInputs.lastName} onChange={handleChange.bind(this)}
-                            />
-                        </Grid>
-
-                        <Grid item xs={6} textAlign='left'>
-                            <TextField required type="email" label="Email" variant="standard" fullWidth
-                                id="email" value={uxInputs.email} onChange={handleChange.bind(this)}
-                            />
-                        </Grid>
-                        <Grid item xs={6} textAlign='left'>
+                    </Grid>
+                    <Grid item xs={12} md={6} direction='column' textAlign='left'>
+                        <TextField required type="text" label="Last Name" variant="standard" fullWidth
+                            id="lastName" value={uxInputs.lastName} onChange={handleChange.bind(this)}
+                        />
+                    </Grid>
+                    <Grid item xs={12} md={6} textAlign='left'>
+                        <TextField required type="email" label="Email" variant="standard" fullWidth
+                            id="email" value={uxInputs.email} onChange={handleChange.bind(this)}
+                        />
+                    </Grid>
+                    <Grid item xs={12} md={6} textAlign='left'>
+                        <TextField required type="email"  label="Email Confirm" variant="standard" fullWidth
+                            error={emailConfirmError} helperText={emailConfirmMessage}
+                            id="emailConfirm" value={uxInputs.emailConfirm} onChange={handleChange.bind(this)}
+                        />
+                    </Grid>
+                    <Grid item xs={12} md={6} textAlign='left'>
                             <TextField required type="password" label="Password" variant="standard" fullWidth
                                 id="password" value={uxInputs.password} onChange={handleChange.bind(this)}
                             />
                         </Grid>
 
-                        <Grid item xs={6} textAlign='left'>
-                            <TextField required type="email"  label="Email Confirm" variant="standard" fullWidth
-                                error={emailConfirmError} helperText={emailConfirmMessage}
-                                id="emailConfirm" value={uxInputs.emailConfirm} onChange={handleChange.bind(this)}
-                            />
-                        </Grid>
-                        <Grid item xs={5} textAlign='left'>
+                        <Grid item xs={12} md={6} textAlign='left'>
                             <TextField required type="password" label="Password Confirm" variant="standard"  fullWidth
                                 error={passwordConfirmError} helperText={passwordConfirmMessage}
                                 id="passwordConfirm" value={uxInputs.passwordConfirm} onChange={handleChange.bind(this)}
                             />
                         </Grid>
-
                         <Grid item xs={6} textAlign='right' >
                             <Button variant="contained" type="button" 
                             onClick={handleCancelModal} 
@@ -180,11 +176,10 @@ export default function LoginSignUpModal(    props: {onCancel:any, onSignup:any}
                             <Button variant="contained" type="submit"
                                 style={{ padding: 4, margin: 10, borderRadius: 25 }} startIcon={<PersonOutlineOutlinedIcon/>} >sign up</Button>
                         </Grid>
-                    </Grid>
+
                 </Grid>
                 <ProcessingDialog open={apiSignUpLoading} message='Signing up is processing...' />
-
-                </Box>
+            </Box>
 
             </ModalWindow>
         </>

@@ -31,6 +31,7 @@ export default function LoginModal(
     const {user, setUser} = useAuthLogin();
 
     const [isLoginScreen, setIsLoginScreen] = useState(true);
+    const [isLoginSuccess, setIsLoginSuccess] = useState(false);
     const [isRegisterScreen, setIsRegisterScreen] = useState(false);
     const [isForgotPasswordScreen, setIsForgotPasswordScreen] = useState(false);
 
@@ -38,7 +39,6 @@ export default function LoginModal(
     const {apiResponse:apiSignInResponse, messages: apiSignInMessages, loading:apiSignInLoading} = useServiceApiResponse<ISignInResponse>(signInResponse);
 
     const [errorMessages, setErrorMessages] = useState<IErrorMessageModel[]>([]);
-
 
     const [uxInputs, setUxInputs] = useState({
         email:'',
@@ -69,11 +69,18 @@ export default function LoginModal(
             lastName: apiSignInResponse.signInUser.lastName
         }
 
+        const messages: IErrorMessageModel ={
+            message: 'Thanks for revisiting!!',
+            statusCode:'200'
+        } 
+
+        setErrorMessages([messages])        
+
+        setIsLoginSuccess(true);
+
         setUser(aUser);
 
         toggleFeatures(ACTION_LOGIN);
-
-        props.onSignIn(apiSignInResponse);
 
     }, [apiSignInResponse])
 
@@ -95,6 +102,15 @@ export default function LoginModal(
 
         props.onClose();
     };
+
+    function handleCloseModal(){
+        toggleFeatures(ACTION_LOGIN);
+
+        props.onSignIn(apiSignInResponse);
+
+        props.onClose();
+
+    }
 
     function handleOnSignIn(){
 
@@ -166,34 +182,49 @@ export default function LoginModal(
                     autoComplete="off"
                     onSubmit={handleSubmit}
                 >
-                    <Grid container spacing={0} xs={12}>
+                    <Grid container spacing={0} xs>
                         <Grid item xs={12} >
-                                <ErrorMessagesDisplay errorMessages={errorMessages} />
+                            <ErrorMessagesDisplay errorMessages={errorMessages} />
                         </Grid>
-                    </Grid>
-                    <Grid container spacing={0} textAlign='center' xs={12}>
-                        <Grid container spacing={1} >
-                            <Grid item xs={12} textAlign='center'>
-                                <TextField required type="email" label="Email" variant="standard" fullWidth
-                                    id="email" value={uxInputs.email} onChange={handleChange.bind(this)}
-                                />
-                            </Grid>
-                            <Grid item xs={12} textAlign='center'>
-                                <TextField type="password" label="Password" variant="standard" fullWidth
-                                    id="password" value={uxInputs.password} onChange={handleChange.bind(this)}
-                                />
-                            </Grid>
-                            <Grid item xs={6} textAlign='right' whiteSpace='nowrap' >
-                                <Button variant='text' color='secondary' onClick={handleForgotPasswordOpenModal}>forgot password</Button>
-                                <Button variant='text' color='secondary' onClick={handleSignupOpenModal}>sign up</Button>
-                                <Button type="button" variant='contained' color='primary' style={{ padding: 4, margin: 10, borderRadius: 25 }} onClick={handleCancelModal}
-                                    startIcon={<CancelOutlinedIcon/>}
-                                >cancel</Button>
-                            </Grid>
-                            <Grid item xs={6} textAlign='left' >
-                                <Button type='submit' variant='contained' color='primary' style={{ padding: 4, margin: 10, borderRadius: 25 }}
-                                    startIcon={<LockOpenIcon/>}
-                                >sign in </Button>
+                        <Grid item xs={12} textAlign='center'>
+                            <TextField required type="email" label="Email" variant="standard" fullWidth
+                                id="email" value={uxInputs.email} onChange={handleChange.bind(this)}
+                            />
+                        </Grid>
+                        <Grid item xs={12} textAlign='center'>
+                            <TextField type="password" label="Password" variant="standard" fullWidth
+                                id="password" value={uxInputs.password} onChange={handleChange.bind(this)}
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <Grid container textAlign='center'>
+                                <Grid container xs={12} justifyContent="center" >
+                                    <Grid item direction="column" xs={12} whiteSpace='nowrap'>
+                                        {!isLoginSuccess && (
+                                            <>
+                                            <Button type="button" variant='contained' color='primary' style={{ padding: 4, margin: 10, borderRadius: 25 }} onClick={handleCancelModal}
+                                                startIcon={<CancelOutlinedIcon/>}
+                                            >cancel</Button>
+                                            <Button type='submit'  variant='contained' color='primary' style={{ padding: 4, margin: 10, borderRadius: 25 }}
+                                                startIcon={<LockOpenIcon/>}
+                                            >sign in 
+                                            </Button>
+                                            </>
+                                        )}
+                                        {isLoginSuccess && (
+                                            <>
+                                                <Button type="button" variant='contained' color='primary' style={{ padding: 4, margin: 10, borderRadius: 25 }} onClick={handleCloseModal}
+                                                    startIcon={<CancelOutlinedIcon/>}
+                                                >close</Button>
+                                            </>
+                                        )}
+
+                                    </Grid>
+                                    <Grid item direction="column" xs={12} whiteSpace='nowrap'>
+                                        <Button variant='text' color='secondary' onClick={handleForgotPasswordOpenModal}>forgot password</Button>
+                                        <Button variant='text' color='secondary' onClick={handleSignupOpenModal}>sign up</Button>
+                                    </Grid>
+                                </Grid>
                             </Grid>
                         </Grid>
                     </Grid>

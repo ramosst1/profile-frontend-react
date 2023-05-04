@@ -167,7 +167,7 @@ export default function NavBarTop() {
     };
 
     function handleLoginOnLoginModel(event:ISignInResponse){
-//        setIsOpenLoginModal(false);
+        setIsOpenLoginModal(false);
     };
 
     function handleOnSignUp(){
