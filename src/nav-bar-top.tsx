@@ -19,12 +19,22 @@ import { ISignUpResponse } from './features/Login/interfaces/signup/signup-respo
 import { ISignInResponse } from './features/Login/interfaces/signin/signin-responses';
 import useAuthUser from './features/Login/hooks/auth-user';
 import useLogout from './features/Login/hooks/auth-logout';
+import MoreIcon from '@mui/icons-material/MoreVert';
 
-interface PagesObject {
-    pageName: string
+interface IPagesObject {
+    pageName: string,
     url: string,
     icon: any,
 }
+
+interface IRightMenuObject {
+    menuName: string,
+    icon: any,
+    event: React.MouseEventHandler<HTMLLIElement>,
+    eventButton: React.MouseEventHandler<HTMLButtonElement>,
+    color: string,
+}
+
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -50,17 +60,9 @@ export default function NavBarTop() {
 
     const {logout,setLogout} = useLogout();
 
-    // useEffect(() => {
-       
-    //     if(logout){
-    //         alert('signout page')
-    //     }
-
-    // },[logout])
-
     const classes = useStyles();
 
-    const pageList: PagesObject[] = [
+    const pageList: IPagesObject[] = [
         {
           pageName: 'Home',
           url: '/',
@@ -76,17 +78,70 @@ export default function NavBarTop() {
           url: '/aboutus',
           icon: <InfoIcon className={classes.topNavIcon} />
         },
-      ];
+    ];
+
+    const rightMenuObjects: IRightMenuObject [] = [
+        {
+            menuName: 'Sign Up',
+            icon: <SubscriptionsIcon sx={{color: '#ef6694'}} />,
+            event: handleOnSignUp,
+            eventButton: handleOnSignUp,
+            color:'#ef6694'
+        },        
+        {
+            menuName: 'Sign In',
+            icon: <PeopleOutlineIcon className={classes.topNavIcon}  />,
+            event: handleOnSignIn,
+            eventButton: handleOnSignIn,
+            color:'#dbffe0'
+        },        
+        {
+            menuName: 'Sign Out',
+            icon: <PeopleOutlineIcon className={classes.topNavIcon}  />,
+            event: handleOnSignOut,
+            eventButton: handleOnSignOut,
+            color:'#dbffe0'
+        },        
+    ]
+
+    const [rightMenus, setRightMenus] = useState<IRightMenuObject []>(rightMenuObjects);
 
     const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
+    const [anchorElNavRight, setAnchorElNavRight] = React.useState<null | HTMLElement>(null);
+
+    useEffect(() => {
+
+        if(user?.userName !== undefined) {
+
+               const newList = [...rightMenuObjects]
+                .filter(item => item.menuName !== 'Sign In' )
+            
+                setRightMenus(newList);
+
+        } else {
+            const newList = [...rightMenuObjects]
+            .filter(item => item.menuName !== 'Sign Out' )
+
+            setRightMenus(newList);
+        }
+
+    }, [user])
 
     function handleOpenNavMenu(event: React.MouseEvent<HTMLElement>){
         setAnchorElNav(event.currentTarget);
     };
 
+    function handleOpenNavMenuRight(event: React.MouseEvent<HTMLElement>){
+        setAnchorElNavRight(event.currentTarget);
+    };
+
 
     function handleCloseNavMenu() {
         setAnchorElNav(null);
+    };
+
+    function handleCloseNavMenuRight() {
+        setAnchorElNavRight(null);
     };
 
     function handleRouteToPageNavMenu(url:string){
@@ -105,6 +160,7 @@ export default function NavBarTop() {
 
     function handleOnSignOut(){
         setLogout(true);
+        handleCloseNavMenuRight();        
     };
 
     function handleLoginCloseModal(){
@@ -117,6 +173,7 @@ export default function NavBarTop() {
 
     function handleOnSignUp(){
         setIsOpenSignupModal(true);
+        handleCloseNavMenuRight();
     };
 
     function handleLoginSignupCloseModal(){
@@ -133,7 +190,6 @@ export default function NavBarTop() {
             <AppBar position="static">
                 <Container maxWidth="xl" > 
                     <Toolbar disableGutters>
-                        {/* <ChildCareIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} /> */}
                         <Typography
                             variant="h6"
                             noWrap
@@ -192,7 +248,7 @@ export default function NavBarTop() {
                         </Box>
 
                         <Typography
-                            variant="h6"
+                            variant="body2"
                             noWrap
                             component="a"
                             href=""
@@ -210,27 +266,68 @@ export default function NavBarTop() {
                             &lt;Sample Website&gt; 
                         </Typography>
 
-                        <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }} >
+                        <Box sx={{ textAlign:'right', flexGrow: 1, display: { xs: 'none', md: 'flex' } }} >
+                        </Box>
+                        <Box sx={{flexGrow: 0, display: { xs: 'none', md: 'flex' } }} >
+
+                            <Typography style={{padding:10}}>
+                                {user?.userName && 'Welcome Back:'}  {user?.firstName}  {user?.lastName}
+                            </Typography>
+
+                            {rightMenus.map((menuItem) => (
+                                <Button color="inherit"  sx={{color: menuItem.color, fontSize: 'small'}} 
+                                   onClick={menuItem.eventButton}
+                                >
+                                    {menuItem.icon}
+                                    {menuItem.menuName}
+                                </Button>
+                        ))}
+
                         </Box>
 
-                        <Box sx={{ flexGrow: 0 }}>
-                            {user?.userName && 'Welcome Back:'}  {user?.firstName}  {user?.lastName}
-                            <Button color="inherit"  sx={{color: '#ef6694', fontSize: 'small'}} onClick={handleOnSignUp}>
-                                <SubscriptionsIcon sx={{color: '#ef6694'}} />
-                                Sign Up
-                            </Button>
-                            {!user?.userName && 
-                                <Button  color="inherit"  sx={{color: '#dbffe0', fontSize:'small'}} onClick={handleOnSignIn}>
-                                    <PeopleOutlineIcon className={classes.topNavIcon}  />
-                                    Sign In
-                                </Button>
-                            }
-                            {user?.userName && 
-                                <Button color="inherit"  sx={{color: '#dbffe0', fontSize:'small'}} onClick={handleOnSignOut}>
-                                        <PeopleOutlineIcon className={classes.topNavIcon}  />
-                                        Sign out
-                                </Button>
-                            }
+
+                        <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
+                            <IconButton
+                            size="large"
+                            aria-label="account of current user"
+                            aria-controls="menu-appbar"
+                            aria-haspopup="true"
+                            onClick={handleOpenNavMenuRight}
+                            sx={{ color: '#dbffe0' }}
+                            
+                            >
+                            <MoreIcon />
+                            </IconButton>
+                            <Menu
+                            id="menu-appbar"
+                            anchorEl={anchorElNavRight}
+                            anchorOrigin={{
+                                vertical: 'bottom',
+                                horizontal: 'left',
+                            }}
+                            keepMounted
+                            transformOrigin={{
+                                vertical: 'top',
+                                horizontal: 'left',
+                            }}
+                            open={Boolean(anchorElNavRight)}
+                            onClose={handleCloseNavMenuRight}
+                            sx={{ 
+                                display: { xs: 'block', md: 'none' }
+                            }}
+                            >
+                                <MenuItem sx={{fontWeight:'bold', display:user?.userName??'none'}}>
+                                    {user?.firstName}  {user?.lastName}
+                                </MenuItem>
+                            {rightMenus.map((menuItem) => (
+                                <MenuItem key={menuItem.menuName} 
+                                onClick= {menuItem.event} 
+                                >
+                                    {menuItem.icon}
+                                <Typography textAlign="center">{menuItem.menuName}</Typography>
+                                </MenuItem>
+                            ))}
+                            </Menu>
                         </Box>
                     </Toolbar>
                 </Container>
@@ -273,4 +370,3 @@ export default function NavBarTop() {
     </>
     );
 };
-
