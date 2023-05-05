@@ -4,8 +4,7 @@ import UserProfileDetail from './features/user-profile-detail';
 import {
   Grid,
   Paper,
-  Box,
-  Hidden
+  Box
 } from "@mui/material";
 import { IProfileModel } from './interfaces/profiles/profile-models';
 import { IProfileResponse} from './interfaces/profiles/profile-responses';
@@ -72,54 +71,54 @@ export default function UserProfiles() {
             />
           </Grid>
           <Grid item md={6} >
-            <Grid item xs={12} md={8}>
-            <Hidden smUp={openProfileDetail ? false : true} >
-              <br/>&nbsp; <br/>
-              <Box sx={{ flexGrow: 1,  display: { xs: 'none', md: 'flex' } }} mt={10}
-                >
-                      <Grid item xs={12} style={{ borderRadius: "15px", padding: 0 }} component={Paper} elevation={10}>
-                        <Grid item xs={12}>
-                          <Box
-                            color="white"
-                            bgcolor="primary.main"
-                            style={{ borderRadius: "15px 15px 0px 0px", padding: 5 }}
-                          >
-                            <strong>Profile Detail</strong>
-                          </Box>
+            <Grid sx={{display: openProfileDetail ? '' : 'none'}}>
+                <Box sx={{ flexGrow: 1,  display: { xs: 'none', md: 'flex' }, }} mt={16}
+                  >
+                        <Grid item style={{ borderRadius: "15px", padding: 0 }} component={Paper} elevation={10}>
+                          <Grid item >
+                            <Box
+                              color="white"
+                              bgcolor="primary.main"
+                              style={{ borderRadius: "15px 15px 0px 0px", padding: 5 }}
+                            >
+                              <strong>Profile Detail</strong>
+                            </Box>
+                          </Grid>
+                          <Grid item >
+                            <div
+                              style={{
+                                backgroundColor: "whitesmoke",
+                                padding: 5,
+                                borderRadius: "0px 0px 15px 15px",
+                                width:'100%'
+
+                              }}
+                            >
+                              <UserProfileDetail
+                                key={keyProfileKey}
+                                profile={selectedProfile}
+                                onUpdate={handleProfileDetailUpdate}
+                                onCancel={handleProfileDetailCancel}
+                                onCreate={handleProfileDetailCreate}
+                              />
+                            <ModalWindow xs={{ flexGrow: 1,  display: { xs: 'flex', md: 'none' } }}  open={openProfileDetail ? true : false} title='Profile Detail ' width='40%' onClose={handleProfileDetailCancel} >
+                              <UserProfileDetail
+                                key={keyProfileKey}
+                                profile={selectedProfile}
+                                onUpdate={handleProfileDetailUpdate}
+                                onCancel={handleProfileDetailCancel}
+                                onCreate={handleProfileDetailCreate}
+                              />
+                            </ModalWindow>
+
+                            </div>
+                          </Grid>
                         </Grid>
-                        <Grid item xs={12} >
-                          <div
-                            style={{
-                              backgroundColor: "whitesmoke",
-                              padding: 5,
-                              borderRadius: "0px 0px 15px 15px"
-                            }}
-                          >
-                            <UserProfileDetail
-                              key={keyProfileKey}
-                              profile={selectedProfile}
-                              onUpdate={handleProfileDetailUpdate}
-                              onCancel={handleProfileDetailCancel}
-                              onCreate={handleProfileDetailCreate}
-                            />
-                          </div>
-                        </Grid>
-                      </Grid>
-              </Box>
-            </Hidden>
+                </Box>
             </Grid>
           </Grid>
       </Grid>
 
-      <ModalWindow xs={{ flexGrow: 1,  display: { xs: 'flex', md: 'none' } }}  open={openProfileDetail ? true : false} title='Profile Detail ' width='40%' onClose={handleProfileDetailCancel} >
-        <UserProfileDetail
-          key={keyProfileKey}
-          profile={selectedProfile}
-          onUpdate={handleProfileDetailUpdate}
-          onCancel={handleProfileDetailCancel}
-          onCreate={handleProfileDetailCreate}
-        />
-      </ModalWindow>
     </>
   )
 

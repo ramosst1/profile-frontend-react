@@ -8,7 +8,6 @@ import {
   FormControl,
   InputLabel,
   Select,
-  Hidden,
   MenuItem,
   FormHelperText,
   Box
@@ -230,13 +229,13 @@ export default function UserProfileDetail(this: any, props: { xs?:any; profile?:
       <Box
       component="form"
       sx={{
-          '& .MuiTextField-root': { m: .5, width: '45ch' },
+          '& .MuiTextField-root': { m: .5, width: '100%' },
       }}
       autoComplete="off" 
       onSubmit={handleSubmit}
       >
-          <Grid container xs={12} spacing={0} >
-            <Grid item xs={12} md={12} >
+          <Grid container spacing={2} >
+            <Grid >
               <ErrorMessagesDisplay errorMessages={errorMessages} />
             </Grid>
             <Grid item xs={12} >
@@ -254,6 +253,7 @@ export default function UserProfileDetail(this: any, props: { xs?:any; profile?:
                 fullWidth
                 onChange={handleProfileChange.bind(this)}
                 variant='standard'
+                sx={{maxWidth:'100%'}}
               />
             </Grid>
             <Grid item xs={12} md={6} >
@@ -267,6 +267,7 @@ export default function UserProfileDetail(this: any, props: { xs?:any; profile?:
                 fullWidth
                 onChange={handleProfileChange.bind(this)}
                 variant='standard'
+                sx={{maxWidth:'100%'}}
               />
             </Grid>
             <Grid  item xs={12} md={12}>
@@ -277,6 +278,7 @@ export default function UserProfileDetail(this: any, props: { xs?:any; profile?:
                 value={uxInputs.active}
                 row
                 onChange={handleProfileChangeBool.bind(this)}
+                sx={{maxWidth:'100%'}}
               >
                 <FormControlLabel
                   value={true}
@@ -289,7 +291,8 @@ export default function UserProfileDetail(this: any, props: { xs?:any; profile?:
                   control={<Radio color="primary" />}
                   label="InActive"
                   labelPlacement="end"
-                />
+                  sx={{maxWidth:'100%'}}
+                  />
               </RadioGroup>
             </Grid>
             <Grid  item xs={12} md={12}>
@@ -302,6 +305,7 @@ export default function UserProfileDetail(this: any, props: { xs?:any; profile?:
                 fullWidth
                 variant='standard'
                 onChange={handleProfileChange.bind(this)}
+                sx={{maxWidth:'100%'}}
               />
             </Grid>
             <Grid  item xs={12} md={12}>
@@ -313,6 +317,7 @@ export default function UserProfileDetail(this: any, props: { xs?:any; profile?:
                 fullWidth
                 variant='standard'
                 onChange={handleProfileChange.bind(this)}
+                sx={{maxWidth:'100%'}}
               />
             </Grid>
             <Grid  item direction={{xs:'row', md:'column'}}>
@@ -325,6 +330,7 @@ export default function UserProfileDetail(this: any, props: { xs?:any; profile?:
                 fullWidth
                 variant='standard'
                 onChange={handleProfileChange.bind(this)}
+                sx={{maxWidth:'100%'}}
               />
             </Grid>
             <Grid  item  direction={{xs:'row', md:'column'}}>
@@ -343,7 +349,8 @@ export default function UserProfileDetail(this: any, props: { xs?:any; profile?:
                   inputProps={{
                     id: 'age-native-required',
                   }}
-                >
+                  sx={{maxWidth:'100%'}}
+                  >
                   <MenuItem value="">
                     <em>Select a State</em>
                   </MenuItem>
@@ -357,16 +364,17 @@ export default function UserProfileDetail(this: any, props: { xs?:any; profile?:
               </FormControl>
             </Grid>
             <Grid  item xs={12} md={12}>
-          <TextField
-            id="zipCode"
-            name="zipCode"
-            value={uxInputs.zipCode}
-            label="ZipCode"
-            required 
-            type="number"
-            variant='standard'
-            onChange={handleProfileChange.bind(this)}
-          />
+              <TextField
+                id="zipCode"
+                name="zipCode"
+                value={uxInputs.zipCode}
+                label="ZipCode"
+                required 
+                type="number"
+                variant='standard'
+                onChange={handleProfileChange.bind(this)}
+                sx={{maxWidth:'100%'}}
+              />
             </Grid>
             <Grid item xs={12} textAlign='center'>
               <Button
@@ -380,7 +388,6 @@ export default function UserProfileDetail(this: any, props: { xs?:any; profile?:
                 >
                 Cancel
               </Button>
-              <Hidden smUp={props.profile ? true : false}>
                 <Button
                   variant="contained"
                   color="primary"
@@ -388,11 +395,10 @@ export default function UserProfileDetail(this: any, props: { xs?:any; profile?:
                   style={{ padding: 4, margin: 10, borderRadius: 25 }}
                   type="submit"
                   startIcon={<PersonAddIcon />}
+                  sx={{display: props.profile ? 'none' : ''}}
                 >
                   Add
                 </Button>
-              </Hidden>
-              <Hidden smUp={props.profile ? false : true}>
                 <Button
                   variant="contained"
                   color="primary"
@@ -400,10 +406,10 @@ export default function UserProfileDetail(this: any, props: { xs?:any; profile?:
                   style={{ padding: 4, margin: 10, borderRadius: 25 }}
                   type="submit"
                   startIcon={<PersonIcon />}
+                  sx={{display: props.profile ? '' : 'none'}}
                 >
                   Update
                 </Button>
-              </Hidden>
             </Grid>
           </Grid>
       </Box>

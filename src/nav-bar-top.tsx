@@ -355,8 +355,7 @@ export default function NavBarTop() {
                     </Box>
                     </Container>
                 </AppBar>
-                <Box component="main" margin={{md:2,xs:1}}
-                    // sx={{ padding:10, width:'100%'}}
+                <Box component="main" margin={{md:10,xs:1}}
                     sx={{ width:'100%'}}
                 >
                     <Toolbar />
