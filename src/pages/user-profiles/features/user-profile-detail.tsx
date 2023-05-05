@@ -238,12 +238,12 @@ export default function UserProfileDetail(this: any, props: { xs?:any; profile?:
             <Grid item xs={12} md={12} >
               <ErrorMessagesDisplay errorMessages={errorMessages} />
             </Grid>
-            <Grid item xs={12} md={12} >
+            <Grid item xs={12} >
               <ProcessingDialog open={apiProfileUpdateLoading} message='Profile is updating ...' />
               <ProcessingDialog open={apiProfileCreateLoading} message='Profile is being created...' />
               <ProcessingDialog open={retrievingData} message='Retrieving Information...' />
             </Grid>
-            <Grid item xs={6} direction='column'>
+            <Grid item xs={12} md={6} >
               <TextField
                 id="firstName"
                 name="firstName"
@@ -255,7 +255,7 @@ export default function UserProfileDetail(this: any, props: { xs?:any; profile?:
                 variant='standard'
               />
             </Grid>
-            <Grid item xs={6} direction='column'>
+            <Grid item xs={12} md={6} >
 
               <TextField
                 id="lastName"
@@ -268,7 +268,7 @@ export default function UserProfileDetail(this: any, props: { xs?:any; profile?:
                 variant='standard'
               />
             </Grid>
-            <Grid  item xs={12} >
+            <Grid  item xs={12} md={12}>
               <RadioGroup
                 aria-label="position"
                 id="active"
@@ -291,7 +291,7 @@ export default function UserProfileDetail(this: any, props: { xs?:any; profile?:
                 />
               </RadioGroup>
             </Grid>
-            <Grid  item xs={12} >
+            <Grid  item xs={12} md={12}>
               <TextField
                 id="address1"
                 name="address1"
@@ -303,7 +303,7 @@ export default function UserProfileDetail(this: any, props: { xs?:any; profile?:
                 onChange={handleProfileChange.bind(this)}
               />
             </Grid>
-            <Grid  item xs={12} >
+            <Grid  item xs={12} md={12}>
               <TextField
                 id="address2"
                 name="address2"
@@ -314,7 +314,7 @@ export default function UserProfileDetail(this: any, props: { xs?:any; profile?:
                 onChange={handleProfileChange.bind(this)}
               />
             </Grid>
-            <Grid  item xs={7} direction='column' >
+            <Grid  item direction={{xs:'row', md:'column'}}>
               <TextField
                 id="city"
                 name="city"
@@ -326,7 +326,7 @@ export default function UserProfileDetail(this: any, props: { xs?:any; profile?:
                 onChange={handleProfileChange.bind(this)}
               />
             </Grid>
-            <Grid  item xs={5} direction='column'>
+            <Grid  item  direction={{xs:'row', md:'column'}}>
               <FormControl
                 required 
               >
@@ -355,7 +355,7 @@ export default function UserProfileDetail(this: any, props: { xs?:any; profile?:
                 <FormHelperText>Required</FormHelperText>
               </FormControl>
             </Grid>
-            <Grid  item xs={12} >
+            <Grid  item xs={12} md={12}>
           <TextField
             id="zipCode"
             name="zipCode"

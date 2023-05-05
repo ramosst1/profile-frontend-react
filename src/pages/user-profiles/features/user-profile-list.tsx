@@ -185,10 +185,6 @@ export default function UserProfileList(){
       },
     }));
 
-    const test = { flexGrow: 1,  display: { xs: 'flex', md: 'none' } };
-    const test2 = {  display: { xs: 'none', md: 'flex' } };
-
-
     return (
       <>
         <Grid container spacing={0} >
@@ -205,7 +201,7 @@ export default function UserProfileList(){
         </Grid>
 
         <Grid container spacing={1} >
-          <Grid item xs={4}>
+          <Grid item xs={12} md={4}>
             <form>
               <Grid
               >
@@ -310,7 +306,7 @@ export default function UserProfileList(){
               </TableContainer>
             </form>
           </Grid>
-          <Grid item xs={8}>
+          <Grid item xs={12} md={8}>
           <Hidden smUp={openProfileDetail ? false : true} >
             <br/>&nbsp; <br/>
             <Box sx={{ flexGrow: 1,  display: { xs: 'none', md: 'flex' } }}
@@ -327,7 +323,7 @@ export default function UserProfileList(){
                           <strong>Profile Detail</strong>
                         </Box>
                       </Grid>
-                      <Grid item xs={12} bgcolor="primary.main" >
+                      <Grid item xs={12} >
                         <div
                           style={{
                             backgroundColor: "whitesmoke",
@@ -346,9 +342,9 @@ export default function UserProfileList(){
                       </Grid>
                     </Grid>            
             </Box>
-            </Hidden>
+          </Hidden>
           </Grid>
-            <ModalWindow xs={test}  open={openProfileDetail ? true : false} title='Profile Detail ' width='40%' onClose={handleProfileDetailCancel} >
+            <ModalWindow xs={{ flexGrow: 1,  display: { xs: 'flex', md: 'none' } }}  open={openProfileDetail ? true : false} title='Profile Detail ' width='40%' onClose={handleProfileDetailCancel} >
                         <UserProfileDetail
                           key={keyProfileKey}
                           profile={selectedProfile}

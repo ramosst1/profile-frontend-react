@@ -35,7 +35,8 @@ export default function ModalWindow(props: {xs?: any , open: boolean, title:stri
                 onClose={handleOnClose}
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
-                sx={props.xs}
+                sx={[{overflow:'auto'},{...props.xs}]}
+                // sx={props.xs} 
             >
                 <Box sx={modalStyle} >
                     <Box textAlign='center' sx={titleStyle} >
