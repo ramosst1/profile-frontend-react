@@ -26,13 +26,13 @@ import { IProfileModel } from '../interfaces/profiles/profile-models';
 import { IProfileResponse, IProfilesResponse} from '../interfaces/profiles/profile-responses';
 import useServiceApiResponse from '../../../hooks/use-service-api-response';
 import IErrorMessageModel from '../../../interfaces/api-error-message';
-import { IApiResponse } from '../interfaces/profiles/api-response'; 
+import { IApiResponse } from '../interfaces/profiles/api-response';
 import ConfirmationDialog from '../../../components/ui/dialogs/confirmation-dialog';
 import ProcessingDialog from '../../../components/ui/dialogs/processing-dialog';
 import ErrorMessagesDisplay from '../../../components/ui/error_displays/error-messages-display';
+import ModalWindow from '../../../components/ui/window-modals/modal_window';
 
 export default function UserProfileList(){
-
 
     const [keyProfileKey,setKeyProfileKey] = useState(0);
     const [profileActiveStatus,setProfileActiveStatus] = useState("true");
@@ -50,12 +50,12 @@ export default function UserProfileList(){
 
     useEffect(() => {
        initPopulateProfileList();
-    },[]);  
+    },[]);
 
     useEffect(() => {
 
-      apiProfilesResponse && setProfiles(apiProfilesResponse.profiles);     
-      apiProfilesMessage && setErrorMessages(apiProfilesMessage);     
+      apiProfilesResponse && setProfiles(apiProfilesResponse.profiles);
+      apiProfilesMessage && setErrorMessages(apiProfilesMessage);
 
     }, [apiProfilesResponse])
 
@@ -150,7 +150,7 @@ export default function UserProfileList(){
 
       setOpenDeleteConfirm(false);
     };
-  
+
     function sortProfileArrayByName(a: IProfileModel, b:IProfileModel ) {
 
       const aFirstName = a.firstName.toUpperCase();
@@ -184,12 +184,15 @@ export default function UserProfileList(){
         fontSize: 14,
       },
     }));
+
+    const test = { flexGrow: 1,  display: { xs: 'flex', md: 'none' } };
+    const test2 = {  display: { xs: 'none', md: 'flex' } };
+
+
     return (
       <>
         <Grid container spacing={0} >
-          <div>
-            <h1>User Profiles</h1>
-          </div>
+            <h3>User Profiles</h3>
         </Grid>
         <Grid container spacing={0} >
           <Grid item xs={12} >
@@ -201,17 +204,18 @@ export default function UserProfileList(){
           </Grid>
         </Grid>
 
-        <Grid container spacing={2}  >
-          <Grid item xs={6}>
+        <Grid container spacing={1} >
+          <Grid item xs={4}>
             <form>
-              <Grid 
+              <Grid
               >
                 <Grid container>
-                  <Grid item xs={9} style={{padding: "0px 0px 0px 10px"}}>
+                  <Grid item xs={9} style={{ padding: "0px 0px 0px 10px"}}>
                     <Tabs
                       value={profileActiveStatus}
                       indicatorColor="secondary" textColor='secondary'
                       onChange={handleProfileFilterChange}
+
                     >
                       <Tab label="Active" value="true" />
                       <Tab label="Inactive" value="false" />
@@ -219,16 +223,6 @@ export default function UserProfileList(){
                     </Tabs>
                   </Grid>
                   <Grid item xs={3} style={{textAlign:"right", whiteSpace:'nowrap' }} >
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      size="small"
-                      style={{ padding: 4, margin: 10, borderRadius: 25 }}
-                      onClick={handleAddProfile}
-                      startIcon={<PersonAddIcon />}
-                    >
-                      Add Profile
-                    </Button>
                   </Grid>
                 </Grid>
               </Grid>
@@ -253,7 +247,17 @@ export default function UserProfileList(){
                         Status
                       </StyledTableCell>
                       <StyledTableCell align="center" style={{ width: 150 }}>
-                        Action
+                      <Button 
+                      variant="contained"
+                      color="primary"
+                      size="small"
+                      style={{ whiteSpace:'nowrap', padding: 4, margin: 10, borderRadius: 25 }}
+                      onClick={handleAddProfile}
+                      startIcon={<PersonAddIcon />}
+                    >
+                      Add Profile
+                    </Button>
+                        
                       </StyledTableCell>
                     </TableRow>
                   </TableHead>
@@ -262,7 +266,7 @@ export default function UserProfileList(){
                       <TableRow
                         key={profile.profileId}
                       >
-                        <TableCell component="th" scope="row"> 
+                        <TableCell component="th" scope="row">
                           {profile.firstName} {profile.lastName}
                         </TableCell>
                         <TableCell
@@ -306,40 +310,54 @@ export default function UserProfileList(){
               </TableContainer>
             </form>
           </Grid>
-          <Grid container item xs={6}>
-            <Hidden smUp={openProfileDetail ? false : true} >
-              <br/>&nbsp; <br/>
-              <Grid item xs={12} style={{ borderRadius: "15px", padding: 0 }} component={Paper} elevation={10}>
-                <Grid item xs={12}>
-                  <Box
-                    color="white"
-                    bgcolor="primary.main"
-                    style={{ borderRadius: "15px 15px 0px 0px", padding: 5 }}
-                  >
-                    <strong>Profile Detail</strong>
-                  </Box>
-                </Grid>
-                <Grid item xs={12} bgcolor="primary.main" >
-                  <div
-                    style={{
-                      backgroundColor: "whitesmoke",
-                      padding: 5,
-                      borderRadius: "0px 0px 15px 15px"
-                    }}
-                  >
-                    <UserProfileDetail
-                      key={keyProfileKey}
-                      profile={selectedProfile}
-                      onUpdate={handleProfileDetailUpdate}
-                      onCancel={handleProfileDetailCancel}
-                      onCreate={handleProfileDetailCreate}
-                    />
-                  </div>
-                </Grid>
-              </Grid>
+          <Grid item xs={8}>
+          <Hidden smUp={openProfileDetail ? false : true} >
+            <br/>&nbsp; <br/>
+            <Box sx={{ flexGrow: 1,  display: { xs: 'none', md: 'flex' } }}
+              >
+
+                <br/>&nbsp; <br/>
+                    <Grid item xs={12} style={{ borderRadius: "15px", padding: 0 }} component={Paper} elevation={10}>
+                      <Grid item xs={12}>
+                        <Box
+                          color="white"
+                          bgcolor="primary.main"
+                          style={{ borderRadius: "15px 15px 0px 0px", padding: 5 }}
+                        >
+                          <strong>Profile Detail</strong>
+                        </Box>
+                      </Grid>
+                      <Grid item xs={12} bgcolor="primary.main" >
+                        <div
+                          style={{
+                            backgroundColor: "whitesmoke",
+                            padding: 5,
+                            borderRadius: "0px 0px 15px 15px"
+                          }}
+                        >
+                          <UserProfileDetail
+                            key={keyProfileKey}
+                            profile={selectedProfile}
+                            onUpdate={handleProfileDetailUpdate}
+                            onCancel={handleProfileDetailCancel}
+                            onCreate={handleProfileDetailCreate}
+                          />
+                        </div>
+                      </Grid>
+                    </Grid>            
+            </Box>
             </Hidden>
+          </Grid>
+            <ModalWindow xs={test}  open={openProfileDetail ? true : false} title='Profile Detail ' width='40%' onClose={handleProfileDetailCancel} >
+                        <UserProfileDetail
+                          key={keyProfileKey}
+                          profile={selectedProfile}
+                          onUpdate={handleProfileDetailUpdate}
+                          onCancel={handleProfileDetailCancel}
+                          onCreate={handleProfileDetailCreate}
+                        />
+            </ModalWindow>
             </Grid>
-        </Grid>
           <ConfirmationDialog open={openDeleteConfirm} title='Profile Delete Dialog' message='Are you sure you want to delete the user profile?' openDialog = {openDeleteConfirm} onConfirm={handleDeleteProfileConfirmDialog} onClose={handleDeleteDialogClose}/>
       </>
     );

@@ -1,5 +1,5 @@
-import React, { useEffect, useRef, useState } from "react";
-import { Box, Button, Grid, Hidden, TextField } from "@mui/material";
+import React, { useEffect, useState } from "react";
+import { Box, Button, Grid, TextField } from "@mui/material";
 import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
 import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined';
 import ModalWindow from "../../components/ui/window-modals/modal_window";
@@ -59,8 +59,6 @@ export default function LoginSignUpModal(    props: {onCancel:any, onSignup:any}
     function handleChange(event: React.ChangeEvent<HTMLInputElement> ){
         const { id, value } = event.target;
 
-        // setFormConfirmError(false);
-
         setPasswordConfirmError(false);                    
         setPasswordConfirmMessage('');                    
 
@@ -73,8 +71,6 @@ export default function LoginSignUpModal(    props: {onCancel:any, onSignup:any}
             case 'passwordConfirm':
                 if(!validateCompareValues(uxInputs.password, value)){
 
-                    // setFormConfirmError(true);
-
                     setPasswordConfirmError(true);                    
                     setPasswordConfirmMessage('The confirm password don\'t match');                    
                 }
@@ -82,8 +78,6 @@ export default function LoginSignUpModal(    props: {onCancel:any, onSignup:any}
             break;
             case 'emailConfirm':
                 if(!validateCompareValues(uxInputs.email, value)){
-
-                    // setFormConfirmError(true);
 
                     setEmailConfirmError(true);                    
                     setEmailConfirmMessage('The confirm email don\'t match');                    
@@ -159,24 +153,22 @@ export default function LoginSignUpModal(    props: {onCancel:any, onSignup:any}
                             <TextField required type="password" label="Password" variant="standard" fullWidth
                                 id="password" value={uxInputs.password} onChange={handleChange.bind(this)}
                             />
-                        </Grid>
-
-                        <Grid item xs={12} md={6} textAlign='left'>
-                            <TextField required type="password" label="Password Confirm" variant="standard"  fullWidth
-                                error={passwordConfirmError} helperText={passwordConfirmMessage}
-                                id="passwordConfirm" value={uxInputs.passwordConfirm} onChange={handleChange.bind(this)}
-                            />
-                        </Grid>
-                        <Grid item xs={6} textAlign='right' >
-                            <Button variant="contained" type="button" 
-                            onClick={handleCancelModal} 
-                            style={{ padding: 4, margin: 10, borderRadius: 25 }} startIcon={<CancelOutlinedIcon/>} >cancel</Button>
-                        </Grid>
-                        <Grid item xs={6} textAlign='left' >
-                            <Button variant="contained" type="submit"
-                                style={{ padding: 4, margin: 10, borderRadius: 25 }} startIcon={<PersonOutlineOutlinedIcon/>} >sign up</Button>
-                        </Grid>
-
+                    </Grid>
+                    <Grid item xs={12} md={6} textAlign='left'>
+                        <TextField required type="password" label="Password Confirm" variant="standard"  fullWidth
+                            error={passwordConfirmError} helperText={passwordConfirmMessage}
+                            id="passwordConfirm" value={uxInputs.passwordConfirm} onChange={handleChange.bind(this)}
+                        />
+                    </Grid>
+                    <Grid item xs={6} textAlign='right' >
+                        <Button variant="contained" type="button" 
+                        onClick={handleCancelModal} 
+                        style={{ padding: 4, margin: 10, borderRadius: 25 }} startIcon={<CancelOutlinedIcon/>} >cancel</Button>
+                    </Grid>
+                    <Grid item xs={6} textAlign='left' >
+                        <Button variant="contained" type="submit"
+                            style={{ padding: 4, margin: 10, borderRadius: 25 }} startIcon={<PersonOutlineOutlinedIcon/>} >sign up</Button>
+                    </Grid>
                 </Grid>
                 <ProcessingDialog open={apiSignUpLoading} message='Signing up is processing...' />
             </Box>

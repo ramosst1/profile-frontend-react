@@ -1,18 +1,13 @@
-import { Box, Grid, Modal } from '@mui/material';
+import { Box, Modal } from '@mui/material';
 import React from 'react';
 
-export default function ModalWindow(props: {open: boolean, title:string, width:string, onClose:any, children:any}){
-
-    const modalWindowStyle = {
-        margin: '0',
-      };
+export default function ModalWindow(props: {xs?: any , open: boolean, title:string, width:string, onClose:any, children:any}){
 
     const modalStyle = {
         position: 'absolute' as 'absolute',
         top: '50%',
         left: '50%',
         transform: 'translate(-50%, -50%)',
-        // width: props.width,
         bgcolor: 'background.paper',
         boxShadow: 24,
         p: 0,
@@ -35,12 +30,12 @@ export default function ModalWindow(props: {open: boolean, title:string, width:s
 
     return (
         <>
-            <Modal 
+            <Modal
                 open={props.open}
                 onClose={handleOnClose}
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
-                sx={modalWindowStyle}
+                sx={props.xs}
             >
                 <Box sx={modalStyle} >
                     <Box textAlign='center' sx={titleStyle} >

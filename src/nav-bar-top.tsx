@@ -4,7 +4,7 @@ import {
     Switch,
     Route
   } from "react-router-dom";
-import {AppBar, Box, Container, Toolbar, Typography, Button, IconButton, Menu, MenuItem, CssBaseline } from '@mui/material';
+import {AppBar, Box, Container, Toolbar, Typography, Button, IconButton, Menu, MenuItem, CssBaseline, linearProgressClasses } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import HomeIcon from '@material-ui/icons/Home';
 import PeopleIcon from '@material-ui/icons/People';
@@ -39,6 +39,11 @@ interface IRightMenuObject {
 const useStyles = makeStyles(theme => ({
     root: {
       flexGrow: 1,
+
+    },
+    topNav: {
+        // background: 'linear-gradient(90deg, #0d47a1 10%, #06224e 90%)',
+        background: 'linear-gradient(90deg, #06224e 10%, #0d47a1 45%, #06224e 95%)'
     },
     topNavIcon: {
       margin: "0px 5px 0px 0px",
@@ -86,7 +91,7 @@ export default function NavBarTop() {
             icon: <SubscriptionsIcon sx={{color: '#ef6694'}} />,
             event: handleOnSignUp,
             eventButton: handleOnSignUp,
-            color:'#ef6694'
+            color:'#fce4ec'
         },        
         {
             menuName: 'Sign In',
@@ -186,9 +191,9 @@ export default function NavBarTop() {
     return (
     <> 
         <Router>
-            <Box sx={{ display: 'flex' }}>
+            <Box sx={{ display: 'flex' }} >
                 <CssBaseline />
-                <AppBar component="nav">
+                <AppBar component="nav" className={classes.topNav}  >
                     <Container maxWidth="xl" > 
                         <Toolbar disableGutters>
                             <Typography
@@ -287,7 +292,8 @@ export default function NavBarTop() {
                             </Box>
 
 
-                            <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
+                            <Box sx={{ flexGrow: 1,  display: { xs: 'flex', md: 'none' } }}
+                            >
                                 <IconButton
                                 size="large"
                                 aria-label="account of current user"
@@ -300,34 +306,34 @@ export default function NavBarTop() {
                                 <MoreIcon />
                                 </IconButton>
                                 <Menu
-                                id="menu-appbar"
-                                anchorEl={anchorElNavRight}
-                                anchorOrigin={{
-                                    vertical: 'bottom',
-                                    horizontal: 'left',
-                                }}
-                                keepMounted
-                                transformOrigin={{
-                                    vertical: 'top',
-                                    horizontal: 'left',
-                                }}
-                                open={Boolean(anchorElNavRight)}
-                                onClose={handleCloseNavMenuRight}
-                                sx={{ 
-                                    display: { xs: 'block', md: 'none' }
-                                }}
+                                    id="menu-appbar"
+                                    anchorEl={anchorElNavRight}
+                                    anchorOrigin={{
+                                        vertical: 'bottom',
+                                        horizontal: 'left',
+                                    }}
+                                    keepMounted
+                                    transformOrigin={{
+                                        vertical: 'top',
+                                        horizontal: 'left',
+                                    }}
+                                    open={Boolean(anchorElNavRight)}
+                                    onClose={handleCloseNavMenuRight}
+                                    sx={{ 
+                                        display: { xs: 'block', md: 'none' }
+                                    }}
                                 >
                                     <MenuItem sx={{fontWeight:'bold', display:user?.userName??'none'}}>
                                         {user?.firstName}  {user?.lastName}
                                     </MenuItem>
-                                {rightMenus.map((menuItem) => (
-                                    <MenuItem key={menuItem.menuName} 
-                                    onClick= {menuItem.event} 
-                                    >
-                                        {menuItem.icon}
-                                    <Typography textAlign="center">{menuItem.menuName}</Typography>
-                                    </MenuItem>
-                                ))}
+                                    {rightMenus.map((menuItem) => (
+                                        <MenuItem key={menuItem.menuName} 
+                                        onClick= {menuItem.event} 
+                                        >
+                                            {menuItem.icon}
+                                        <Typography textAlign="center">{menuItem.menuName}</Typography>
+                                        </MenuItem>
+                                    ))}
                                 </Menu>
                             </Box>
                         </Toolbar>
@@ -349,7 +355,10 @@ export default function NavBarTop() {
                     </Box>
                     </Container>
                 </AppBar>
-                <Box component="main" sx={{ padding:10, width:'100%'}}>
+                <Box component="main" mt={10}
+                    // sx={{ padding:10, width:'100%'}}
+                    sx={{ width:'100%'}}
+                >
                     <Toolbar />
                     <Switch>
                         <Route exact path="/">

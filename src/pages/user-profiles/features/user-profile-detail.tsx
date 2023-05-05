@@ -10,7 +10,8 @@ import {
   Select,
   Hidden,
   MenuItem,
-  FormHelperText
+  FormHelperText,
+  Box
 } from '@mui/material';
 import PersonIcon from '@material-ui/icons/Person';
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
@@ -25,7 +26,7 @@ import useServiceApiResponse from '../../../hooks/use-service-api-response';
 import ProcessingDialog from '../../../components/ui/dialogs/processing-dialog';
 import ErrorMessagesDisplay from '../../../components/ui/error_displays/error-messages-display';
 
-export default function UserProfileDetail(this: any, props: { profile?: IProfileModel; onCreate?: any; onUpdate?: any; onCancel?: any; }) {
+export default function UserProfileDetail(this: any, props: { xs?:any; profile?: IProfileModel; onCreate?: any; onUpdate?: any; onCancel?: any; }) {
 
   const APropProfile = props.profile;
 
@@ -224,45 +225,50 @@ export default function UserProfileDetail(this: any, props: { profile?: IProfile
   };
 
     return (
-      <form onSubmit={handleSubmit}  >
-         <Grid container xs={12} spacing={1} >
-            <Grid item xs={12} >
+      // <form onSubmit={handleSubmit}  >
+      <Box
+      component="form"
+      sx={{
+          '& .MuiTextField-root': { m: .5, width: '45ch' },
+      }}
+      autoComplete="off" 
+      onSubmit={handleSubmit}
+      >
+          <Grid container xs={12} spacing={0} >
+            <Grid item xs={12} md={12} >
               <ErrorMessagesDisplay errorMessages={errorMessages} />
             </Grid>
-            <Grid item xs={12} >
+            <Grid item xs={12} md={12} >
               <ProcessingDialog open={apiProfileUpdateLoading} message='Profile is updating ...' />
               <ProcessingDialog open={apiProfileCreateLoading} message='Profile is being created...' />
               <ProcessingDialog open={retrievingData} message='Retrieving Information...' />
-          </Grid>
-
-            <Grid container item xs={12} >
-                <Grid item xs={6} style={{padding: 5}} >
-                  <TextField
-                    id="firstName"
-                    name="firstName"
-                    value={uxInputs.firstName}
-                    label="First Name"
-                    required
-                    fullWidth
-                    onChange={handleProfileChange.bind(this)}
-                    variant='standard'
-                  />
-                </Grid>
-                <Grid item xs={6} style={{padding: 5}}>
-
-                  <TextField
-                    id="lastName"
-                    name="lastName"
-                    value={uxInputs.lastName}
-                    label="Last Name"
-                    required
-                    fullWidth
-                    onChange={handleProfileChange.bind(this)}
-                    variant='standard'
-                  />
-                </Grid>
             </Grid>
-            <Grid  item xs={12} style={{padding: 5}}>
+            <Grid item xs={6} direction='column'>
+              <TextField
+                id="firstName"
+                name="firstName"
+                value={uxInputs.firstName}
+                label="First Name"
+                required
+                fullWidth
+                onChange={handleProfileChange.bind(this)}
+                variant='standard'
+              />
+            </Grid>
+            <Grid item xs={6} direction='column'>
+
+              <TextField
+                id="lastName"
+                name="lastName"
+                value={uxInputs.lastName}
+                label="Last Name"
+                required
+                fullWidth
+                onChange={handleProfileChange.bind(this)}
+                variant='standard'
+              />
+            </Grid>
+            <Grid  item xs={12} >
               <RadioGroup
                 aria-label="position"
                 id="active"
@@ -285,7 +291,7 @@ export default function UserProfileDetail(this: any, props: { profile?: IProfile
                 />
               </RadioGroup>
             </Grid>
-            <Grid  item xs={12} style={{padding: 5}}>
+            <Grid  item xs={12} >
               <TextField
                 id="address1"
                 name="address1"
@@ -297,7 +303,7 @@ export default function UserProfileDetail(this: any, props: { profile?: IProfile
                 onChange={handleProfileChange.bind(this)}
               />
             </Grid>
-            <Grid  item xs={12} style={{padding: 5}}>
+            <Grid  item xs={12} >
               <TextField
                 id="address2"
                 name="address2"
@@ -308,7 +314,7 @@ export default function UserProfileDetail(this: any, props: { profile?: IProfile
                 onChange={handleProfileChange.bind(this)}
               />
             </Grid>
-            <Grid  item xs={12} style={{padding: 5}}>
+            <Grid  item xs={7} direction='column' >
               <TextField
                 id="city"
                 name="city"
@@ -320,8 +326,7 @@ export default function UserProfileDetail(this: any, props: { profile?: IProfile
                 onChange={handleProfileChange.bind(this)}
               />
             </Grid>
-
-            <Grid  item xs={12} style={{padding: 5}}>
+            <Grid  item xs={5} direction='column'>
               <FormControl
                 required 
               >
@@ -350,17 +355,17 @@ export default function UserProfileDetail(this: any, props: { profile?: IProfile
                 <FormHelperText>Required</FormHelperText>
               </FormControl>
             </Grid>
-            <Grid  item xs={12} style={{padding: 5}}>
-              <TextField
-                id="zipCode"
-                name="zipCode"
-                value={uxInputs.zipCode}
-                label="ZipCode"
-                required 
-                type="number"
-                variant='standard'
-                onChange={handleProfileChange.bind(this)}
-              />
+            <Grid  item xs={12} >
+          <TextField
+            id="zipCode"
+            name="zipCode"
+            value={uxInputs.zipCode}
+            label="ZipCode"
+            required 
+            type="number"
+            variant='standard'
+            onChange={handleProfileChange.bind(this)}
+          />
             </Grid>
             <Grid item xs={12} textAlign='center'>
               <Button
@@ -400,6 +405,7 @@ export default function UserProfileDetail(this: any, props: { profile?: IProfile
               </Hidden>
             </Grid>
           </Grid>
-      </form>
+      {/* </form> */}
+      </Box>
     );
   };
