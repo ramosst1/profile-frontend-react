@@ -147,6 +147,8 @@ export default function UserProfileDetail(this: any, props: { xs?:any; profile?:
 
       setProfilesCreateResponse(ProfilesService.createProfileAsync(ProfileNew));
 
+      
+
     } catch(e){
       setErrorMessages([{ message: 'An unexpect error occured while attempting to add a profile.', statusCode: '999'  } as IErrorMessageModel]);
     }
@@ -225,7 +227,6 @@ export default function UserProfileDetail(this: any, props: { xs?:any; profile?:
   };
 
     return (
-      // <form onSubmit={handleSubmit}  >
       <Box
       component="form"
       sx={{
@@ -405,7 +406,6 @@ export default function UserProfileDetail(this: any, props: { xs?:any; profile?:
               </Hidden>
             </Grid>
           </Grid>
-      {/* </form> */}
       </Box>
     );
   };

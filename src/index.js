@@ -4,7 +4,7 @@ import "./index.css";
 import App from "./App";
 
 if(process.env.NODE_ENV === 'development'){
-    const { worker, signupWorker } = require('./mocks/api/browser')
+    const { worker} = require('./mocks/api/browser')
     worker.start()
 }
 

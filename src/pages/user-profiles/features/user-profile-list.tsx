@@ -12,12 +12,10 @@ import {
   TableHead,
   TableRow,
   Box,
-  Hidden,
   tableCellClasses,
   styled,
   Tooltip
 } from "@mui/material";
-import UserProfileDetail from './user-profile-detail';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
@@ -30,16 +28,22 @@ import { IApiResponse } from '../interfaces/profiles/api-response';
 import ConfirmationDialog from '../../../components/ui/dialogs/confirmation-dialog';
 import ProcessingDialog from '../../../components/ui/dialogs/processing-dialog';
 import ErrorMessagesDisplay from '../../../components/ui/error_displays/error-messages-display';
-import ModalWindow from '../../../components/ui/window-modals/modal_window';
 
-export default function UserProfileList(){
+export default function UserProfileList(
+    props: {
+      onProfileEdit:any, 
+      onProfileDelete:any, 
+      onProfileAdd:any, 
+      onProfileAddCommitted:IProfileResponse,
+      onProfileUpdateCommitted:IProfileResponse,
+      // onProfileDeleteCommitted:IProfileResponse 
+    }
+){
 
-    const [keyProfileKey,setKeyProfileKey] = useState(0);
     const [profileActiveStatus,setProfileActiveStatus] = useState("true");
     const[profiles , setProfiles] = useState<IProfileModel[]>([]);
     const [openDeleteConfirm, setOpenDeleteConfirm] = useState(false);
     const [selectedProfile, setSelectedProfile] = useState<IProfileModel>();
-    const [openProfileDetail, setOpenProfileDetail] = useState(false);
     const [errorMessages, setErrorMessages] = useState<IErrorMessageModel[]>([]);
 
     const [profilesResponse, setProfilesResponse] = useState<Promise<IProfilesResponse>>();
@@ -62,16 +66,43 @@ export default function UserProfileList(){
     useEffect(() =>{
 
       if(apiProfileDeleteResponse?.success){
+        
         const profileListNew = profiles.filter(
           aItem => aItem.profileId !== selectedProfile?.profileId
         );
 
         setProfiles(profileListNew);
-        setOpenProfileDetail(false);
       };
 
 
     }, [apiProfileDeleteResponse])
+
+    useEffect(() => {
+
+      if(props.onProfileAddCommitted?.profile !== undefined) {
+
+        const newProfiles = [...profiles, props.onProfileAddCommitted.profile].sort(sortProfileArrayByName);
+        setProfiles(newProfiles);
+      }
+
+
+    },[props.onProfileAddCommitted])
+
+    useEffect(() => {
+
+      if(props.onProfileUpdateCommitted?.profile !== undefined) {
+
+
+        const newProfileList = [...profiles].map(item => {
+          return item.profileId === props.onProfileUpdateCommitted.profile.profileId? props.onProfileUpdateCommitted.profile: item;
+        }).sort(sortProfileArrayByName)
+
+        setProfiles(newProfileList);
+      }
+
+
+    },[props.onProfileUpdateCommitted])
+
 
     function initPopulateProfileList(){
 
@@ -89,13 +120,14 @@ export default function UserProfileList(){
     }
 
     function handleProfileFilterChange(event: any, profileActiveStatus: React.SetStateAction<string>){
-      setOpenProfileDetail(false);
       setProfileActiveStatus(profileActiveStatus);
     };
 
     function handleDeleteDialogOpen(profile: IProfileModel){
-      setOpenDeleteConfirm(true);
+
       setSelectedProfile(profile);
+      setOpenDeleteConfirm(true);
+      props.onProfileDelete(profile)
     };
 
     function handleDeleteDialogClose(event: any){
@@ -103,49 +135,21 @@ export default function UserProfileList(){
     };
 
     function handleAddProfile() {
-
-      setOpenProfileDetail(true)
-      setKeyProfileKey(0);
-      setSelectedProfile(undefined);
-    };
-
-    function addProfileToList(profileResponse:IProfileResponse){
-
-        const newProfiles = [...profiles, profileResponse.profile].sort(sortProfileArrayByName);
-        setProfiles(newProfiles);
-    };
-
-    function handleProfileDetailUpdate(profileResponse: IProfileResponse) {
-
-      const newProfileList = [...profiles].map(item => {
-        return item.profileId === profileResponse.profile.profileId? profileResponse.profile: item;
-      }).sort(sortProfileArrayByName)
-
-      setProfiles(newProfileList);
-
-      setOpenProfileDetail(false);
-      setSelectedProfile(undefined);
+      props.onProfileAdd();
     };
 
     function handleEditProfile (profile: IProfileModel){
-      setOpenProfileDetail(true);
-      setKeyProfileKey(profile.profileId);
-      setSelectedProfile(profile);
-    };
 
-    function handleProfileDetailCreate(profileResponse: IProfileResponse){
+      const newProfileList = [...profiles].map(item => {
+      return item.profileId === profile.profileId? profile: item;
+    }).sort(sortProfileArrayByName)
 
-      addProfileToList(profileResponse);
-      setOpenProfileDetail(false);
-      setSelectedProfile(undefined);
-    };
 
-    function handleProfileDetailCancel() {
-      setOpenProfileDetail(false);
-      setSelectedProfile(undefined);
+      props.onProfileEdit(profile);
     };
 
     function handleDeleteProfileConfirmDialog(){
+
       setDeleteProfileResponse(ProfilesService.deleteProfileAsync(selectedProfile?.profileId ?? 0));
 
       setOpenDeleteConfirm(false);
@@ -155,10 +159,10 @@ export default function UserProfileList(){
 
       const aFirstName = a.firstName.toUpperCase();
       const aLastName = a.lastName.toLocaleUpperCase();
-
+  
       const bFirstName = b.firstName.toUpperCase();
       const bLastName = b.lastName.toLocaleUpperCase();
-
+  
       if (aLastName < aLastName) {
         return -1;
       }
@@ -173,8 +177,7 @@ export default function UserProfileList(){
       }
       return 0;
     };
-
-
+  
     const StyledTableCell = styled(TableCell)(({ theme }) => ({
       [`&.${tableCellClasses.head}`]: {
         backgroundColor: theme.palette.secondary.main,
@@ -201,7 +204,7 @@ export default function UserProfileList(){
         </Grid>
 
         <Grid container spacing={1} >
-          <Grid item xs={12} md={4}>
+          <Grid item xs={12} md={12}>
             <form>
               <Grid
               >
@@ -306,55 +309,8 @@ export default function UserProfileList(){
               </TableContainer>
             </form>
           </Grid>
-          <Grid item xs={12} md={8}>
-          <Hidden smUp={openProfileDetail ? false : true} >
-            <br/>&nbsp; <br/>
-            <Box sx={{ flexGrow: 1,  display: { xs: 'none', md: 'flex' } }}
-              >
-
-                <br/>&nbsp; <br/>
-                    <Grid item xs={12} style={{ borderRadius: "15px", padding: 0 }} component={Paper} elevation={10}>
-                      <Grid item xs={12}>
-                        <Box
-                          color="white"
-                          bgcolor="primary.main"
-                          style={{ borderRadius: "15px 15px 0px 0px", padding: 5 }}
-                        >
-                          <strong>Profile Detail</strong>
-                        </Box>
-                      </Grid>
-                      <Grid item xs={12} >
-                        <div
-                          style={{
-                            backgroundColor: "whitesmoke",
-                            padding: 5,
-                            borderRadius: "0px 0px 15px 15px"
-                          }}
-                        >
-                          <UserProfileDetail
-                            key={keyProfileKey}
-                            profile={selectedProfile}
-                            onUpdate={handleProfileDetailUpdate}
-                            onCancel={handleProfileDetailCancel}
-                            onCreate={handleProfileDetailCreate}
-                          />
-                        </div>
-                      </Grid>
-                    </Grid>            
-            </Box>
-          </Hidden>
-          </Grid>
-            <ModalWindow xs={{ flexGrow: 1,  display: { xs: 'flex', md: 'none' } }}  open={openProfileDetail ? true : false} title='Profile Detail ' width='40%' onClose={handleProfileDetailCancel} >
-                        <UserProfileDetail
-                          key={keyProfileKey}
-                          profile={selectedProfile}
-                          onUpdate={handleProfileDetailUpdate}
-                          onCancel={handleProfileDetailCancel}
-                          onCreate={handleProfileDetailCreate}
-                        />
-            </ModalWindow>
-            </Grid>
-          <ConfirmationDialog open={openDeleteConfirm} title='Profile Delete Dialog' message='Are you sure you want to delete the user profile?' openDialog = {openDeleteConfirm} onConfirm={handleDeleteProfileConfirmDialog} onClose={handleDeleteDialogClose}/>
+        </Grid>
+        <ConfirmationDialog open={openDeleteConfirm} title='Profile Delete Dialog' message='Are you sure you want to delete the user profile?' openDialog = {openDeleteConfirm} onConfirm={handleDeleteProfileConfirmDialog} onClose={handleDeleteDialogClose}/>
       </>
     );
 }

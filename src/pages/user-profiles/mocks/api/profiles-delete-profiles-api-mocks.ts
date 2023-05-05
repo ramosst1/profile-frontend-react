@@ -1,6 +1,5 @@
 import { rest } from 'msw'
 import { IProfileResponse, IProfilesResponse } from '../../interfaces/profiles/profile-responses';
-import { IProfileModel } from '../../interfaces/profiles/profile-models';
 import profilesList from './profile-list';
 import { IMessageModel } from '../../interfaces/profiles/error-message-model';
 
