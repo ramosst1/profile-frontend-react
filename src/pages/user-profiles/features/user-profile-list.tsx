@@ -36,7 +36,6 @@ export default function UserProfileList(
       onProfileAdd:any, 
       onProfileAddCommitted:IProfileResponse,
       onProfileUpdateCommitted:IProfileResponse,
-      // onProfileDeleteCommitted:IProfileResponse 
     }
 ){
 
@@ -246,16 +245,16 @@ export default function UserProfileList(
                         Status
                       </StyledTableCell>
                       <StyledTableCell align="center" style={{ width: 150 }}>
-                      <Button 
-                      variant="contained"
-                      color="primary"
-                      size="small"
-                      style={{ whiteSpace:'nowrap', padding: 4, margin: 10, borderRadius: 25 }}
-                      onClick={handleAddProfile}
-                      startIcon={<PersonAddIcon />}
-                    >
-                      Add Profile
-                    </Button>
+                        <Button 
+                          variant="contained"
+                          color="primary"
+                          size="small"
+                          style={{ whiteSpace:'nowrap', paddingTop:0, paddingBottom:0, paddingLeft: 4, paddingRight:4, margin: 0, borderRadius: 25 }}
+                          onClick={handleAddProfile}
+                          startIcon={<PersonAddIcon />}
+                        >
+                          Add Profile
+                        </Button>
                         
                       </StyledTableCell>
                     </TableRow>
@@ -280,23 +279,25 @@ export default function UserProfileList(
                             {profile.active === true ? "Active" : "Inactive"}
                           </span>
                         </TableCell>
-                        <TableCell align="center">
-                          <Box whiteSpace='nowrap'>
-                            <Tooltip title="Edit" arrow>
+                        <TableCell align="left" sx={{margin:0, padding:0}}>
+                          <Box whiteSpace='nowrap' sx={{margin:0, padding:0}}>
+                            <Tooltip title="Edit" >
                                 <Button
                                   size="small"
                                   onClick={() => handleEditProfile(profile)} color='secondary'
+                                  sx={{margin:0, padding:0, border:0}}
                                 >
-                                  <EditIcon />
+                                  <EditIcon style={{margin: 0, padding: 0}} />
                                 </Button>
                             </Tooltip>
                             <Tooltip title="Delete" arrow>
                               <Button
                                 size="small"
                                 onClick={() => handleDeleteDialogOpen(profile)}
+                                sx={{margin:0, padding:0, border:0}}
                               >
                                 <Box color="error.main">
-                                  <DeleteIcon />
+                                  <DeleteIcon style={{margin: 0, padding: 0}} />
                                 </Box>
                               </Button>
                             </Tooltip>

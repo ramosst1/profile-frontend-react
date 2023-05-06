@@ -320,7 +320,7 @@ export default function UserProfileDetail(this: any, props: { xs?:any; profile?:
                 sx={{maxWidth:'100%'}}
               />
             </Grid>
-            <Grid  item direction={{xs:'row', md:'column'}}>
+            <Grid  item xs={12} md={6}>
               <TextField
                 id="city"
                 name="city"
