@@ -227,9 +227,10 @@ export default function UserProfileList(
 
               <TableContainer
                 component={Paper}
+                sx={{ maxHeight: {md: 560, xs: 400} }}
                 style={{ borderRadius: "15px" }}
               >
-                <Table size="small" aria-label="a dense table">
+                <Table size="small" aria-label="a dense table" stickyHeader>
                   <TableHead >
                     <TableRow >
                       <StyledTableCell color='primary.main' >Name</StyledTableCell>

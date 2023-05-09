@@ -48,16 +48,20 @@ export default function LoginSignUpModal(    props: {onCancel:any, onSignup:any}
      function handleSubmit(event: { preventDefault: () => void; }){
         event.preventDefault()
 
+        if(!formValid) return;
+
         setErrorMessages([]);        
 
         handleOnSignup();
         
     };
 
-    function validateForm(){}
+    const [formValid, setFormValid] = useState(false);
 
     function handleChange(event: React.ChangeEvent<HTMLInputElement> ){
         const { id, value } = event.target;
+
+        setFormValid(false);
 
         setPasswordConfirmError(false);                    
         setPasswordConfirmMessage('');                    
@@ -73,6 +77,7 @@ export default function LoginSignUpModal(    props: {onCancel:any, onSignup:any}
 
                     setPasswordConfirmError(true);                    
                     setPasswordConfirmMessage('The confirm password don\'t match');                    
+                    return;
                 }
                 console.log(true);
             break;
@@ -81,9 +86,14 @@ export default function LoginSignUpModal(    props: {onCancel:any, onSignup:any}
 
                     setEmailConfirmError(true);                    
                     setEmailConfirmMessage('The confirm email don\'t match');                    
+
+                    return;
                 }
             break;
         }
+
+        setFormValid(true);
+
     };
 
     function handleCancelModal(){

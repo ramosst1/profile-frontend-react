@@ -1,6 +1,6 @@
 import { rest } from 'msw'
 import { IProfileResponse } from '../../interfaces/profiles/profile-responses';
-import { IProfileModel, IProfileUpdateModel, IProfileAddressModel, IProfileAddressCreateModel, IProfileCreateModel } from '../../interfaces/profiles/profile-models';
+import { IProfileModel, IProfileAddressModel, IProfileCreateModel } from '../../interfaces/profiles/profile-models';
 
 export const profilesPostHandlers = [  
 
@@ -12,8 +12,6 @@ export const profilesPostHandlers = [
     {
       const adresslist = createItem.addresses.map<IProfileAddressModel>(item => {
         const aProfile: IProfileAddressModel = {
-          // profileId: item.profileId,
-          // addressId: item.addressId,
           profileId: 99,
           addressId: 99,
           address1: item.address1,
@@ -41,11 +39,10 @@ export const profilesPostHandlers = [
         messages: [],
         profile: aProfileModel
       };
-      
 
       return res(ctx.json(response))
 
-    }
+    };
 
   }),
 

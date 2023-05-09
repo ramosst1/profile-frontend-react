@@ -114,7 +114,6 @@ export default function LoginModal(
 
     function handleOnSignIn(){
 
-
         const requestSignInUser: ISignInRequest = {
             userName: uxInputs.email,
             password: uxInputs.password
