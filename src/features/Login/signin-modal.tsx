@@ -46,10 +46,6 @@ export default function LoginModal(
     });
     
     useEffect(() => {
-//        alert(user?.firstName)
-    }, [user])
-
-    useEffect(() => {
 
         return() => {
             toggleFeatures(ACTION_LOGIN);

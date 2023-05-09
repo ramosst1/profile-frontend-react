@@ -170,14 +170,20 @@ export default function LoginSignUpModal(    props: {onCancel:any, onSignup:any}
                             id="passwordConfirm" value={uxInputs.passwordConfirm} onChange={handleChange.bind(this)}
                         />
                     </Grid>
-                    <Grid item xs={6} textAlign='right' >
+                    <Grid item xs={6} textAlign='right' display={apiSignUpResponse?.success !== true?'':'none'} >
                         <Button variant="contained" type="button" 
                         onClick={handleCancelModal} 
                         style={{ padding: 4, margin: 10, borderRadius: 25 }} startIcon={<CancelOutlinedIcon/>} >cancel</Button>
                     </Grid>
-                    <Grid item xs={6} textAlign='left' >
+                    <Grid item xs={6} textAlign='left' display={apiSignUpResponse?.success !== true?'':'none'}>
                         <Button variant="contained" type="submit"
                             style={{ padding: 4, margin: 10, borderRadius: 25 }} startIcon={<PersonOutlineOutlinedIcon/>} >sign up</Button>
+                    </Grid>
+                    <Grid item xs={12} textAlign='center' display={apiSignUpResponse?.success === true?'':'none'}>
+                        <Button variant="contained" type="button" 
+                            onClick={handleCancelModal} 
+                            style={{ padding: 4, margin: 10, borderRadius: 25 }} startIcon={<CancelOutlinedIcon/>} >close</Button>
+
                     </Grid>
                 </Grid>
                 <ProcessingDialog open={apiSignUpLoading} message='Signing up is processing...' />
