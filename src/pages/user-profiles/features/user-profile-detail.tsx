@@ -12,9 +12,9 @@ import {
   FormHelperText,
   Box
 } from '@mui/material';
-import PersonIcon from '@material-ui/icons/Person';
-import PersonAddIcon from '@material-ui/icons/PersonAdd';
-import CancelIcon from '@material-ui/icons/Cancel';
+import PeopleIcon from '@mui/icons-material/People';
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
+import CancelIcon from '@mui/icons-material/Cancel';
 import ProfilesService from '../services/profiles-service';
 import StatesServices from '../../../services/states/states-services';
 import { IProfileCreateModel, IProfileModel, IProfileAddressCreateModel } from '../interfaces/profiles/profile-models';
@@ -405,7 +405,7 @@ export default function UserProfileDetail(this: any, props: { xs?:any; profile?:
                   size="small"
                   style={{ padding: 4, margin: 10, borderRadius: 25 }}
                   type="submit"
-                  startIcon={<PersonIcon />}
+                  startIcon={<PeopleIcon />}
                   sx={{display: props.profile ? '' : 'none'}}
                 >
                   Update

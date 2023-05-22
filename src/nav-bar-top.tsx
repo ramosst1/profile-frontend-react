@@ -6,12 +6,11 @@ import {
   } from "react-router-dom";
 import {AppBar, Box, Container, Toolbar, Typography, Button, IconButton, Menu, MenuItem, CssBaseline, linearProgressClasses } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
-import HomeIcon from '@material-ui/icons/Home';
-import PeopleIcon from '@material-ui/icons/People';
-import PeopleOutlineIcon from '@material-ui/icons/PeopleOutline';
+import HomeIcon from '@mui/icons-material/Home';
+import PeopleIcon from '@mui/icons-material/People';
+import PeopleOutlineIcon from '@mui/icons-material/PeopleOutline';
 import InfoIcon from '@mui/icons-material/Info';
 import SubscriptionsIcon from '@mui/icons-material/Subscriptions';
-import { makeStyles } from '@material-ui/core/styles';
 import LoginModal from './features/Login/signin-modal';
 import {Home, AboutUs, UserProfiles} from './pages/index'
 import LoginSignUpModal from './features/Login/signup-modal';
@@ -35,53 +34,27 @@ interface IRightMenuObject {
     color: string,
 }
 
-
-const useStyles = makeStyles(theme => ({
-    root: {
-      flexGrow: 1,
-
-    },
-    topNav: {
-        // background: 'linear-gradient(90deg, #0d47a1 10%, #06224e 90%)',
-        background: 'linear-gradient(90deg, #06224e 10%, #0d47a1 45%, #06224e 95%)'
-    },
-    topNavIcon: {
-      margin: "0px 5px 0px 0px",
-      padding: 0,
-      color: "#21a631"
-    },
-    topNavButton: {
-      color:"#dbffe0",
-      padding: "0px 30px 0px 00px"
-    },
-    title: {
-      flexGrow: 1,
-    },
-  }));  
-
 export default function NavBarTop() {
 
     const {user} = useAuthUser();
 
     const {logout,setLogout} = useLogout();
 
-    const classes = useStyles();
-
     const pageList: IPagesObject[] = [
         {
           pageName: 'Home',
           url: '/',
-          icon: <HomeIcon className={classes.topNavIcon}/>
+          icon: <HomeIcon style={{color: '#21a631'}} />
         },
         {
           pageName: 'Profiles',
           url: '/profiles/profiles',
-          icon: <PeopleIcon className={classes.topNavIcon} />,
+          icon: <PeopleIcon style={{color: '#21a631'}} />,
         },
         {
           pageName: 'About Us',
           url: '/aboutus',
-          icon: <InfoIcon className={classes.topNavIcon} />
+          icon: <InfoIcon style={{color: '#21a631'}} />
         },
     ];
 
@@ -95,14 +68,14 @@ export default function NavBarTop() {
         },        
         {
             menuName: 'Sign In',
-            icon: <PeopleOutlineIcon className={classes.topNavIcon}  />,
+            icon: <PeopleOutlineIcon />,
             event: handleOnSignIn,
             eventButton: handleOnSignIn,
             color:'#dbffe0'
         },        
         {
             menuName: 'Sign Out',
-            icon: <PeopleOutlineIcon className={classes.topNavIcon}  />,
+            icon: <PeopleOutlineIcon   />,
             event: handleOnSignOut,
             eventButton: handleOnSignOut,
             color:'#dbffe0'
@@ -193,7 +166,7 @@ export default function NavBarTop() {
         <Router>
             <Box sx={{ display: 'flex' }} >
                 <CssBaseline />
-                <AppBar component="nav" className={classes.topNav}  >
+                <AppBar component="nav" style={{background: 'linear-gradient(90deg, #06224e 10%, #0d47a1 45%, #06224e 95%)'}}  >
                     <Container maxWidth="xl" > 
                         <Toolbar disableGutters>
                             <Typography
