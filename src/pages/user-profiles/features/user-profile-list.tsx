@@ -14,11 +14,16 @@ import {
   Box,
   tableCellClasses,
   styled,
-  Tooltip
+  Tooltip,
+  IconButton,
+  Collapse,
+  Typography
 } from "@mui/material";
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import ProfilesService from '../services/profiles-service';
 import { IProfileModel } from '../interfaces/profiles/profile-models';
 import { IProfileResponse, IProfilesResponse} from '../interfaces/profiles/profile-responses';
@@ -187,6 +192,82 @@ export default function UserProfileList(
       },
     }));
 
+
+    function Row(props: { profile: IProfileModel }) {
+
+      const { profile } = props;
+      const [openProfileDetailRow, setOpenProfileDetailRow] = React.useState(false);
+    
+      return (
+        <>
+          <TableRow key={profile.profileId} >
+            <TableCell style={{borderBottom: 0}}>
+              <IconButton
+                aria-label="expand row"
+                size="small"
+                onClick={() => setOpenProfileDetailRow(!openProfileDetailRow)}
+              >
+                {openProfileDetailRow ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+              </IconButton>
+              <Typography component='div'
+                  style={{
+                        color: 'rgba(0, 0, 0, 0.4)',
+                          display:
+                            profileActiveStatus === null
+                              ? ""
+                              : "none"
+                        }}
+              >
+                {profile.active === true ? "Active" : "Inactive"}
+              </Typography>
+            </TableCell>
+            <TableCell component="th" scope="row" style={{borderBottom: 0}}>
+              {profile.firstName} {profile.lastName}
+            </TableCell>
+            <TableCell align="left" sx={{margin:0, padding:0,borderBottom:0}}>
+              <Box whiteSpace='nowrap' sx={{margin:0, padding:0}}>
+                <Tooltip title="Edit" >
+                    <Button
+                      size="small"
+                      onClick={() => handleEditProfile(profile)} color='secondary'
+                      sx={{margin:0, padding:0, border:0}}
+                    >
+                      <EditIcon style={{margin: 0, padding: 0}} />
+                    </Button>
+                </Tooltip>
+                <Tooltip title="Delete" arrow>
+                  <Button
+                    size="small"
+                    onClick={() => handleDeleteDialogOpen(profile)}
+                    sx={{margin:0, padding:0, border:0}}
+                  >
+                    <Box color="error.main">
+                      <DeleteIcon style={{margin: 0, padding: 0}} />
+                    </Box>
+                  </Button>
+                </Tooltip>
+              </Box>
+            </TableCell>
+          </TableRow>
+
+          <TableRow>
+            <TableCell></TableCell>
+            <TableCell style={{ paddingBottom: 0, paddingTop: 0}} colSpan={3}>
+              <Collapse in={openProfileDetailRow} timeout="auto" unmountOnExit>
+                <Box sx={{ margin: 1 }}>
+                  {profile.addresses[0].address1}<br/>
+                  {profile.addresses[0].address2 !== '' && (<>{profile.addresses[0].address2} <br/></>)}
+                  {profile.addresses[0].city},{profile.addresses[0].stateAbrev} {profile.addresses[0].zipCode} 
+                </Box>
+              </Collapse>
+            </TableCell>
+          </TableRow>
+        </>
+      );
+    }
+    
+
+
     return (
       <>
         <Grid container spacing={0} >
@@ -215,9 +296,9 @@ export default function UserProfileList(
                       onChange={handleProfileFilterChange}
 
                     >
-                      <Tab label="Active" value="true" />
-                      <Tab label="Inactive" value="false" />
-                      <Tab label="All" value={null} />
+                      <Tab label="Active" value="true" style={{fontSize: 13}} />
+                      <Tab label="Inactive" value="false" style={{fontSize: 13}} />
+                      <Tab label="All" value={null} style={{fontSize: 13}} />
                     </Tabs>
                   </Grid>
                   <Grid item xs={3} style={{textAlign:"right", whiteSpace:'nowrap' }} >
@@ -233,18 +314,8 @@ export default function UserProfileList(
                 <Table size="small" aria-label="a dense table" stickyHeader>
                   <TableHead >
                     <TableRow >
+                    <StyledTableCell color='primary.main' style={{width:1}} ></StyledTableCell>
                       <StyledTableCell color='primary.main' >Name</StyledTableCell>
-                      <StyledTableCell
-                        style={{
-                          width: 10,
-                          display:
-                            profileActiveStatus === null
-                              ? ""
-                              : "none"
-                        }}
-                      >
-                        Status
-                      </StyledTableCell>
                       <StyledTableCell align="center" style={{ width: 150 }}>
                         <Button 
                           variant="contained"
@@ -262,49 +333,9 @@ export default function UserProfileList(
                   </TableHead>
                   <TableBody>
                     {getProfileFilters().map((profile) => (
-                      <TableRow
-                        key={profile.profileId}
-                      >
-                        <TableCell component="th" scope="row">
-                          {profile.firstName} {profile.lastName}
-                        </TableCell>
-                        <TableCell
-                          style={{
-                            display:
-                              profileActiveStatus === null
-                                ? ""
-                                : "none"
-                          }}
-                        >
-                          <span style={{ color: "grey" }}>
-                            {profile.active === true ? "Active" : "Inactive"}
-                          </span>
-                        </TableCell>
-                        <TableCell align="left" sx={{margin:0, padding:0}}>
-                          <Box whiteSpace='nowrap' sx={{margin:0, padding:0}}>
-                            <Tooltip title="Edit" >
-                                <Button
-                                  size="small"
-                                  onClick={() => handleEditProfile(profile)} color='secondary'
-                                  sx={{margin:0, padding:0, border:0}}
-                                >
-                                  <EditIcon style={{margin: 0, padding: 0}} />
-                                </Button>
-                            </Tooltip>
-                            <Tooltip title="Delete" arrow>
-                              <Button
-                                size="small"
-                                onClick={() => handleDeleteDialogOpen(profile)}
-                                sx={{margin:0, padding:0, border:0}}
-                              >
-                                <Box color="error.main">
-                                  <DeleteIcon style={{margin: 0, padding: 0}} />
-                                </Box>
-                              </Button>
-                            </Tooltip>
-                          </Box>
-                        </TableCell>
-                      </TableRow>
+                      <>
+                        <Row key={profile.profileId} profile={profile} />
+                      </>
                     ))}
                   </TableBody>
                 </Table>
