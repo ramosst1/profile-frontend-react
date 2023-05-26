@@ -7,7 +7,7 @@ import {
 } from "@mui/material";
 import { IProfileModel } from './interfaces/profiles/profile-models';
 import { IProfileResponse} from './interfaces/profiles/profile-responses';
-import { DynamicModalWindow } from '../../components/ui/dynamic_modal_window';
+import { DynamicModalWindow } from '../../components/ui/window-modals/dynamic_modal_window';
 
 export default function UserProfiles() {
 
