@@ -271,9 +271,6 @@ export default function UserProfileList(
     return (
       <>
         <Grid container spacing={0} >
-            <h3>User Profiles</h3>
-        </Grid>
-        <Grid container spacing={0} >
           <Grid item xs={12} >
               <ErrorMessagesDisplay errorMessages={errorMessages} />
           </Grid>
